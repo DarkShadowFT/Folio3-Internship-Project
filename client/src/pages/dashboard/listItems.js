@@ -17,19 +17,19 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton href="/DoctorsList">
       <ListItemIcon>
         <AssignmentTurnedInIcon />
       </ListItemIcon>
       <ListItemText primary="Book Appointment" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton href="/MyAppointments">
       <ListItemIcon>
         <PersonIcon />
       </ListItemIcon>
       <ListItemText primary="My Appointments" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton href="/BookingForm">
       <ListItemIcon>
         <BoltIcon />
       </ListItemIcon>
