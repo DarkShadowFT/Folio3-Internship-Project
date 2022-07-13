@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 
-export default function SignUp() {
+function Login() {
   return (
+
   );
 }
+
+export default Login;
