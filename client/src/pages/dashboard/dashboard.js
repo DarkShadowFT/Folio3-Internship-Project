@@ -24,21 +24,51 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import {Pie} from "react-chartjs-2";
+import {Bar} from "react-chartjs-2";
+import { faker } from '@faker-js/faker';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+// ChartJS.register(Tooltip, Legend);
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export const data = {
+export const pie_data = {
   labels: ["Attended", "Pending", "Cancelled"],
   datasets: [
     {
       label: "# of Appointments",
-      data: [12, 6, 2],
-      backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)"],
+      data: [12, 4, 2],
+      backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
       borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
       borderWidth: 1,
     },
+  ],
+};
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: false,
+      text: '',
+    },
+  },
+  maintainAspectRatio: false
+};
+
+const labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: 'No. Of Appointments Per Day',
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      backgroundColor: 'rgba(255, 99, 132, 0.8)',
+    }
   ],
 };
 
@@ -55,7 +85,7 @@ function Copyright(props) {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -199,12 +229,13 @@ function DashboardContent() {
                   sx={{
                     p: 2,
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    height: 240,
+                    height: 250
                   }}
                 >
-                  <Pie data={data} options={{maintainAspectRatio: false}} />
+                  <div style={{display: "flex", width: "45%"}}>
+                    <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}} />
+                    <Bar data={data} width={"10%"} options={options}/>
+                  </div>
                 </Paper>
               </Grid>
               {/* Recent Orders */}
