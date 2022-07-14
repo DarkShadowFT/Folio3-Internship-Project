@@ -1,40 +1,56 @@
-import React, { useState } from "react"
-import { Alert, Box, Button, Card, Divider } from "@mui/material"
-import { useAuth } from "../../contexts/AuthContext"
-import { useNavigate } from "react-router-dom"
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import Appointments from './Appointments';
-import Chart from './Chart';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import React, {useState} from "react";
+import {Alert, Box, Button, Card, Divider} from "@mui/material";
+import {useAuth} from "../../contexts/AuthContext";
+import {useNavigate} from "react-router-dom";
+import {styled, createTheme, ThemeProvider} from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiDrawer from "@mui/material/Drawer";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Badge from "@mui/material/Badge";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Link from "@mui/material/Link";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import {mainListItems, secondaryListItems} from "./listItems";
+import Appointments from "./Appointments";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from "chart.js";
+import {Pie} from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+export const data = {
+  labels: ["Attended", "Pending", "Cancelled"],
+  datasets: [
+    {
+      label: "# of Appointments",
+      data: [12, 6, 2],
+      backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)"],
+      borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+      borderWidth: 1,
+    },
+  ],
+};
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="/">
         Find Me A Doctor
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -42,48 +58,46 @@ function Copyright(props) {
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== "open",
+})(({theme, open}) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
+const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== "open"})(({theme, open}) => ({
+  "& .MuiDrawer-paper": {
+    position: "relative",
+    whiteSpace: "nowrap",
+    width: drawerWidth,
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    boxSizing: "border-box",
+    ...(!open && {
+      overflowX: "hidden",
+      transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+        duration: theme.transitions.duration.leavingScreen,
       }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
+      width: theme.spacing(7),
+      [theme.breakpoints.up("sm")]: {
+        width: theme.spacing(9),
+      },
+    }),
+  },
+}));
 
 const mdTheme = createTheme();
 
@@ -92,31 +106,29 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  const [error, setError] = useState("")
-  const { currentUser, logout } = useAuth()
-  const history = useNavigate()
+  const [error, setError] = useState("");
+  const {currentUser, logout} = useAuth();
+  const history = useNavigate();
 
   async function handleLogout() {
-    setError("")
+    setError("");
 
     try {
-      await logout()
-      history("/login")
-    } 
-    catch {
-      setError("Failed to log out")
+      await logout();
+      history("/login");
+    } catch {
+      setError("Failed to log out");
     }
   }
 
-
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{display: "flex"}}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
+              pr: "24px", // keep right padding when drawer closed
             }}
           >
             <IconButton
@@ -125,19 +137,13 @@ function DashboardContent() {
               aria-label="open drawer"
               onClick={toggleDrawer}
               sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
+                marginRight: "36px",
+                ...(open && {display: "none"}),
               }}
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
+            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
               Dashboard
             </Typography>
             <IconButton color="inherit">
@@ -147,15 +153,12 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Drawer 
-          variant="permanent" 
-          open={open} 
-        >
+        <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
               px: [1],
             }}
           >
@@ -171,8 +174,8 @@ function DashboardContent() {
                 <ExitToAppIcon />
               </ListItemIcon>
               <ListItemText primary="Logout" />
-            </ListItemButton>            
-            <Divider sx={{ my: 1 }} />
+            </ListItemButton>
+            <Divider sx={{my: 1}} />
             {secondaryListItems}
           </List>
         </Drawer>
@@ -180,39 +183,38 @@ function DashboardContent() {
           component="main"
           sx={{
             backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
             flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
+            height: "100vh",
+            overflow: "auto",
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
             {error && <Alert variant="danger">{error}</Alert>}
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={8} lg={12}>
                 <Paper
                   sx={{
                     p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
                     height: 240,
                   }}
                 >
-                  <Chart />
+                  <Pie data={data} options={{maintainAspectRatio: false}} />
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
                   <Appointments />
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
+            <Copyright sx={{pt: 4}} />
           </Container>
         </Box>
       </Box>
