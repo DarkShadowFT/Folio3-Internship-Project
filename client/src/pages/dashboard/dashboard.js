@@ -67,7 +67,7 @@ export const options = {
   maintainAspectRatio: false,
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+const labels = ['2017', '2018', '2019', '2020', '2021', '2021', '2022'];
 
 export const data = {
   labels,
