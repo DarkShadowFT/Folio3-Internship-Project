@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useState } from "react";
+import Alert from '@mui/material/Alert';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,19 +18,15 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Copyright from "../copyright/copyright"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../contexts/AuthContext"
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
+  const [error, setError] = useState("")
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [values, setValues] = React.useState({
     amount: "",
     password: "",
@@ -37,6 +34,8 @@ export default function SignUp() {
     weightRange: "",
     showPassword: false,
   });
+  const { signup } = useAuth()
+  const history = useNavigate()
 
   const handleChange = (prop) => (event) => {
     setValues({...values, [prop]: event.target.value});
@@ -51,6 +50,19 @@ export default function SignUp() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+    
+    try {
+      setError("")
+      await signup(email, values.password)
+      history("/login")
+    }
+    catch (err){
+      setError("Failed to signup: " + err.code)
+    }
   };
 
   return (
@@ -71,7 +83,8 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
+          <Box component="form" noValidate onSubmit={handleSignup} sx={{mt: 3}}>
+          {error && <Alert severity="error">{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -95,7 +108,15 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+                <TextField 
+                  required 
+                  fullWidth 
+                  id="email" 
+                  label="Email Address" 
+                  name="email" 
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value) }}
+                  autoComplete="email" />
               </Grid>
               <Grid item xs={12}>
                 <TextField
