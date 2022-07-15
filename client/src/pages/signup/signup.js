@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -20,7 +20,9 @@ import IconButton from "@mui/material/IconButton";
 import Copyright from "../copyright/copyright"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 const theme = createTheme();
 
 export default function SignUp() {
@@ -38,7 +40,7 @@ export default function SignUp() {
   const history = useNavigate()
 
   const handleChange = (prop) => (event) => {
-    setValues({...values, [prop]: event.target.value});
+    setValues({ ...values, [prop]: event.target.value });
   };
 
   const handleClickShowPassword = () => {
@@ -54,16 +56,38 @@ export default function SignUp() {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-    
+
     try {
       setError("")
-      await signup(email, values.password)
+      await SignUp(email, values.password)
       history("/login")
     }
-    catch (err){
+    catch (err) {
       setError("Failed to signup: " + err.code)
     }
   };
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
+
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,14 +101,14 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{m: 1, bgcolor: "secondary.main"}}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSignup} sx={{mt: 3}}>
-          {error && <Alert severity="error">{error}</Alert>}
+          <Box component="form"  sx={{ mt: 3 }}>
+            {error && <Alert severity="error">{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -108,12 +132,12 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField 
-                  required 
-                  fullWidth 
-                  id="email" 
-                  label="Email Address" 
-                  name="email" 
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value) }}
                   autoComplete="email" />
@@ -169,10 +193,28 @@ export default function SignUp() {
                 />
               </Grid> */}
             </Grid>
-
-            <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
+              {/* 
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                alert('Account Created Successfully');
+              }}
+            >
               Sign Up
+            </Button> */}
+
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}
+               onClick={handleClick}>
+                Sign Up
             </Button>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Account created successfully
+              </Alert>
+            </Snackbar>
+
+
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
@@ -182,7 +224,7 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{mt: 5}} />
+        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
