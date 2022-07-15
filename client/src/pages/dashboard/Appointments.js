@@ -54,7 +54,7 @@ function preventDefault(event) {
 export default function Appointments() {
   return (
     <React.Fragment>
-      <Title>Appointments</Title>
+      <Title>Recent Appointments</Title>
       <Table size="small">
         <TableHead>
           <TableRow>

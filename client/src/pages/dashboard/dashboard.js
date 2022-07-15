@@ -27,7 +27,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
-import { faker } from '@faker-js/faker';
+import {faker} from "@faker-js/faker";
 
 // ChartJS.register(Tooltip, Legend);
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -36,12 +36,12 @@ export const pie_data = {
   labels: ["Attended", "Pending", "Cancelled"],
   datasets: [
     {
-      label: "# of Appointments",
+      label: "# ",
       data: [12, 4, 2],
       backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
       borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
       borderWidth: 1,
-    },
+    }
   ],
 };
 
@@ -49,26 +49,44 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: 'top',
+      position: "top",
     },
     title: {
       display: false,
-      text: '',
+      text: "",
     },
   },
-  maintainAspectRatio: false
+  scales: {
+    x: {
+      stacked: true,
+    },
+    y: {
+      stacked: true,
+    },
+  },
+  maintainAspectRatio: false,
 };
 
-const labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: 'No. Of Appointments Per Day',
+      label: "Attended",
       data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
-      backgroundColor: 'rgba(255, 99, 132, 0.8)',
-    }
+      backgroundColor: "rgba(255, 99, 132, 0.8)",
+    },
+    {
+      label: 'Pending',
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 10 })),
+      backgroundColor: 'rgba(75, 192, 192, 0.8)',
+    },
+    {
+      label: 'Cancelled',
+      data: labels.map(() => faker.datatype.number({ min: 0, max: 20 })),
+      backgroundColor: 'rgba(53, 162, 235, 0.8)',
+    },
   ],
 };
 
@@ -229,12 +247,12 @@ function DashboardContent() {
                   sx={{
                     p: 2,
                     display: "flex",
-                    height: 250
+                    height: 250,
                   }}
                 >
                   <div style={{display: "flex", width: "45%"}}>
                     <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}} />
-                    <Bar data={data} width={"10%"} options={options}/>
+                    <Bar data={data} width={"10%"} options={options} />
                   </div>
                 </Paper>
               </Grid>
