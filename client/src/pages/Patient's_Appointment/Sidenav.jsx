@@ -1,6 +1,7 @@
 import React from "react";
-import "./App.css";
+import "./Sidenav.css";
 import { SidebarData } from "./SidebarData";
+
 function SideNav() {
   return (
     <div className="Sidenav">

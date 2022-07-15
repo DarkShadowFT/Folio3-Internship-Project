@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import List from "./List";
 
-function Appointments() {
+function Appointment() {
   const [users, setUsers] = useState([
     {
       name: "Deepak",
@@ -85,4 +85,4 @@ function Appointments() {
   );
 }
 
-export default Appointments;
+export default Appointment;
