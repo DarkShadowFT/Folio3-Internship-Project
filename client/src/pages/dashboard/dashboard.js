@@ -29,7 +29,6 @@ import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
 
-// ChartJS.register(Tooltip, Legend);
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export const pie_data = {
@@ -59,9 +58,17 @@ export const options = {
   scales: {
     x: {
       stacked: true,
+      title: {
+        display: true,
+        text: 'Year'
+      }
     },
     y: {
       stacked: true,
+      title: {
+        display: true,
+        text: 'No of Appointments'
+      }
     },
   },
   maintainAspectRatio: false,
