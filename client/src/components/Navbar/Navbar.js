@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
@@ -7,6 +7,9 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {styled} from "@mui/material/styles";
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreators } from "../../state/index";
+import { bindActionCreators } from "redux";
 
 const drawerWidth = 250;
 
@@ -29,10 +32,9 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function Navbar() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const open = useSelector(state => state.state)
+  const dispatch = useDispatch();
+  const { toggleDrawer } = bindActionCreators(actionCreators, dispatch);
 
   return (
   <AppBar position="absolute" open={open}>
@@ -45,7 +47,7 @@ export default function Navbar() {
         edge="start"
         color="inherit"
         aria-label="open drawer"
-        onClick={toggleDrawer}
+        onClick={() => {toggleDrawer(open)}}
         sx={{
           marginRight: "36px",
           ...(open && {display: "none"}),
