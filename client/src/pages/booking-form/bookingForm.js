@@ -29,6 +29,15 @@ import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
 
+
+
+import TextField from '@mui/material/TextField';
+
+
+
+
+
+
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export const pie_data = {
@@ -186,7 +195,7 @@ function DashboardContent() {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
-              Dashboard
+              Instant Appointment
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -232,31 +241,97 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+          <Container 
+              maxWidth="sm" sx={{mt: 4, mb: 2}}>
             {error && <Alert variant="danger">{error}</Alert>}
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    height: 250,
-                  }}
-                >
-                  <div style={{display: "flex", width: "45%"}}>
-                    <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}} />
-                    <Bar data={data} width={"10%"} options={options} />
-                  </div>
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                  <Appointments />
-                </Paper>
-              </Grid>
-            </Grid>
+            {/* ///////////////////////////////////////////////////////////////*/}
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1,width: "25ch" }
+              }}
+              noValidate
+              autoComplete="off"
+            
+            >
+              <div>
+              <TextField
+                  required
+                  id="outlined-required"
+                  label="First Name"
+                  defaultValue="Ali"
+                  
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Last Name"
+                  defaultValue="Ahmad"
+          
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Docotr Name"
+                  defaultValue="Sajid"
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Doctor Specializatioin"
+                  defaultValue="Heart Surgeon"
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  type="date"
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  type="time"
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Appointment Locatioin"
+                  defaultValue="Faisal Town"
+                />
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Appointment Chargers"
+                  defaultValue="5000"
+           
+                />
+              </div>
+            </Box>
+            <Box sx={{
+                "& .MuiTextField-root": { m: 1,width: "52ch" }
+              }}>
+            <TextField
+                  required
+                  id="outlined-required"
+                  label="First Name"
+                  defaultValue="abc123@"
+                  fullWidth
+                  type="email"
+                />
+            </Box>
+            <Box sx={{
+                "& .MuiTextField-root": { m: 1,width: "52ch" }
+              }}>
+            <TextField
+                  required
+                  id="outlined-required"
+                  label="Patient Query"
+                  defaultValue="Stroke"
+                  fullWidth
+                  multiline
+                  rows="5"
+                />
+            </Box>
+
             <Copyright sx={{pt: 4}} />
           </Container>
         </Box>
