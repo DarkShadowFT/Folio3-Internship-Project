@@ -11,6 +11,7 @@ import Link from "@mui/material/Link";
 import Appointments from "./Appointments";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
+import Copyright from "../../components/copyright/copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
@@ -83,19 +84,6 @@ export const data = {
     },
   ],
 };
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {"Copyright © "}
-      <Link color="inherit" href="/">
-        Find Me A Doctor
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const mdTheme = createTheme();
 
