@@ -86,8 +86,8 @@ export default function Sidebar() {
           </ListItemIcon>
           <ListItemText primary="Logout" />
         </ListItemButton>
-        <Divider sx={{my: 1}} />
-        {secondaryListItems}
+        {/* <Divider sx={{my: 1}} /> */}
+        {/* {secondaryListItems} */}
       </List>
     </Drawer>
   );
