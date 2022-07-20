@@ -1,29 +1,16 @@
-import React, {useState} from "react";
-import {Alert, Box, Button, Card, Divider} from "@mui/material";
-import {useAuth} from "../../contexts/AuthContext";
-import {useNavigate} from "react-router-dom";
-import {styled, createTheme, ThemeProvider} from "@mui/material/styles";
+import React from "react";
+import {Alert, Box} from "@mui/material";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import {mainListItems, secondaryListItems} from "./listItems";
+import Link from "@mui/material/Link";
 import Appointments from "./Appointments";
-import Copyright from "../copyright/copyright";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Navbar from "../../components/Navbar/Navbar";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
@@ -40,7 +27,7 @@ export const pie_data = {
       backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
       borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
       borderWidth: 1,
-    }
+    },
   ],
 };
 
@@ -60,167 +47,65 @@ export const options = {
       stacked: true,
       title: {
         display: true,
-        text: 'Year'
-      }
+        text: "Year",
+      },
     },
     y: {
       stacked: true,
       title: {
         display: true,
-        text: 'No of Appointments'
-      }
+        text: "No of Appointments",
+      },
     },
   },
   maintainAspectRatio: false,
 };
 
-const labels = ['2017', '2018', '2019', '2020', '2021', '2021', '2022'];
+const labels = ["2017", "2018", "2019", "2020", "2021", "2021", "2022"];
 
 export const data = {
   labels,
   datasets: [
     {
       label: "Attended",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      data: labels.map(() => faker.datatype.number({min: 0, max: 50})),
       backgroundColor: "rgba(255, 99, 132, 0.8)",
     },
     {
-      label: 'Pending',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 10 })),
-      backgroundColor: 'rgba(75, 192, 192, 0.8)',
+      label: "Pending",
+      data: labels.map(() => faker.datatype.number({min: 0, max: 10})),
+      backgroundColor: "rgba(75, 192, 192, 0.8)",
     },
     {
-      label: 'Cancelled',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 20 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.8)',
+      label: "Cancelled",
+      data: labels.map(() => faker.datatype.number({min: 0, max: 20})),
+      backgroundColor: "rgba(53, 162, 235, 0.8)",
     },
   ],
 };
 
-const drawerWidth = 250;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({theme, open}) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== "open"})(({theme, open}) => ({
-  "& .MuiDrawer-paper": {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: "border-box",
-    ...(!open && {
-      overflowX: "hidden",
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
-}));
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {"Copyright © "}
+      <Link color="inherit" href="/">
+        Find Me A Doctor
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
-  const [error, setError] = useState("");
-  const {currentUser, logout} = useAuth();
-  const history = useNavigate();
-
-  async function handleLogout() {
-    setError("");
-
-    try {
-      await logout();
-      history("/login");
-    } catch {
-      setError("Failed to log out");
-    }
-  }
-
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: "24px", // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && {display: "none"}),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <ListItemButton onClick={handleLogout}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItemButton>
-            <Divider sx={{my: 1}} />
-            {secondaryListItems}
-          </List>
-        </Drawer>
+        <Navbar/>
+        <Sidebar/>
         <Box
           component="main"
           sx={{
@@ -233,7 +118,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-            {error && <Alert variant="danger">{error}</Alert>}
+            {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={12}>
