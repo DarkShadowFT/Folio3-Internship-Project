@@ -23,6 +23,8 @@ import { useAuth } from "../../contexts/AuthContext"
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useEffect } from 'react';
+
 const theme = createTheme();
 
 export default function SignUp() {
@@ -54,26 +56,11 @@ export default function SignUp() {
     event.preventDefault();
   };
 
-  const handleSignup = async (event) => {
-    event.preventDefault();
 
-    try {
-      setError("")
-      await SignUp(email, values.password)
-      history("/login")
-    }
-    catch (err) {
-      setError("Failed to signup: " + err.code)
-    }
-  };
-
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-  const [open, setOpen] = React.useState(false);
+  const [showalert, setshowalert] = React.useState(false);
 
   const handleClick = () => {
-    setOpen(true);
+    setshowalert(true);
   };
 
   const handleClose = (event, reason) => {
@@ -81,9 +68,34 @@ export default function SignUp() {
       return;
     }
 
-    setOpen(false);
+    setshowalert(false);
   };
 
+
+  const handleSignup = async (event) => {
+    event.preventDefault();
+
+    try {
+      setError("")
+      await signup(email, values.password);
+      setshowalert(true);//if user is sign up successfully set showalert to true.
+
+
+      const timer = setTimeout(() => history("/login"), 1500);
+      return () => clearTimeout(timer);
+
+
+
+    }
+    catch (err) {
+      setError("Failed to signup: " + err.code)
+      setshowalert(false);
+    }
+  };
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
 
 
@@ -107,7 +119,8 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form"  sx={{ mt: 3 }}>
+
+          <Box component="form" validate onSubmit={handleSignup} sx={{ mt: 3 }}>
             {error && <Alert severity="error">{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -186,32 +199,22 @@ export default function SignUp() {
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I accept terms and policy"
-                />
-              </Grid> */}
+
             </Grid>
-              {/* 
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}
-              onClick={() => {
-                alert('Account Created Successfully');
-              }}
-            >
+
+
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
-            </Button> */}
-
-
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}
-               onClick={handleClick}>
-                Sign Up
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+
+
+            < Snackbar open={showalert} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                 Account created successfully
               </Alert>
             </Snackbar>
+
 
 
 
@@ -226,6 +229,6 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
