@@ -121,7 +121,7 @@ export default function SignUp() {
           </Typography>
 
           <Box component="form" validate onSubmit={handleSignup} sx={{ mt: 3 }}>
-            {error && <Alert severity="error">{error}</Alert>}
+            {error &&< Alert severity="error" sx={{mt: 3, mb: 5}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
