@@ -3,28 +3,28 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 
 export const mainListItems = (
   <React.Fragment>
     <ListItemButton href="/">
       <ListItemIcon>
-        <DeleteIcon />
+        <DeleteIcon style={{ color: "red" }}  />
       </ListItemIcon>
       <ListItemText primary="Delete" />
     </ListItemButton>
     <ListItemButton href="/DoctorsList">
       <ListItemIcon>
-        <EditIcon />
+        <EditIcon style={{ color: "blue" }} />
       </ListItemIcon>
-      <ListItemText primary="Book Appointment" />
+      <ListItemText primary="Edit" />
     </ListItemButton>
-    <ListItemButton href="/MyAppointments">
+    <ListItemButton href="/DoctorsList">
       <ListItemIcon>
-        <PersonIcon />
+        <VisibilityIcon style={{ color: "black" }} />
       </ListItemIcon>
-      <ListItemText primary="My Appointments" />
+      <ListItemText primary="View" />
     </ListItemButton>
   </React.Fragment>
 );
