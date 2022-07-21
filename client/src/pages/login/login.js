@@ -18,7 +18,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import Copyright from "../copyright/copyright";
+import Copyright from "../../components/copyright/copyright";
 import { useGoogleOneTapLogin } from 'react-google-one-tap-login';
 
 const theme = createTheme();
