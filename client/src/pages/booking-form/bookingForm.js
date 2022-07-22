@@ -28,9 +28,6 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
-
-
-
 import TextField from '@mui/material/TextField';
 
 
@@ -150,7 +147,10 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== "open"})
   },
 }));
 
-const mdTheme = createTheme();
+const theme = createTheme();
+
+
+
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
@@ -173,7 +173,7 @@ function DashboardContent() {
   }
 
   return (
-    <ThemeProvider theme={mdTheme}>
+    <ThemeProvider theme={theme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -238,6 +238,7 @@ function DashboardContent() {
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
+      
           }}
         >
           <Toolbar />
@@ -247,8 +248,9 @@ function DashboardContent() {
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
-              sx={{
-                "& .MuiTextField-root": { m: 1,width: "25ch" }
+              sx={{flexDirection:"row",justifyContent: 'space-between',
+                "& .MuiTextField-root": { m: 1,width: "25ch" },spacing:10,      
+                //,bgcolor: "aqua "
               }}
               noValidate
               autoComplete="off"
@@ -261,13 +263,14 @@ function DashboardContent() {
                   label="First Name"
                   defaultValue="Ali"
                   
+
                 />
                 <TextField
                   required
                   id="outlined-required"
                   label="Last Name"
                   defaultValue="Ahmad"
-          
+                  
                 />
                 <TextField
                   required
@@ -330,10 +333,19 @@ function DashboardContent() {
                   multiline
                   rows="5"
                 />
+                
             </Box>
-
-            <Copyright sx={{pt: 4}} />
+    
           </Container>
+          <Button
+              type="submit"
+              variant="contained"
+              sx={{ ml:72,b: 2,pl:10,pr:10}}
+
+            >
+              submit
+            </Button>
+            <Copyright sx={{pt: 4}} />
         </Box>
       </Box>
     </ThemeProvider>
