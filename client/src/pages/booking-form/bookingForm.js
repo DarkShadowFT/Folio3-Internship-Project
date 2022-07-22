@@ -296,7 +296,7 @@ function DashboardContent() {
                 <TextField
                   required
                   id="outlined-required"
-                  label="Appointment Locatioin"
+                  label="Appointment Location"
                   defaultValue=""
                 />
                 <TextField
