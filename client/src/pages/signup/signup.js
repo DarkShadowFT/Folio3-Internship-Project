@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import Alert from '@mui/material/Alert';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -20,17 +17,14 @@ import IconButton from "@mui/material/IconButton";
 import Copyright from "../../components/copyright/copyright"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
-import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { useEffect } from 'react';
 
 const theme = createTheme();
 
 export default function SignUp() {
   const [error, setError] = useState("")
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [values, setValues] = React.useState({
     amount: "",
     password: "",
@@ -56,21 +50,14 @@ export default function SignUp() {
     event.preventDefault();
   };
 
-
   const [showalert, setshowalert] = React.useState(false);
-
-  const handleClick = () => {
-    setshowalert(true);
-  };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setshowalert(false);
   };
-
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -80,12 +67,8 @@ export default function SignUp() {
       await signup(email, values.password);
       setshowalert(true);//if user is sign up successfully set showalert to true.
 
-
       const timer = setTimeout(() => history("/login"), 1500);
       return () => clearTimeout(timer);
-
-
-
     }
     catch (err) {
       setError("Failed to signup: " + err.code)
@@ -96,10 +79,6 @@ export default function SignUp() {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-
-
-
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -119,7 +98,6 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-
           <Box component="form" validate onSubmit={handleSignup} sx={{ mt: 3 }}>
             {error &&< Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
@@ -183,11 +161,9 @@ export default function SignUp() {
                   variant="outlined"
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField required fullWidth id="ageofpatient" label="Age" name="age" autoComplete="age" />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   required
@@ -198,26 +174,15 @@ export default function SignUp() {
                   autoComplete="PhoneNumber"
                 />
               </Grid>
-
-
             </Grid>
-
-
-
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
-
-
             < Snackbar open={showalert} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                 Account created successfully
               </Alert>
             </Snackbar>
-
-
-
-
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
