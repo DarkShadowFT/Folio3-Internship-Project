@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -20,6 +20,10 @@ import IconButton from "@mui/material/IconButton";
 import Copyright from "../../components/copyright/copyright"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import { useEffect } from 'react';
 
 const theme = createTheme();
 
@@ -38,7 +42,7 @@ export default function SignUp() {
   const history = useNavigate()
 
   const handleChange = (prop) => (event) => {
-    setValues({...values, [prop]: event.target.value});
+    setValues({ ...values, [prop]: event.target.value });
   };
 
   const handleClickShowPassword = () => {
@@ -52,18 +56,50 @@ export default function SignUp() {
     event.preventDefault();
   };
 
+
+  const [showalert, setshowalert] = React.useState(false);
+
+  const handleClick = () => {
+    setshowalert(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setshowalert(false);
+  };
+
+
   const handleSignup = async (event) => {
     event.preventDefault();
-    
+
     try {
       setError("")
-      await signup(email, values.password)
-      history("/login")
+      await signup(email, values.password);
+      setshowalert(true);//if user is sign up successfully set showalert to true.
+
+
+      const timer = setTimeout(() => history("/login"), 1500);
+      return () => clearTimeout(timer);
+
+
+
     }
-    catch (err){
+    catch (err) {
       setError("Failed to signup: " + err.code)
+      setshowalert(false);
     }
   };
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,14 +113,15 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{m: 1, bgcolor: "secondary.main"}}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSignup} sx={{mt: 3}}>
-          {error && <Alert severity="error">{error}</Alert>}
+
+          <Box component="form" validate onSubmit={handleSignup} sx={{ mt: 3 }}>
+            {error &&< Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -108,12 +145,12 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField 
-                  required 
-                  fullWidth 
-                  id="email" 
-                  label="Email Address" 
-                  name="email" 
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value) }}
                   autoComplete="email" />
@@ -162,17 +199,25 @@ export default function SignUp() {
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I accept terms and policy"
-                />
-              </Grid> */}
+
             </Grid>
 
-            <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
+
+
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
+
+
+            < Snackbar open={showalert} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Account created successfully
+              </Alert>
+            </Snackbar>
+
+
+
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
@@ -182,8 +227,8 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{mt: 5}} />
+        <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
