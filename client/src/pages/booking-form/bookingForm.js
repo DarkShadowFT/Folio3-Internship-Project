@@ -261,28 +261,27 @@ function DashboardContent() {
                   required
                   id="outlined-required"
                   label="First Name"
-                  defaultValue="Ali"
-                  
-
+                  defaultValue=""
+                
                 />
                 <TextField
                   required
                   id="outlined-required"
                   label="Last Name"
-                  defaultValue="Ahmad"
+                  defaultValue=""
                   
                 />
                 <TextField
                   required
                   id="outlined-required"
                   label="Docotr Name"
-                  defaultValue="Sajid"
+                  defaultValue=""
                 />
                 <TextField
                   required
                   id="outlined-required"
                   label="Doctor Specializatioin"
-                  defaultValue="Heart Surgeon"
+                  defaultValue=""
                 />
                 <TextField
                   required
@@ -298,13 +297,13 @@ function DashboardContent() {
                   required
                   id="outlined-required"
                   label="Appointment Locatioin"
-                  defaultValue="Faisal Town"
+                  defaultValue=""
                 />
                 <TextField
                   required
                   id="outlined-required"
                   label="Appointment Chargers"
-                  defaultValue="5000"
+                  defaultValue=""
             
                 />
               </div>
@@ -316,7 +315,7 @@ function DashboardContent() {
                   required
                   id="outlined-required"
                   label="Email"
-                  defaultValue="abc123@"
+                  defaultValue=""
                   fullWidth
                   type="email"
                 />
@@ -328,23 +327,26 @@ function DashboardContent() {
                   required
                   id="outlined-required"
                   label="Patient Query"
-                  defaultValue="Stroke"
+                  defaultValue=""
                   fullWidth
                   multiline
                   rows="5"
                 />
                 
             </Box>
-    
-          </Container>
-          <Button
+            <Box>
+            <Button
               type="submit"
               variant="contained"
-              sx={{ ml:72,b: 2,pl:10,pr:10}}
-
+              sx={{ ml:15,mt:2,b: 2,pl:10,pr:10}}
             >
               submit
             </Button>
+
+
+            </Box>
+                      </Container>
+
             <Copyright sx={{pt: 4}} />
         </Box>
       </Box>
