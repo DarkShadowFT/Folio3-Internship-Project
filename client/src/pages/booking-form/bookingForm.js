@@ -305,7 +305,7 @@ function DashboardContent() {
                   id="outlined-required"
                   label="Appointment Chargers"
                   defaultValue="5000"
-           
+            
                 />
               </div>
             </Box>
@@ -315,7 +315,7 @@ function DashboardContent() {
             <TextField
                   required
                   id="outlined-required"
-                  label="First Name"
+                  label="Email"
                   defaultValue="abc123@"
                   fullWidth
                   type="email"
