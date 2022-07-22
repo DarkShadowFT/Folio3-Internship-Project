@@ -12,13 +12,12 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import {mainListItems, secondaryListItems} from "./listItems";
-import Appointments from "./Appointments";
 import Copyright from "../copyright/copyright";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -28,12 +27,7 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
-import TextField from '@mui/material/TextField';
-
-
-
-
-
+import TextField from "@mui/material/TextField";
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -46,7 +40,7 @@ export const pie_data = {
       backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
       borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
       borderWidth: 1,
-    }
+    },
   ],
 };
 
@@ -66,39 +60,39 @@ export const options = {
       stacked: true,
       title: {
         display: true,
-        text: 'Year'
-      }
+        text: "Year",
+      },
     },
     y: {
       stacked: true,
       title: {
         display: true,
-        text: 'No of Appointments'
-      }
+        text: "No of Appointments",
+      },
     },
   },
   maintainAspectRatio: false,
 };
 
-const labels = ['2017', '2018', '2019', '2020', '2021', '2021', '2022'];
+const labels = ["2017", "2018", "2019", "2020", "2021", "2021", "2022"];
 
 export const data = {
   labels,
   datasets: [
     {
       label: "Attended",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 50 })),
+      data: labels.map(() => faker.datatype.number({min: 0, max: 50})),
       backgroundColor: "rgba(255, 99, 132, 0.8)",
     },
     {
-      label: 'Pending',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 10 })),
-      backgroundColor: 'rgba(75, 192, 192, 0.8)',
+      label: "Pending",
+      data: labels.map(() => faker.datatype.number({min: 0, max: 10})),
+      backgroundColor: "rgba(75, 192, 192, 0.8)",
     },
     {
-      label: 'Cancelled',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 20 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.8)',
+      label: "Cancelled",
+      data: labels.map(() => faker.datatype.number({min: 0, max: 20})),
+      backgroundColor: "rgba(53, 162, 235, 0.8)",
     },
   ],
 };
@@ -148,9 +142,6 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== "open"})
 }));
 
 const theme = createTheme();
-
-
-
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
@@ -238,116 +229,67 @@ function DashboardContent() {
             flexGrow: 1,
             height: "100vh",
             overflow: "auto",
-      
           }}
         >
           <Toolbar />
-          <Container 
-              maxWidth="sm" sx={{mt: 4, mb: 2}}>
+          <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
             {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
-              sx={{flexDirection:"row",justifyContent: 'space-between',
-                "& .MuiTextField-root": { m: 1,width: "25ch" },spacing:10,      
+              sx={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                "& .MuiTextField-root": {m: 1, width: "25ch"},
+                spacing: 10,
                 //,bgcolor: "aqua "
               }}
               noValidate
               autoComplete="off"
-            
             >
               <div>
-              <TextField
-                  required
-                  id="outlined-required"
-                  label="First Name"
-                  defaultValue=""
-                
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Last Name"
-                  defaultValue=""
-                  
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Docotr Name"
-                  defaultValue=""
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Doctor Specializatioin"
-                  defaultValue=""
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  type="date"
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  type="time"
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Appointment Locatioin"
-                  defaultValue=""
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Appointment Chargers"
-                  defaultValue=""
-            
-                />
+                <TextField required id="outlined-required" label="First Name" defaultValue="" />
+                <TextField required id="outlined-required" label="Last Name" defaultValue="" />
+                <TextField required id="outlined-required" label="Doctor Name" defaultValue="" />
+                <TextField required id="outlined-required" label="Doctor Specialization" defaultValue="" />
+                <TextField required id="outlined-required" type="date" />
+                <TextField required id="outlined-required" type="time" />
+                <TextField required id="outlined-required" label="Appointment Location" defaultValue="" />
+                <TextField required id="outlined-required" label="Appointment Charges" defaultValue="" />
               </div>
             </Box>
-            <Box sx={{
-                "& .MuiTextField-root": { m: 1,width: "52ch" }
-              }}>
-            <TextField
-                  required
-                  id="outlined-required"
-                  label="Email"
-                  defaultValue=""
-                  fullWidth
-                  type="email"
-                />
+            <Box
+              sx={{
+                "& .MuiTextField-root": {m: 1, width: "52ch"},
+              }}
+            >
+              <TextField required id="outlined-required" label="Email" defaultValue="" fullWidth type="email" />
             </Box>
-            <Box sx={{
-                "& .MuiTextField-root": { m: 1,width: "52ch" }
-              }}>
-            <TextField
-                  required
-                  id="outlined-required"
-                  label="Patient Query"
-                  defaultValue=""
-                  fullWidth
-                  multiline
-                  rows="5"
-                />
-                
+            <Box
+              sx={{
+                "& .MuiTextField-root": {m: 1, width: "52ch"},
+              }}
+            >
+              <TextField
+                required
+                id="outlined-required"
+                label="Patient Query"
+                defaultValue=""
+                fullWidth
+                multiline
+                rows="5"
+              />
             </Box>
             <Box>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ ml:15,mt:2,b: 2,pl:10,pr:10}}
-            >
-              submit
-            </Button>
-
-
+              <Link href="/MyAppointments">
+                <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
+                Submit
+                </Button>
+              </Link>
             </Box>
-                      </Container>
+          </Container>
 
-            <Copyright sx={{pt: 4}} />
+          <Copyright sx={{pt: 4}} />
         </Box>
       </Box>
     </ThemeProvider>
