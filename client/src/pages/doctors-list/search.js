@@ -4,7 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
 
 const SearchBar = ({setSearchQuery}) => (
-  <form>
+  <form sx={{mx:'suto'}} align='center'>
     <TextField
       id="search-bar"
       className="text"

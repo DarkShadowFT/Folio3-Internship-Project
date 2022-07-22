@@ -24,19 +24,19 @@ function DoctorsList() {
           sx={{
             backgroundColor: (theme) =>
               theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
+                flexGrow: 1,
+                  height: "100vh",
+                    overflow: "auto",
           }}
           
           >
           <Toolbar />
           <Container>
-          <Search />
+            <Search />
           </Container>
-          <Container>
-          <Table/>
-          </Container>
+            <Container>
+              <Table/>
+            </Container>
         </Box>
       </Box>
     </ThemeProvider>
