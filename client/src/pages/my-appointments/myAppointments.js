@@ -1,54 +1,19 @@
 import React from "react"
-import {Alert, Box} from "@mui/material";
+import {Box} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
 import Appointments from "./Appointments";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
 import Copyright from "../../components/copyright/copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
-import {Pie} from "react-chartjs-2";
-import {Bar} from "react-chartjs-2";
-import {faker} from "@faker-js/faker";
 export default MyAppointments;
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: false,
-      text: "",
-    },
-  },
-  scales: {
-    x: {
-      stacked: true,
-      title: {
-        display: true,
-        text: "Year",
-      },
-    },
-    y: {
-      stacked: true,
-      title: {
-        display: true,
-        text: "No of Appointments",
-      },
-    },
-  },
-  maintainAspectRatio: false,
-};
 
 
 const mdTheme = createTheme();

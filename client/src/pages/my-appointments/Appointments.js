@@ -4,17 +4,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import {mainListItems} from "../../pages/my-appointments/labelslist";
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import PersonIcon from '@mui/icons-material/Person';
-import EditIcon from '@mui/icons-material/Edit';
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import List from "@mui/material/List";
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
 import Title from './Title';
 
@@ -72,6 +62,14 @@ export default function Appointments() {
 
     <React.Fragment>
       <Title>Appointments</Title>
+      <Link to="../BookingForm">
+          <Button style={{ border: '2px solid black',
+                            background: '#FFFFCC',
+                            color: 'black',
+                             }}> 
+              Create New Appointment</Button>
+        </Link>
+
       <Table size="small">
         <TableHead>
           <TableRow>
