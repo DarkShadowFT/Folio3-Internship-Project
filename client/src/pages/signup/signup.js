@@ -19,15 +19,17 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../contexts/AuthContext"
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 const theme = createTheme();
 
 export default function SignUp() {
   const [error, setError] = useState("")
-  const [email, setEmail] = useState('')
+  const [showalert, setshowalert] = React.useState(false);
   const [values, setValues] = React.useState({
     amount: "",
-    password: "",
     weight: "",
     weightRange: "",
     showPassword: false,
@@ -35,9 +37,48 @@ export default function SignUp() {
   const { signup } = useAuth()
   const history = useNavigate()
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const validationSchema = yup.object({
+    firstName: yup
+      .string("Enter your first name")
+      .required("Please enter your first name")
+      .min(3, 'First name is too short - should be minimum 3 chars')
+      .max(50, 'First name is too long'),
+    lastName: yup
+      .string("Enter your last name")
+      .required("Please enter your last name")
+      .min(3, 'Last name is too short - should be minimum 3 chars')
+      .max(50, 'Last name is too long'),
+    email: yup
+      .string("Enter your email")
+      .required("Please enter an email")
+      .email("Enter a valid email"),
+    password: yup
+      .string("Enter your password")
+      .required("Please enter a password")
+      .min(6, 'Password is too short - should be minimum 6 chars')
+      .max(50, 'Password is too long'),
+    age: yup
+      .number()
+      .required("Please enter your age")
+      .min(18, 'You must be at least 18 years old')
+      .max(120, 'You must be at most 120 years old')
+      .typeError("Age must be a number"),
+    phoneNumber: yup
+      .string("Enter your phone number in +923XXXXXXXXXX format")
+      .required("Please enter your phone number")
+      .min(13, 'PhoneNumber is exactly 13 characters long and of format +923XXXXXXXXXX')
+      .max(13, 'PhoneNumber is exactly 13 characters long and of format +923XXXXXXXXXX')
+      .typeError("PhoneNumber must be a number")
+      .matches("^((\\+92)?(0092)?(92)?(0)?)(3)([0-9]{9})$", 'Should be of the form +923XXXXXXXXXX'),
+  }).required();
+
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm({resolver: yupResolver(validationSchema)});
+  const firstName = register('firstName')
+  const lastName = register('lastName')
+  const email = register('email')
+  const password = register('password')
+  const age = register('age')
+  const phoneNumber = register('phoneNumber')
 
   const handleClickShowPassword = () => {
     setValues({
@@ -50,8 +91,6 @@ export default function SignUp() {
     event.preventDefault();
   };
 
-  const [showalert, setshowalert] = React.useState(false);
-
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -59,12 +98,11 @@ export default function SignUp() {
     setshowalert(false);
   };
 
-  const handleSignup = async (event) => {
-    event.preventDefault();
+  const handleSignup = async () => {
 
     try {
       setError("")
-      await signup(email, values.password);
+      await signup(getValues("email"), getValues("password"));
       setshowalert(true);//if user is sign up successfully set showalert to true.
 
       const timer = setTimeout(() => history("/login"), 1500);
@@ -98,7 +136,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" validate onSubmit={handleSignup} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
             {error &&< Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -110,16 +148,26 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  inputRef={firstName.ref}
+                  error={errors.firstName}
+                  onBlur={firstName.onBlur}
+                  helperText={errors.firstName?.message}
+                  onChange={firstName.onChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  autoComplete="family-name"
+                  name="lastName"
                   required
                   fullWidth
                   id="lastName"
                   label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  inputRef={lastName.ref}
+                  error={errors.lastName}
+                  onBlur={lastName.onBlur}
+                  helperText={errors.lastName?.message}
+                  onChange={lastName.onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -129,9 +177,13 @@ export default function SignUp() {
                   id="email"
                   label="Email Address"
                   name="email"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value) }}
-                  autoComplete="email" />
+                  autoComplete="email" 
+                  inputRef={email.ref}
+                  error={errors.email}
+                  onBlur={email.onBlur}
+                  helperText={errors.email?.message}
+                  onChange={email.onChange}
+                  />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -142,8 +194,11 @@ export default function SignUp() {
                   autoComplete="new-password"
                   id="standard-adornment-password"
                   type={values.showPassword ? "text" : "password"}
-                  value={values.password}
-                  onChange={handleChange("password")}
+                  inputRef={password.ref}
+                  error={errors.password}
+                  onBlur={password.onBlur}
+                  helperText={errors.password?.message}
+                  onChange={password.onChange}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -162,7 +217,19 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField required fullWidth id="ageofpatient" label="Age" name="age" autoComplete="age" />
+                <TextField 
+                  required 
+                  fullWidth 
+                  id="ageofpatient" 
+                  label="Age" 
+                  name="age" 
+                  autoComplete="age"
+                  inputRef={age.ref}
+                  error={errors.age}
+                  onBlur={age.onBlur}
+                  helperText={errors.age?.message}
+                  onChange={age.onChange}
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -170,8 +237,13 @@ export default function SignUp() {
                   fullWidth
                   id="phoneofpatient"
                   label="Phone Number"
-                  name="Phone_number"
+                  name="phoneNumber"
                   autoComplete="PhoneNumber"
+                  inputRef={phoneNumber.ref}
+                  error={errors.phoneNumber}
+                  onBlur={phoneNumber.onBlur}
+                  helperText={errors.phoneNumber?.message}
+                  onChange={phoneNumber.onChange}
                 />
               </Grid>
             </Grid>
