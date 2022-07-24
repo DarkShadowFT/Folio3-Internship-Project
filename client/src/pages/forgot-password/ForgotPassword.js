@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Alert, Button, Box, Card, CssBaseline, Container, Grid, Link, TextField } from "@mui/material"
+import { Alert, Button, Box, CssBaseline, Container, Grid, Link, TextField } from "@mui/material"
 import { useAuth } from "../../contexts/AuthContext"
 
 export default function ForgotPassword() {

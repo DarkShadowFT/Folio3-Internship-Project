@@ -4,7 +4,7 @@ import Table from './table';
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Navbar from "../../components/Navbar/Navbar";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {Alert, Box} from "@mui/material";
+import {Box} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Container from '@mui/material/Container';
