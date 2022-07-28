@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const PersonSchema = new Schema({
+    _id: Number,
     First_Name: {
         type: String,
         required: true,
