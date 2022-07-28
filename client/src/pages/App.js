@@ -1,14 +1,14 @@
 import React from "react";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider } from "../contexts/AuthContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/login/login";
-import SignUp from "./pages/signup/signup";
-import Dashboard from "./pages/dashboard/dashboard";
-import PrivateRoute from "./pages/PrivateRoute";
-import ForgotPassword from "./pages/forgot-password/ForgotPassword";
-import DoctorsList from "./pages/doctors-list/doctorsList"
-import BookingForm from "./pages/booking-form/bookingForm";
-import MyAppointments from "./pages/my-appointments/myAppointments";
+import Login from "./login/login";
+import SignUp from "./signup/signup";
+import Dashboard from "./dashboard/dashboard";
+import PrivateRoute from "./PrivateRoute";
+import ForgotPassword from "./forgot-password/ForgotPassword";
+import DoctorsList from "./doctors-list/doctorsList"
+import BookingForm from "./booking-form/bookingForm";
+import MyAppointments from "./my-appointments/myAppointments";
 
 function App() {
   return (
