@@ -1,11 +1,8 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const AppointmentSchema = new mongoose.Schema({
-    Appointment_ID:{
-      type: Number,
-      required: true,
-      unique: true
-    },
+    _id: Number,
     Doctor_ID:{
       type: Number,
       require: true,
