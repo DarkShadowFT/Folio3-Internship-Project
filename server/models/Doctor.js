@@ -36,7 +36,7 @@ const Doctor = new mongoose.Schema({
     type: Number,
     required: true,
   }
-
+//2
 
 })
 
