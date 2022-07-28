@@ -1,13 +1,9 @@
 const mongoose= require('mongoose');
 const patient_schema= new mongoose.Schema({
     _id: Number,
-    Patient_ID:{
-
-        required:true,
-        unique:true
-    },
+   
     Person_ID:{
-        
+        type:Number,
         required:true,
         unique:true
     },
@@ -27,4 +23,4 @@ const patient_schema= new mongoose.Schema({
         unique:false
     },
 });
-module.exports=mongoose.model('Patiaent', patient_schema);
+module.exports=mongoose.model('Patient', patient_schema);
