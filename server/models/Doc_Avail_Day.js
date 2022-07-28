@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const DADSchema = new Schema({
+  _id: Number,
   Doctor_ID: {
     type: String,
     required: true,
