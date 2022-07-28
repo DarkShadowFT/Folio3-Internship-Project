@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
 
-const AppointmentSchema = new mongoose.Schema({
-  Availability_Day_ID:{
-    type: Number,
-    required: true,
-    unique: true
-  },
-  Date:{
+const Availability_DaySchema = new mongoose.Schema({
+  _id: Number,
+  Day:{
     type: Date,
     default: Date.now
   },
