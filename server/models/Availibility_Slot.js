@@ -1,7 +1,7 @@
 const mongoose= require('mongoose');
 const AvailibitySlot_Schema= new mongoose.Schema({
     Availibility_slot_ID:{
-        type:number,
+        _id:Number,
         required:true,
         unique:true
     },
