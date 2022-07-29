@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Doctor = new mongoose.Schema({
-  _id: Number,
+  //_id: Number,
   Person_ID:{
     type:Number,
     required:true,
