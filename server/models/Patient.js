@@ -22,5 +22,5 @@ const patient_schema= new mongoose.Schema({
         required:true,
         unique:false
     },
-});
+}, {collection: 'Patient'});
 module.exports=mongoose.model('Patient', patient_schema);
