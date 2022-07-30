@@ -30,37 +30,45 @@ const router = express.Router();
     res.send(req.body);
   });
   
-// Actual API for getting Appointment
-router.get("/", async (req, res) => {
-  try {
-    const appointment = await Appointment.find({_id : req.query.ID});
-    if (appointment.length){
-      // console.log(appointment);
-      
-      // Getting Doctor Name
-      const doctor = await Doctor.find({_id: appointment[0].Doctor_ID})
-      // console.log("Doctor info: ", doctor);
-      const personID = doctor[0].Person_ID
-      // console.log("Finding " + personID + " in Person's table")
-      const docInfo = await Person.find({_id: personID})
-      // console.log("Doctor common info: ", docInfo);
-      const docName = docInfo[0].First_Name + " " + docInfo[0].Last_Name;
-      // console.log("Doctor Name: ", docName);
-      
-      const apptDate = appointment[0].Date;
-      const bookingDate = appointment[0].Booking_Date;
-      const fee = appointment[0].Fee;
-      const status = appointment[0].Status;
-      Appointment.find({}).sort('-date').limit(5).exec((err, docs) => { res.send(docs) });
-      // res.send({docName, apptDate, bookingDate, fee, status});
-    }
-    else {
-      res.status(404).send("No appointment found")
-    }
 
+// Actual API for getting Appointment
+router.get("/appointments", async (req, res) => {
+  try {
+    Appointment.find({}).sort('-date').limit(5).exec((err, docs) => { res.json(docs) });
+    // const appointment = await Appointment.find({_id : req.query.ID});
+    // if (appointment.length){
+    //   // console.log(appointment);
+    
+    //   const apptDate = appointment[0].Date;
+    //   const bookingDate = appointment[0].Booking_Date;
+    //   const fee = appointment[0].Fee;
+    //   const status = appointment[0].Status;
+    //   // res.send({docName, apptDate, bookingDate, fee, status});
+    // }
+    // else {
+    //   res.status(404).send("No appointment found")
+    // }
   } 
   catch (err) {
     console.error(err);
+  }
+});
+
+router.get("/doctor/:id", async (req, res) => {
+  // Getting Doctor Name
+  const doctor = await Doctor.find({_id: req.params.id})
+  if (doctor[0]){
+    // console.log("Doctor info: ", doctor);
+    const personID = doctor[0].Person_ID
+    // console.log("Finding " + personID + " in Person's table")
+    const docInfo = await Person.find({_id: personID})
+    // console.log("Doctor common info: ", docInfo);
+    const name = docInfo[0].First_Name + " " + docInfo[0].Last_Name;
+    // console.log("Doctor Name: ", docName);
+    res.json(name);
+  }
+  else {
+    res.status(404).send("No Doctor found!");
   }
 });
 

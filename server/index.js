@@ -5,6 +5,10 @@ connectToMongo();
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+
+var cors = require('cors')
+app.use(cors())
+
 app.use(express.json())
 
 app.use("/api/dashboard", require("./routes/Dashboard"))
