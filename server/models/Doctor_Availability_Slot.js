@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const DASSchema = new Schema({
-  _id: Number,
   Availability_Day_ID: {
     type: Number,
     required: true,
