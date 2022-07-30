@@ -4,13 +4,11 @@ const AppointmentSchema = new mongoose.Schema({
   _id: Number,
   Doctor_ID: {
     type: Number,
-    require: true,
-    unique: true,
+    required: true,
   },
   Patient_ID: {
     type: Number,
     required: true,
-    unique: true,
   },
   Query: {
     type: String,
