@@ -21,6 +21,11 @@ const AppointmentSchema = new mongoose.Schema({
     timestamps: true,
     required: true
   },
+  Booking_Date: {
+    type: Date,
+    timestamps: true,
+    required: true
+  },
   Fee: {
     type: Number,
     required: true
