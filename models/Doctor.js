@@ -1,10 +1,11 @@
-const mongoose = require('mongoose');
+import { Schema, model, models } from 'mongoose';
 
-const Doctor = new mongoose.Schema({
+const DoctorSchema = new Schema({
   Person_ID:{
-    type:Number,
+    type:Schema.Types.ObjectId,
     required:true,
-    unique:true
+    unique:true,
+    ref:'Person'
   },
   Specialization:{
     type:String,
@@ -24,4 +25,5 @@ const Doctor = new mongoose.Schema({
   }
 }, { collection: 'Doctor' })
 
-module.exports = mongoose.model('Doctor', Doctor);
+const Doctor = models.Doctor || model('Doctor', DoctorSchema);
+export default Doctor
