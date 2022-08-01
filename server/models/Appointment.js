@@ -31,6 +31,6 @@ const AppointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
+}, {collection: 'Appointment'});
 
 module.exports = mongoose.model("appointment", AppointmentSchema);

@@ -8,5 +8,5 @@ const HistorySchema = new Schema({
     type: Number,
     required: true
   },
-});
+}, {collection: 'History'});
 module.exports = mongoose.model("History", HistorySchema);
