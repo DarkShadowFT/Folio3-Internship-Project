@@ -35,14 +35,6 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
   const [values, setValues] = React.useState({
     amount: '',
@@ -52,12 +44,10 @@ export default function SignUp() {
     showPassword: false,
   });
 
-<<<<<<< Updated upstream
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-=======
   const validationSchema = yup.object({
     firstName: yup
       .string("Enter your first name")
@@ -123,7 +113,6 @@ export default function SignUp() {
   const Address = register('Address')
   const Gender = register('Gender')
   const CNIC = register('CNIC')
->>>>>>> Stashed changes
 
   const handleClickShowPassword = () => {
     setValues({
@@ -155,181 +144,172 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-<<<<<<< Updated upstream
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-=======
-          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
-            {error && < Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
->>>>>>> Stashed changes
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-<<<<<<< Updated upstream
-=======
-                  inputRef={email.ref}
-                  error={errors.email}
-                  onBlur={email.onBlur}
-                  helperText={errors.email?.message}
-                  onChange={email.onChange}
->>>>>>> Stashed changes
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  autoComplete="new-password"
-                  id="standard-adornment-password"
-                  type={values.showPassword ? 'text' : 'password'}
-                  value={values.password}
-                  onChange={handleChange('password')}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {values.showPassword ? <VisibilityOff /> : <Visibility />}
+            <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
+              {error && < Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoComplete="given-name"
+                    name="firstName"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="family-name"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    inputRef={email.ref}
+                    error={errors.email}
+                    onBlur={email.onBlur}
+                    helperText={errors.email?.message}
+                    onChange={email.onChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    autoComplete="new-password"
+                    id="standard-adornment-password"
+                    type={values.showPassword ? 'text' : 'password'}
+                    value={values.password}
+                    onChange={handleChange('password')}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {values.showPassword ? <VisibilityOff /> : <Visibility />}
                           </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  variant="outlined"
-                />
-               
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="outlined"
+                  />
+
+
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="ageofpatient"
+                    label="Age"
+                    name="age"
+                    autoComplete="age"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="phoneofpatient"
+                    label="Phone Number"
+                    name="Phone_number"
+                    autoComplete="PhoneNumber"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    label="I accept terms and policy"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="Addressofpatient"
+                    label="Address"
+                    name="patientAddress"
+                    autoComplete="patientAddress"
+                    inputRef={Address.ref}
+                    error={errors.Address}
+                    onBlur={Address.onBlur}
+                    helperText={errors.Address?.message}
+                    onChange={Address.onChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="GenderofPatient"
+                    label="Gender"
+                    name="PatientGender"
+                    autoComplete="PatientGender"
+                    inputRef={Gender.ref}
+                    error={errors.Gender}
+                    onBlur={Gender.onBlur}
+                    helperText={errors.Gender?.message}
+                    onChange={Gender.onChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="CNIC"
+                    label="CNIC Number"
+                    name="CNICNumber"
+                    autoComplete="CNICNumber"
+                    inputRef={CNIC.ref}
+                    error={errors.CNIC}
+                    onBlur={CNIC.onBlur}
+                    helperText={errors.CNIC?.message}
+                    onChange={CNIC.onChange}
+                  />
+                </Grid>
 
               </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="ageofpatient"
-                  label="Age"
-                  name="age"
-                  autoComplete="age"
-                />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phoneofpatient"
-                  label="Phone Number"
-                  name="Phone_number"
-                  autoComplete="PhoneNumber"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I accept terms and policy"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="Addressofpatient"
-                  label="Address"
-                  name="patientAddress"
-                  autoComplete="patientAddress"
-                  inputRef={Address.ref}
-                  error={errors.Address}
-                  onBlur={Address.onBlur}
-                  helperText={errors.Address?.message}
-                  onChange={Address.onChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="GenderofPatient"
-                  label="Gender"
-                  name="PatientGender"
-                  autoComplete="PatientGender"
-                  inputRef={Gender.ref}
-                  error={errors.Gender}
-                  onBlur={Gender.onBlur}
-                  helperText={errors.Gender?.message}
-                  onChange={Gender.onChange}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="CNIC"
-                  label="CNIC Number"
-                  name="CNICNumber"
-                  autoComplete="CNICNumber"
-                  inputRef={CNIC.ref}
-                  error={errors.CNIC}
-                  onBlur={CNIC.onBlur}
-                  helperText={errors.CNIC?.message}
-                  onChange={CNIC.onChange}
-                />
-              </Grid>
-
-            </Grid>
-
-
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
+            </Box>
           </Box>
+          <Copyright sx={{ mt: 5 }} />
         </Box>
-        <Copyright sx={{ mt: 5 }} />
-        
       </Container>
     </ThemeProvider>
   );
