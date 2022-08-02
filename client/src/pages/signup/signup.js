@@ -52,10 +52,78 @@ export default function SignUp() {
     showPassword: false,
   });
 
+<<<<<<< Updated upstream
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
+=======
+  const validationSchema = yup.object({
+    firstName: yup
+      .string("Enter your first name")
+      .required("Please enter your first name")
+      .min(3, 'First name is too short - should be minimum 3 chars')
+      .max(50, 'First name is too long'),
+    lastName: yup
+      .string("Enter your last name")
+      .required("Please enter your last name")
+      .min(3, 'Last name is too short - should be minimum 3 chars')
+      .max(50, 'Last name is too long'),
+    email: yup
+      .string("Enter your email")
+      .required("Please enter an email")
+      .email("Enter a valid email"),
+    password: yup
+      .string("Enter your password")
+      .required("Please enter a password")
+      .min(6, 'Password is too short - should be minimum 6 chars')
+      .max(50, 'Password is too long'),
+    age: yup
+      .number()
+      .required("Please enter your age")
+      .min(18, 'You must be at least 18 years old')
+      .max(120, 'You must be at most 120 years old')
+      .typeError("Age must be a number"),
+    phoneNumber: yup
+      .string("Enter your phone number in +923XXXXXXXXXX format")
+      .required("Please enter your phone number")
+      .min(13, 'PhoneNumber is exactly 13 characters long and of format +923XXXXXXXXXX')
+      .max(13, 'PhoneNumber is exactly 13 characters long and of format +923XXXXXXXXXX')
+      .typeError("PhoneNumber must be a number")
+      .matches("^((\\+92)?(0092)?(92)?(0)?)(3)([0-9]{9})$", 'Should be of the form +923XXXXXXXXXX'),
+    Address: yup
+      .string("Enter your Address ")
+      .required("Please Enter your Address")
+      .typeError("Kindly Enter your Address"),
+    Gender: yup
+      .string("Enter your Gender")
+      .required("Please Enter your Gender")
+      .typeError("Kindly Enter your Gender"),
+    CNIC: yup
+      .string("Enter your CNIC number in format XXXXX-XXXXXXX-X")
+      .required("Please enter your CNIC number")
+      .min(13, 'CNIC is exactly 13 characters long and of format XXXXX-XXXXXXX-X')
+      .max(13, 'CNIC is exactly 13 characters long and of format XXXXX-XXXXXXX-X')
+      .typeError("CNIC must be a number")
+      .matches("^[0-9]{5}-[0-9]{7}-[0-9]$", 'Should be of the form XXXXX-XXXXXXX-X'),
+
+
+
+
+
+  }).required();
+
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
+  const firstName = register('firstName')
+  const lastName = register('lastName')
+  const email = register('email')
+  const password = register('password')
+  const age = register('age')
+  const phoneNumber = register('phoneNumber')
+  const Address = register('Address')
+  const Gender = register('Gender')
+  const CNIC = register('CNIC')
+>>>>>>> Stashed changes
 
   const handleClickShowPassword = () => {
     setValues({
@@ -87,7 +155,12 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+<<<<<<< Updated upstream
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+=======
+          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
+            {error && < Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+>>>>>>> Stashed changes
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -118,6 +191,14 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+<<<<<<< Updated upstream
+=======
+                  inputRef={email.ref}
+                  error={errors.email}
+                  onBlur={email.onBlur}
+                  helperText={errors.email?.message}
+                  onChange={email.onChange}
+>>>>>>> Stashed changes
                 />
               </Grid>
               <Grid item xs={12}>
@@ -179,6 +260,53 @@ export default function SignUp() {
                   label="I accept terms and policy"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Addressofpatient"
+                  label="Address"
+                  name="patientAddress"
+                  autoComplete="patientAddress"
+                  inputRef={Address.ref}
+                  error={errors.Address}
+                  onBlur={Address.onBlur}
+                  helperText={errors.Address?.message}
+                  onChange={Address.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="GenderofPatient"
+                  label="Gender"
+                  name="PatientGender"
+                  autoComplete="PatientGender"
+                  inputRef={Gender.ref}
+                  error={errors.Gender}
+                  onBlur={Gender.onBlur}
+                  helperText={errors.Gender?.message}
+                  onChange={Gender.onChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="CNIC"
+                  label="CNIC Number"
+                  name="CNICNumber"
+                  autoComplete="CNICNumber"
+                  inputRef={CNIC.ref}
+                  error={errors.CNIC}
+                  onBlur={CNIC.onBlur}
+                  helperText={errors.CNIC?.message}
+                  onChange={CNIC.onChange}
+                />
+              </Grid>
+
             </Grid>
 
 
