@@ -14,21 +14,33 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
+import axios from 'axios';
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export const pie_data = {
-  labels: ["Attended", "Pending", "Cancelled"],
-  datasets: [
-    {
-      label: "# ",
-      data: [12, 4, 2],
-      backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
-      borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
-      borderWidth: 1,
-    },
-  ],
-};
+let pie_chart_data = []
+
+const getMonth = async () => {
+  const response = await axios.get('/api/dashboard/month')
+  let completed_count = 0
+  let pending_count = 0
+  let cancelled_count = 0
+  // console.log("Response.data = " + JSON.stringify(response))
+  for (let appt of response.data){
+    // console.log("appt type = " + JSON.stringify(appt.Status))
+    if (appt.Status === "Completed"){
+      completed_count += 1
+    }
+    else if (appt.Status === "Cancelled"){
+      cancelled_count += 1
+    }
+    else if (appt.Status === "Pending"){
+      pending_count += 1
+    }
+  }
+  // console.log("Returning " + [completed_count, pending_count, cancelled_count]);
+  pie_chart_data = [completed_count, pending_count, cancelled_count];
+}
 
 export const options = {
   responsive: true,
@@ -86,6 +98,22 @@ export const data = {
 const mdTheme = createTheme();
 
 function DashboardContent() {
+  getMonth();
+  // console.log("data = " + pie_chart_data);
+
+  const pie_data = {  
+    labels: ["Attended", "Pending", "Cancelled"],
+    datasets: [
+      {
+        label: "# of Appointments in Current Month",
+        data: pie_chart_data,
+        backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
+        borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
