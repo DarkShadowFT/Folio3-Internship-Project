@@ -7,6 +7,7 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import Title from "./Title";
+import Typography from '@mui/material/Typography';
 
 // Generate Order Data
 function createData(id, doctor, appointment_date, appointment_time, reason) {
@@ -29,13 +30,17 @@ export default function Appointments() {
 
   return (
     <React.Fragment>
-      <Title>Appointments</Title>
-      <Link href="/booking-form">
-        <Button style={{border: "2px solid black", background: "#FFFFCC", color: "black"}}>
-          Create New Appointment
-        </Button>
-      </Link>
-
+    <br></br>
+    <div>
+    <Typography  style={{color: 'blue', fontSize: 22}}> <b>My Appointments  </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; 
+     <Button  variant="outlined" color="success" href="/booking-form">
+        Create New Appointment
+      </Button>
+      </Typography>
+    
+    </div>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -62,17 +67,17 @@ export default function Appointments() {
               <TableCell>{row.reason}</TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "purple"}}> Read</Button>
+                  <Button style={{color: "white", background: "purple"}}> View</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "blue"}}> Edit</Button>
+                  <Button style={{color: "white", background: "blue"}}> Edit</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Button
-                  style={{color: "red"}}
+                  style={{color: "white", background: "#ba0001"}}
                   onClick={() => {
                     deleteRow(row.id);
                   }}
