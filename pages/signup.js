@@ -71,15 +71,51 @@ export default function SignUp() {
       .max(13, 'PhoneNumber is exactly 13 characters long and of format +923XXXXXXXXXX')
       .typeError("PhoneNumber must be a number")
       .matches("^((\\+92)?(0092)?(92)?(0)?)(3)([0-9]{9})$", 'Should be of the form +923XXXXXXXXXX'),
+    CNIC: yup
+      .string("Enter your CNIC number in xxxxx-xxxxxxx-x format")
+      .required("Please enter your phone number")
+      .min(15, 'CNICNumber is exactly 15 characters long and of format xxxxx-xxxxxxx-x')
+      .max(15, 'CNICNumber is exactly 15 characters long and of format xxxxx-xxxxxxx-x')
+      .typeError("CNICNumber must be a number")
+      .matches("^[0-9]{5}-[0-9]{7}-[0-9]$", 'Should be of the form xxxxx-xxxxxxx-x'),
+    Gender: yup
+      .string("Enter your Gender")
+      .required("Please enter your Gender")
+      .typeError("Enter gender correctly"),
+    Address: yup
+      .string("Enter your Address")
+      .required("Please enter your Address")
+      .typeError("Enter Address correctly"),
+    BMI: yup
+      .string("Enter your BMI")
+      .required("Please enter your BMI")
+      .typeError("Enter BMI correctly"),
+    Weight:yup
+      .string("Enter your Weight")
+      .required("Please enter your Weight")
+      .typeError("Enter Weight correctly"),
+    Height:yup
+      .string("Enter your Height")
+      .required("Please enter your Height")
+      .typeError("Enter Height correctly"),
+
+
+
   }).required();
 
-  const { register, handleSubmit, getValues, formState: { errors } } = useForm({resolver: yupResolver(validationSchema)});
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
   const firstName = register('firstName')
   const lastName = register('lastName')
   const email = register('email')
   const password = register('password')
   const age = register('age')
   const phoneNumber = register('phoneNumber')
+  const CNIC = register('CNIC')
+  const Gender = register('Gender')
+  const Address = register('Address')
+  const BMI= register('BMI')
+  const Weight = register('Weight')
+  const Height = register('Height')
 
   const handleClickShowPassword = () => {
     setValues({
@@ -138,7 +174,7 @@ export default function SignUp() {
             Sign up
           </Typography>
           <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
-            {error &&< Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
+            {error && < Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -178,13 +214,13 @@ export default function SignUp() {
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email" 
+                  autoComplete="email"
                   inputRef={email.ref}
                   error={errors.email}
                   onBlur={email.onBlur}
                   helperText={errors.email?.message}
                   onChange={email.onChange}
-                  />
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -218,12 +254,12 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField 
-                  required 
-                  fullWidth 
-                  id="ageofpatient" 
-                  label="Age" 
-                  name="age" 
+                <TextField
+                  required
+                  fullWidth
+                  id="ageofpatient"
+                  label="Age"
+                  name="age"
                   autoComplete="age"
                   inputRef={age.ref}
                   error={errors.age}
@@ -247,6 +283,102 @@ export default function SignUp() {
                   onChange={phoneNumber.onChange}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="CNICofpatient"
+                  label="CNIC Number"
+                  name="CNIC"
+                  autoComplete="CNICNumber"
+                  inputRef={CNIC.ref}
+                  error={errors.CNIC}
+                  onBlur={CNIC.onBlur}
+                  helperText={errors.CNIC?.message}
+                  onChange={CNIC.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Genderofpatient"
+                  label="Patient Gender"
+                  name="Gender"
+                  autoComplete="PatientGender"
+                  inputRef={Gender.ref}
+                  error={errors.Gender}
+                  onBlur={Gender.onBlur}
+                  helperText={errors.Gender?.message}
+                  onChange={Gender.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Addressofpatient"
+                  label="Patient Address"
+                  name="Address"
+                  autoComplete="PatientAddress"
+                  inputRef={Address.ref}
+                  error={errors.Address}
+                  onBlur={Address.onBlur}
+                  helperText={errors.Address?.message}
+                  onChange={Address.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="BMIofpatient"
+                  label="Patient BMI in kg/feet"
+                  name="BMI"
+                  autoComplete="PatientBMI"
+                  inputRef={BMI.ref}
+                  error={errors.BMI}
+                  onBlur={BMI.onBlur}
+                  helperText={errors.BMI?.message}
+                  onChange={BMI.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Weightofpatient"
+                  label="Patient Weight in kg"
+                  name="Weight"
+                  autoComplete="PatientWeight"
+                  inputRef={Weight.ref}
+                  error={errors.Weight}
+                  onBlur={Weight.onBlur}
+                  helperText={errors.Weight?.message}
+                  onChange={Weight.onChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="Heightofpatient"
+                  label="Patient Height in  feet"
+                  name="Height"
+                  autoComplete="PatientHeight"
+                  inputRef={Height.ref}
+                  error={errors.Height}
+                  onBlur={Height.onBlur}
+                  helperText={errors.Height?.message}
+                  onChange={Height.onChange}
+                />
+              </Grid>
+
+
+
+
+
+
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
