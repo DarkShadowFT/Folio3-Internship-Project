@@ -1,4 +1,6 @@
 import Appointment from "../../../models/Appointment"
+
+
 import connectToMongo from '../../../utils/db'
 
 export default async (req, res) => {
@@ -15,6 +17,7 @@ export default async (req, res) => {
       res.status(500).send("Internal server error occurred");
     }
   }
+
   else if (req.method === "DELETE"){
    
     // Getting Doctor Name
@@ -28,4 +31,5 @@ export default async (req, res) => {
     Appointment.splice(index,1)
       res.status(200).json(deletedappointment)
   }
+
 };
