@@ -14,20 +14,48 @@ function createData(id, doctor, appointment_date, appointment_time, reason) {
   return {id, doctor, appointment_date, appointment_time, reason};
 }
 
+
+const getAppointments = async (rows) => {
+  while(rows.length) {
+    rows.pop();
+  }
+
+  // API Call
+  const response = await fetch("/api/my-appointments/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  let counter = 0;
+  for (let obj of json) {
+    // console.log("obj = ", obj);
+    let response = await fetch(`/api/doctor/${obj.Doctor_ID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const docName = await response.json();
+
+    let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
+    // console.log("row = ", row);
+    rows.push(row);
+    counter += 1;
+  }
+  // console.log(rows);
+};
+
+
 export default function Appointments() {
-  const [rows, setrows] = useState([
-    createData(0, "Mark", "16 Mar, 2019", "1:00 pm", "Fever"),
-    createData(1, "John", "16 June, 2019", "1:00 pm", "Fever"),
-    createData(2, "David", "10 Jan, 2020", "1:00 pm", "Fever"),
-    createData(3, "Nathan", "23 Mar, 2019", "1:00 pm", "Fever"),
-    createData(4, "Michael", "5 Mar, 2019", "1:00 pm", "Fever"),
-  ]);
+  const [rows, setrows] = useState([ ]);
 
   const deleteRow = (id) => {
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
   };
-
+  getAppointments(rows);
   return (
     <React.Fragment>
     <br></br>
