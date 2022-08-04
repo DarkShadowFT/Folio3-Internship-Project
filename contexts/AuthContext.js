@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { auth } from "../utils/firebase";
-import { GoogleAuthProvider, signInWithCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  sendPasswordResetEmail, onAuthStateChanged, signOut } from "firebase/auth";
 
 const AuthContext = React.createContext()
 
@@ -14,10 +15,7 @@ export function AuthProvider({ children }) {
     
   function googleOAuthLogin(response) {
     if (response) {
-      const cred = GoogleAuthProvider.credential(response);
-  
-      // Sign in with credential from the Google user.
-      return signInWithCredential(auth, cred);
+      return signInWithCustomToken(auth, response)
     }
   }
 

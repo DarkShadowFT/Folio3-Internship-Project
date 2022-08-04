@@ -22,14 +22,14 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
-import styles from '../styles/Home.module.css'
+import axios from 'axios'
 
 const theme = createTheme();
 
 export default function Login() {
   const [error, setError] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
-  const {googleOAuthLogin, login} = useAuth();
+  const {googleOAuthLogin, login, currentUser} = useAuth();
   const router = useRouter()
 
   const togglePassword = () => {
@@ -59,16 +59,29 @@ export default function Login() {
 
   useGoogleOneTapLogin({
     googleAccountConfigs: {
-      callback: ({clientId, credential, select_by}) => {
+      callback: async ({clientId, credential, select_by}) => {
         try {
-          setError("");
-          googleOAuthLogin(credential);
-          router.push("/dashboard");
+          setError("")
+          // const authToken = GoogleAuthProvider.credential(credential)
+          const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+          // console.log("idToken = " + response_token)
+          const config = {
+            headers: { Authorization: idToken }
+          };
+          const response = await axios.get(
+            'http://localhost:3000/api/login',
+            config
+          )
+          // console.log("Received response: " + JSON.stringify(response.data))
+          googleOAuthLogin(response.data.token)
+          // console.log("Login with custom token successful")
+          await router.replace("/dashboard");
         } catch (err) {
+          console.error(err)
           setError("Failed to login: " + err.code);
         }
       },
-      client_id: "492991954388-qrd09isefh88c869p0trg3mn2c8v6k3b.apps.googleusercontent.com",
+      client_id: "293626469940-9togri5sacgoeoldvjvq3gtot796cb66.apps.googleusercontent.com",
     },
   });
 
@@ -148,18 +161,19 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <MUILink variant="body2">
                   <Link href="/forgot-password">
-                    {"Forgot password?"}
+                    <a>
+                      {"Forgot password?"}
+                    </a>
                   </Link>
-                </MUILink>
+                {/*</MUILink>*/}
               </Grid>
               <Grid item>
-                  <MUILink variant="body2">
+                  {/*<MUILink variant="body2">*/}
                     <Link href="/signup">
                       {"Don't have an account? Sign Up"}
                     </Link>
-                  </MUILink>
+                  {/*</MUILink>*/}
               </Grid>
             </Grid>
           </Box>
