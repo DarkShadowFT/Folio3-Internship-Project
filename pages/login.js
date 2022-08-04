@@ -23,6 +23,8 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
 import axios from 'axios'
+import {GoogleAuthProvider, signInWithCredential} from 'firebase/auth'
+import { auth } from "../utils/firebase";
 
 const theme = createTheme();
 
@@ -62,7 +64,8 @@ export default function Login() {
       callback: async ({clientId, credential, select_by}) => {
         try {
           setError("")
-          // const authToken = GoogleAuthProvider.credential(credential)
+          const cred = GoogleAuthProvider.credential(credential)
+          await signInWithCredential(auth, cred)
           const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
           // console.log("idToken = " + response_token)
           const config = {
@@ -73,7 +76,7 @@ export default function Login() {
             config
           )
           // console.log("Received response: " + JSON.stringify(response.data))
-          googleOAuthLogin(response.data.token)
+          await googleOAuthLogin(response.data.token)
           // console.log("Login with custom token successful")
           await router.replace("/dashboard");
         } catch (err) {
