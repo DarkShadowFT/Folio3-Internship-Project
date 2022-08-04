@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import Title from "./Title";
 import Typography from '@mui/material/Typography';
+import { object } from "yup";
 
 // Generate Order Data
 function createData(id, doctor, appointment_date, appointment_time, reason) {
@@ -30,7 +31,7 @@ const getAppointments = async (rows) => {
   const json = await response.json();
   let counter = 0;
   for (let obj of json) {
-    // console.log("obj = ", obj);
+
     let response = await fetch(`/api/doctor/${obj.Doctor_ID}`, {
       method: "GET",
       headers: {
@@ -39,23 +40,37 @@ const getAppointments = async (rows) => {
     });
     const docName = await response.json();
 
-    let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
-    // console.log("row = ", row);
+    // extracting time
+    const time = new Date(obj.Date).toLocaleTimeString('en',
+                 { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
+
+    // extracting Date
+    const dt=obj.Date.getFullYear()+'-' + (obj.Date.getMonth()+1) + '-'+obj.Date.getDate();
+
+    let row = createData(counter, docName, dt, time, obj.Query);
+
     rows.push(row);
     counter += 1;
   }
-  // console.log(rows);
+   
+   return rows;
 };
 
 
 export default function Appointments() {
   const [rows, setrows] = useState([ ]);
-
-  const deleteRow = (id) => {
+  getAppointments(rows);
+  const deleteRow = async (id) => {
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
+    const response= await fetch('/api/appointment/index/${id}',{
+      method: 'DELETE'
+    })
+    const data = await response.json()
+    console.log(data)
+    getAppointments(rows)
   };
-  getAppointments(rows);
+  
   return (
     <React.Fragment>
     <br></br>
