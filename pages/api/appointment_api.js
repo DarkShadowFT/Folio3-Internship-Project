@@ -1,5 +1,5 @@
 
-import Doctor from "D:\\Work\\Folio 3 Project\\Folio3-Internship-Project\\models\\Doctor.js"
+import Doctor from "D:\\Work\\Folio 3 Project\\Folio3-Internship-Project\\models\\Appointment.js"
 import connectDb from "D:\\Work\\Folio 3 Project\\Folio3-Internship-Project\\mongoose.js"
 
 
@@ -7,13 +7,15 @@ const handler= async (req,res)=>{
   if (req.method=="POST"){
     for(let i=0;i<req.body.length;i++){
       console.log(req.body)
-      console.log("NOPE")
       let d=new Doctor({
-        "Person_ID":req.body[i].Person_ID,
-        "Specialization":req.body[i].Specialization,
-        "Degree_info":req.body[i].Degree_info,
-        "Days_available":req.body[i].Days_available,
-        "Slots_available":req.body[i].Slots_available
+        "Doctor_ID":req.body[i].Doctor_ID,
+        "Patient_ID":req.body[i].Patient_ID,
+        "Query":req.body[i].Query,
+        "Date":req.body[i].Date,
+        "Booking_Date":req.body[i].Booking_Date,
+        "Fee":req.body[i].Fee,
+        "Status":req.body[i].Status
+
       })
       await d.save()
     }

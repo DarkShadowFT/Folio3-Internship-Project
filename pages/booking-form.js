@@ -10,12 +10,41 @@ import Copyright from "../components/copyright/copyright";
 import Navbar from "../components/Navbar/Navbar"
 import Sidebar from "../components/Sidebar/Sidebar"
 import TextField from "@mui/material/TextField";
+import Axios from "axios";
 
 const theme = createTheme();
 
 function DashboardContent() {
   const [error, setError] = useState("");
 
+  const url="http://localhost:3000/api/doctor_api"
+  const[data,setData]=useState({
+    //first_name:"",
+    Specialization:""
+
+  })
+  function submit(e){
+    e.preventDefault ();
+    (res=>{
+      console.log(res.data)
+    })
+    Axios.post(url,{
+      Specialization:data.Specialization
+    })
+    .then(res=>{
+      console.log(res.data)
+    })
+  }
+  function handle(e){
+    const newdata={...data}
+    newdata[e.target.id]=e.target.value
+    setData(newdata)
+    console.log(newdata)
+  }
+
+  function sayHello() {
+    alert('You clicked me!');
+  }
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{display: "flex"}}>
@@ -33,35 +62,47 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
+          <Container  maxWidth="sm" sx={{mt: 4, mb: 2}}>
             {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
-              component="form"
+              
               sx={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 "& .MuiTextField-root": {m: 1, width: "25ch"},
                 spacing: 10,
-                //,bgcolor: "aqua "
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+                borderTopLeftRadius:10,
+                borderTopRightRadius:10,
+                width:477
               }}
               noValidate
               autoComplete="off"
             >
               <div>
-                <TextField required id="outlined-required" label="First Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Last Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Doctor Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Doctor Specialization" defaultValue="" />
+                {/* <TextField onChange={(e)=>handle(e)} required id="first_name" label="First Name" value={data.first_name}  type="text" /> */}
+                <TextField required id="outlined-required" label="Last Name" type="text" defaultValue="" />
+                <TextField required id="outlined-required" label="Doctor Name" type="text" defaultValue="" />
+                <TextField onChange={(e)=>handle(e)} required id="Specialization" label="Doctor Specialization" value={data.Specialization} type="text"  />
                 <TextField required id="outlined-required" type="date" />
                 <TextField required id="outlined-required" type="time" />
-                <TextField required id="outlined-required" label="Appointment Location" defaultValue="" />
-                <TextField required id="outlined-required" label="Appointment Charges" defaultValue="" />
+                <TextField required id="outlined-required" label="Appointment Location" type="text" defaultValue="" />
+                <TextField required id="outlined-required" label="Appointment Charges" type="number" defaultValue="" />
               </div>
             </Box>
             <Box
               sx={{
                 "& .MuiTextField-root": {m: 1, width: "52ch"},
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+
+                width:480
               }}
             >
               <TextField required id="outlined-required" label="Email" defaultValue="" fullWidth type="email" />
@@ -69,6 +110,13 @@ function DashboardContent() {
             <Box
               sx={{
                 "& .MuiTextField-root": {m: 1, width: "52ch"},
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+                borderBottomLeftRadius:10,
+                borderBottomRightRadius:10,
+                width:480,
               }}
             >
               <TextField
@@ -83,7 +131,7 @@ function DashboardContent() {
             </Box>
             <Box>
               <Link href="/MyAppointments">
-                <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
+                <Button type="submit" onClick={submit} variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
                 Submit
                 </Button>
               </Link>

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const DADSchema = new Schema({
+const DADSchema = new mongoose.Schema({
   Doctor_ID: {
-    type: String,
+    type: Number,
     required: true,
   },
   Day: {

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const DASSchema = new Schema({
+const DASSchema = new mongoose.Schema({
   Availability_Day_ID: {
     type: Number,
     required: true,
