@@ -18,16 +18,15 @@ function DashboardContent() {
   const [error, setError] = useState("");
 
   const url="http://localhost:3000/api/doctor_api"
-  const[data,setData]=useState({
+  const[data,setData]=useState([{
     //first_name:"",
     Specialization:""
 
-  })
+  }])
   function submit(e){
     e.preventDefault ();
-    (res=>{
-      console.log(res.data)
-    })
+    console.log("submit got clicked")
+    console.log(data)
     Axios.post(url,{
       Specialization:data.Specialization
     })
@@ -92,6 +91,9 @@ function DashboardContent() {
                 <TextField required id="outlined-required" type="time" />
                 <TextField required id="outlined-required" label="Appointment Location" type="text" defaultValue="" />
                 <TextField required id="outlined-required" label="Appointment Charges" type="number" defaultValue="" />
+                <Button type="submit" onClick={submit} variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
+                Submit
+                </Button>
               </div>
             </Box>
             <Box
