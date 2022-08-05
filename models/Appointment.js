@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
+import { Schema, model, models } from 'mongoose';
 
-const AppointmentSchema = new mongoose.Schema({
+const AppointmentSchema = new Schema({
   Doctor_ID: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   Patient_ID: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   Query: {
@@ -31,6 +31,7 @@ const AppointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
+}, {collection: 'Appointment'});
 
-module.exports = mongoose.model("appointment", AppointmentSchema);
+const Appointment = models.Appointment || model('Appointment', AppointmentSchema);
+export default Appointment

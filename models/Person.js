@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import { Schema, model, models } from 'mongoose';
+
 const PersonSchema = new Schema({
   First_Name: {
     type: String,
@@ -34,6 +35,9 @@ const PersonSchema = new Schema({
   CNIC: {
     type: String,
     required: true,
+    unique: true
   },
-});
-module.exports = mongoose.model("Person", PersonSchema);
+}, {collection: 'Person'});
+
+const Person = models.Person || model('Person', PersonSchema);
+export default Person

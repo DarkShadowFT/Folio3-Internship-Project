@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const HistorySchema = new Schema({
   Patient_ID: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   Appointment_ID: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true
   },
 });
