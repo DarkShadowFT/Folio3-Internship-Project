@@ -67,7 +67,7 @@ export default function Login() {
           setError("Failed to login: " + err.code);
         }
       },
-      client_id: "492991954388-qrd09isefh88c869p0trg3mn2c8v6k3b.apps.googleusercontent.com",
+      client_id: "293626469940-9togri5sacgoeoldvjvq3gtot796cb66.apps.googleusercontent.com",
     },
   });
 
