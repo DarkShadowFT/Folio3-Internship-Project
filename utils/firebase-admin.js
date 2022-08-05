@@ -1,20 +1,16 @@
-import { getAuth } from "firebase/auth";
+const {initializeApp, getApps, getApp, applicationDefault} = require('firebase-admin/app')
+const { getAuth } = require('firebase-admin/auth');
 
-var admin = require("firebase-admin");
-var serviceAccount = require("find-me-a-doctor-dev-firebase-adminsdk-vvbm7-aac8e5333b.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
-export function verifyToken(idToken){
-  // idToken comes from the client app
-  getAuth()
-  .verifyIdToken(idToken)
-  .then((decodedToken) => {
-    // ...
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+let adminApp = ''
+export let adminAuth = ''
+if (getApps().length){
+  adminApp = getApp()
+  adminAuth = getAuth(adminApp)
 }
+else{
+  const app = initializeApp({
+    credential: applicationDefault()
+  });
+  adminAuth = getApps(app)
+}
+export default adminApp

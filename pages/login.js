@@ -22,13 +22,16 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
+import axios from 'axios'
+import {GoogleAuthProvider, signInWithCredential} from 'firebase/auth'
+import { auth } from "../utils/firebase";
 
 const theme = createTheme();
 
 export default function Login() {
   const [error, setError] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
-  const {googleOAuthLogin, login} = useAuth();
+  const {googleOAuthLogin, login, currentUser} = useAuth();
   const router = useRouter()
 
   const togglePassword = () => {
@@ -58,12 +61,26 @@ export default function Login() {
 
   useGoogleOneTapLogin({
     googleAccountConfigs: {
-      callback: ({clientId, credential, select_by}) => {
+      callback: async ({clientId, credential, select_by}) => {
         try {
-          setError("");
-          googleOAuthLogin(credential);
-          router.push("/dashboard");
+          setError("")
+          const cred = GoogleAuthProvider.credential(credential)
+          await signInWithCredential(auth, cred)
+          const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+          // console.log("idToken = " + response_token)
+          const config = {
+            headers: { Authorization: idToken }
+          };
+          const response = await axios.get(
+            'http://localhost:3000/api/login',
+            config
+          )
+          // console.log("Received response: " + JSON.stringify(response.data))
+          await googleOAuthLogin(response.data.token)
+          // console.log("Login with custom token successful")
+          await router.replace("/dashboard");
         } catch (err) {
+          console.error(err)
           setError("Failed to login: " + err.code);
         }
       },
@@ -147,18 +164,19 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <MUILink variant="body2">
                   <Link href="/forgot-password">
-                    {"Forgot password?"}
+                    <a>
+                      {"Forgot password?"}
+                    </a>
                   </Link>
-                </MUILink>
+                {/*</MUILink>*/}
               </Grid>
               <Grid item>
-                  <MUILink variant="body2">
+                  {/*<MUILink variant="body2">*/}
                     <Link href="/signup">
                       {"Don't have an account? Sign Up"}
                     </Link>
-                  </MUILink>
+                  {/*</MUILink>*/}
               </Grid>
             </Grid>
           </Box>
