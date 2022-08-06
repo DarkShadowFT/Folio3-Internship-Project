@@ -66,10 +66,11 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+          const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
           // console.log("idToken = " + response_token)
           const config = {
-            headers: { Authorization: idToken }
+            headers: { Authorization: idToken },
+            credentials: 'include'
           };
           const response = await axios.get(
             'http://localhost:3000/api/login',
@@ -77,11 +78,14 @@ export default function Login() {
           )
           // console.log("Received response: " + JSON.stringify(response.data))
           await googleOAuthLogin(response.data.token)
-          // console.log("Login with custom token successful")
+          console.log("Login with custom token successful")
           await router.replace("/dashboard");
         } catch (err) {
           console.error(err)
-          setError("Failed to login: " + err.code);
+          if (err.code)
+            setError("Failed to login: " + err.code);
+          else
+            setError("Failed to login")
         }
       },
       client_id: "293626469940-9togri5sacgoeoldvjvq3gtot796cb66.apps.googleusercontent.com",

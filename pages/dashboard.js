@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +14,10 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
+import {useAuth} from "../contexts/AuthContext";
+import axios from "axios";
+import {useRouter} from "next/router";
+import Custom403 from "./403";
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -84,9 +88,49 @@ export const data = {
 };
 
 const mdTheme = createTheme();
+let authorized = false
 
-function DashboardContent() {
-  return (
+export default function DashboardContent() {
+  const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const {currentUser} = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          if (currentUser){
+            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+            // console.log("idToken = " + response_token)
+            const config = {
+              headers: { Authorization: idToken },
+              credentials: 'include'
+            };
+            const response = await axios.get(
+              'http://localhost:3000/api/auth/dashboard',
+              config
+            )
+            if (response.status === 200) {
+              // console.log("Response = " + JSON.stringify(response))
+              setAuth(true)
+            }
+            setLoading(false)
+          }
+          else {
+            await router.replace("/login")
+          }
+        }
+        catch (e) {
+          setAuth(false)
+        }
+      }
+    )();
+  })
+  // console.log("Auth = " + auth)
+  authorized = auth
+
+  let dashboard = (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
@@ -134,10 +178,13 @@ function DashboardContent() {
       </Box>
     </ThemeProvider>
   );
-}
 
-export default function Dashboard() {
-  return <DashboardContent />;
+  if (!loading){
+    if (authorized)
+      return dashboard
+    else
+      return <Custom403/>
+  }
 }
 
 // export default function Dashboard() {

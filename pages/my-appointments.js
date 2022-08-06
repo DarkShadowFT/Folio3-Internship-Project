@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect, useState} from "react"
 import {Box} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,14 +11,56 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import Navbar from "../components/Navbar/Navbar";
 import Copyright from "../components/copyright/copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
+import Custom403 from "./403";
+import {useRouter} from "next/router";
+import {useAuth} from "../contexts/AuthContext";
 export default MyAppointments;
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-
-
 const mdTheme = createTheme();
+let authorized = false
+
 function MyAppointments() {
-  return (
+  const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const {currentUser} = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          if (currentUser){
+            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+            // console.log("idToken = " + response_token)
+            const config = {
+              headers: { Authorization: idToken },
+              credentials: 'include'
+            };
+            const response = await axios.get(
+              'http://localhost:3000/api/auth/my-appointments',
+              config
+            )
+            if (response.status === 200) {
+              // console.log("Response = " + JSON.stringify(response))
+              setAuth(true)
+            }
+            setLoading(false)
+          }
+          else {
+            await router.replace("/login")
+          }
+        }
+        catch (e) {
+          setAuth(false)
+        }
+      }
+    )();
+  })
+  // console.log("Auth = " + auth)
+  authorized = auth
+
+  let myAppointments = (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
@@ -44,6 +86,14 @@ function MyAppointments() {
       </Box>
     </ThemeProvider>
   );
+
+  if (!loading){
+    if (authorized)
+      return myAppointments
+    else {
+      return <Custom403/>
+    }
+  }
 }
 
 

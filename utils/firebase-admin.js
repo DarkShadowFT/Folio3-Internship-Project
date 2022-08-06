@@ -11,6 +11,6 @@ else{
   const app = initializeApp({
     credential: applicationDefault()
   });
-  adminAuth = getApps(app)
+  adminAuth = getAuth(app)
 }
 export default adminApp
