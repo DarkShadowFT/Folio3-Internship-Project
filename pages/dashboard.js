@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,30 +17,6 @@ import {faker} from "@faker-js/faker";
 import axios from 'axios';
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-let pie_chart_data = []
-
-const getMonth = async () => {
-  const response = await axios.get('/api/dashboard/month')
-  let completed_count = 0
-  let pending_count = 0
-  let cancelled_count = 0
-  // console.log("Response.data = " + JSON.stringify(response))
-  for (let appt of response.data){
-    // console.log("appt type = " + JSON.stringify(appt.Status))
-    if (appt.Status === "Completed"){
-      completed_count += 1
-    }
-    else if (appt.Status === "Cancelled"){
-      cancelled_count += 1
-    }
-    else if (appt.Status === "Pending"){
-      pending_count += 1
-    }
-  }
-  // console.log("Returning " + [completed_count, pending_count, cancelled_count]);
-  pie_chart_data = [completed_count, pending_count, cancelled_count];
-}
 
 export const options = {
   responsive: true,
@@ -98,7 +74,30 @@ export const data = {
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  getMonth();
+  const [pie_chart_data, setPieChartData] = useState([])
+  useEffect(() => {
+    (async() => {
+      const response = await axios.get('/api/dashboard/month')
+      let completed_count = 0
+      let pending_count = 0
+      let cancelled_count = 0
+      // console.log("Response.data = " + JSON.stringify(response))
+      for (let appt of response.data){
+        // console.log("appt type = " + JSON.stringify(appt.Status))
+        if (appt.Status === "Completed"){
+          completed_count += 1
+        }
+        else if (appt.Status === "Cancelled"){
+          cancelled_count += 1
+        }
+        else if (appt.Status === "Pending"){
+          pending_count += 1
+        }
+      }
+      // console.log("Returning " + [completed_count, pending_count, cancelled_count]);
+      setPieChartData([completed_count, pending_count, cancelled_count])
+    })()
+  }, [])
   // console.log("data = " + pie_chart_data);
 
   const pie_data = {  

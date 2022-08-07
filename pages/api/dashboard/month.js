@@ -1,5 +1,3 @@
-import moment from "moment";
-
 import Appointment from "../../../models/Appointment"
 import connectToMongo from "../../../utils/db"
 
