@@ -5,6 +5,8 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Title from "./Title";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 function convertDate(original_date) {
   let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -28,44 +30,36 @@ function createData(id, doctor, appointment_date, booking_date, amount, status) 
   return {id, doctor, appt_date, book_date, amount, status};
 }
 
-let rows = [];
-
-// Get 5 most recent appointments
-const getAppointments = async () => {
-  while(rows.length > 5) {
-    rows.pop();
-  }
-
-  // API Call
-  const response = await fetch("/api/dashboard/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const json = await response.json();
-  let counter = 0;
-  for (let obj of json) {
-    // console.log("obj = ", obj);
-    let response = await fetch(`/api/doctor/${obj.Doctor_ID}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const docName = await response.json();
-
-    let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
-    // console.log("row = ", row);
-    rows.push(row);
-    counter += 1;
-  }
-  // console.log(rows);
-};
-
 export default function Appointments() {
+  const [rows, setRows] = useState([])
+  useEffect(() => {
+    // Get 5 most recent appointments
+    (async() => {
+      // API Call
+      const response = await axios.get("/api/dashboard/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let counter = 0;
+      let data = [];
+      for (let obj of response.data) {
+        // console.log("obj = ", obj);
+        let response = await axios.get(`/api/doctor/${obj.Doctor_ID}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const docName = response.data;
 
-  getAppointments();
+        let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
+        // console.log("row = ", row);
+        data.push(row);
+        counter += 1;
+      }
+      setRows(data)
+    })()
+  }, [])
 
   return (
     <React.Fragment>
