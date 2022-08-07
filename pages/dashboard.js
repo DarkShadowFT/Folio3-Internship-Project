@@ -52,28 +52,7 @@ export const options = {
   maintainAspectRatio: false,
 };
 
-const labels = ["2017", "2018", "2019", "2020", "2021", "2021", "2022"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Attended",
-      data: labels.map(() => faker.datatype.number({min: 0, max: 50})),
-      backgroundColor: "rgba(255, 99, 132, 0.8)",
-    },
-    {
-      label: "Pending",
-      data: labels.map(() => faker.datatype.number({min: 0, max: 10})),
-      backgroundColor: "rgba(75, 192, 192, 0.8)",
-    },
-    {
-      label: "Cancelled",
-      data: labels.map(() => faker.datatype.number({min: 0, max: 20})),
-      backgroundColor: "rgba(53, 162, 235, 0.8)",
-    },
-  ],
-};
+const labels = ["2016", "2017", "2018", "2019", "2020", "2021", "2022"];
 
 const mdTheme = createTheme();
 let authorized = false
@@ -84,7 +63,11 @@ export default function DashboardContent() {
   const {currentUser} = useAuth();
   const router = useRouter()
   const [pie_chart_data, setPieChartData] = useState([])
+  const [attended, setAttended] = useState([])
+  const [pending, setPending] = useState([])
+  const [cancelled, setCancelled] = useState([])
 
+  // Fetching current month's appointment to be displayed in pie chart
   useEffect(() => {
     (async() => {
       const response = await axios.get('/api/dashboard/month')
@@ -108,8 +91,38 @@ export default function DashboardContent() {
       setPieChartData([completed_count, pending_count, cancelled_count])
     })()
   }, [])
-  // console.log("data = " + pie_chart_data);
 
+  // Fetching 7-year appointments
+  useEffect(() => {
+    (async() => {
+      const date = new Date()
+      const currentYear = date.getFullYear() - 6
+      for (let i = currentYear; i < currentYear + 7; i++){
+        const response = await axios.get(`/api/dashboard/${i}`)
+
+        let completed_count = 0
+        let pending_count = 0
+        let cancelled_count = 0
+        for (let appt of response.data){
+          if (appt.Status === "Completed"){
+            completed_count += 1
+          }
+          else if (appt.Status === "Cancelled"){
+            cancelled_count += 1
+          }
+          else if (appt.Status === "Pending"){
+            pending_count += 1
+          }
+        }
+
+        setAttended(oldValue => [...oldValue, completed_count])
+        setPending(oldValue => [...oldValue, pending_count])
+        setCancelled(oldValue => [...oldValue, cancelled_count])
+      }
+    })()
+  }, [])
+
+  // Authorizing user
   useEffect(() => {
     (async() => {
       try {
@@ -117,15 +130,14 @@ export default function DashboardContent() {
           // const idToken = await currentUser.getIdToken(true)
           const idToken = cookieCutter.get('customAuthToken')
           const config = {
-            headers: {Authorization: idToken},
-            credentials: 'include'
-          };
+            headers: {
+              Authorization: idToken}
+            };
           const response = await axios.get(
             'http://localhost:3000/api/auth/dashboard',
             config
           )
           if (response.status === 200) {
-            // console.log("Response = " + JSON.stringify(response))
             setAuth(true)
           }
           setLoading(false)
@@ -134,6 +146,13 @@ export default function DashboardContent() {
         }
       }
       catch (e) {
+        console.log(e)
+        if (e.response.data.code === "auth/id-token-expired"){
+          const idToken = await currentUser.getIdToken(true)
+          cookieCutter.set('customAuthToken', idToken)
+          console.log("About to reload page")
+          await router.replace('/dashboard')
+        }
         setAuth(false)
       }
     })()
@@ -150,6 +169,27 @@ export default function DashboardContent() {
         backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
         borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
         borderWidth: 1,
+      },
+    ],
+  };
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Attended",
+        data: attended.map((appt) => appt),
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+      },
+      {
+        label: "Pending",
+        data: pending.map((appt) => appt),
+        backgroundColor: "rgba(75, 192, 192, 0.8)",
+      },
+      {
+        label: "Cancelled",
+        data: cancelled.map((appt) => appt),
+        backgroundColor: "rgba(53, 162, 235, 0.8)",
       },
     ],
   };
