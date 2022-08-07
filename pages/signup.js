@@ -258,10 +258,8 @@ export default function SignUp() {
             </Snackbar>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <MUILink variant="body2">
-                  <Link href="/login">
-                    {"Already have an account? Sign in"}
-                  </Link>
+                <MUILink variant="body2" href="/login">
+                  {"Already have an account? Sign in"}
                 </MUILink>
               </Grid>
             </Grid>

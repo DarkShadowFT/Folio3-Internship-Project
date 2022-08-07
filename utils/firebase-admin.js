@@ -2,7 +2,7 @@ const {initializeApp, getApps, getApp, applicationDefault} = require('firebase-a
 const { getAuth } = require('firebase-admin/auth');
 
 let adminApp = ''
-export let adminAuth
+export let adminAuth = ''
 if (getApps().length){
   adminApp = getApp()
   adminAuth = getAuth(adminApp)
@@ -11,6 +11,6 @@ else{
   const app = initializeApp({
     credential: applicationDefault()
   });
-  adminAuth = getApps()
+  adminAuth = getAuth(app)
 }
 export default adminApp

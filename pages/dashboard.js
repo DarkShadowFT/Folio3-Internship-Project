@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Box} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,33 +14,26 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie} from "react-chartjs-2";
 import {Bar} from "react-chartjs-2";
 import {faker} from "@faker-js/faker";
-import axios from 'axios';
+import {useAuth} from "../contexts/AuthContext";
+import axios from "axios";
+import {useRouter} from "next/router";
+import Custom403 from "./403";
+import cookieCutter from 'cookie-cutter'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-let pie_chart_data = []
-
-const getMonth = async () => {
-  const response = await axios.get('/api/dashboard/month')
-  let completed_count = 0
-  let pending_count = 0
-  let cancelled_count = 0
-  // console.log("Response.data = " + JSON.stringify(response))
-  for (let appt of response.data){
-    // console.log("appt type = " + JSON.stringify(appt.Status))
-    if (appt.Status === "Completed"){
-      completed_count += 1
-    }
-    else if (appt.Status === "Cancelled"){
-      cancelled_count += 1
-    }
-    else if (appt.Status === "Pending"){
-      pending_count += 1
-    }
-  }
-  // console.log("Returning " + [completed_count, pending_count, cancelled_count]);
-  pie_chart_data = [completed_count, pending_count, cancelled_count];
-}
+export const pie_data = {
+  labels: ["Attended", "Pending", "Cancelled"],
+  datasets: [
+    {
+      label: "# ",
+      data: [12, 4, 2],
+      backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
+      borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+      borderWidth: 1,
+    },
+  ],
+};
 
 export const options = {
   responsive: true,
@@ -96,25 +89,46 @@ export const data = {
 };
 
 const mdTheme = createTheme();
+let authorized = false
 
-function DashboardContent() {
-  getMonth();
-  // console.log("data = " + pie_chart_data);
+export default function DashboardContent() {
+  const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const {currentUser} = useAuth();
+  const router = useRouter()
 
-  const pie_data = {  
-    labels: ["Attended", "Pending", "Cancelled"],
-    datasets: [
-      {
-        label: "# of Appointments in Current Month",
-        data: pie_chart_data,
-        backgroundColor: ["rgba(255, 99, 132, 0.8)", "rgba(54, 162, 235, 0.8)", "rgba(255, 206, 86, 0.8)"],
-        borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
-        borderWidth: 1,
-      },
-    ],
-  };
+  useEffect(() => {
+    (async() => {
+      try {
+        if (currentUser) {
+          // const idToken = await currentUser.getIdToken(true)
+          const idToken = cookieCutter.get('customAuthToken')
+          const config = {
+            headers: {Authorization: idToken},
+            credentials: 'include'
+          };
+          const response = await axios.get(
+            'http://localhost:3000/api/auth/dashboard',
+            config
+          )
+          if (response.status === 200) {
+            // console.log("Response = " + JSON.stringify(response))
+            setAuth(true)
+          }
+          setLoading(false)
+        } else {
+          await router.replace("/login")
+        }
+      }
+      catch (e) {
+        setAuth(false)
+      }
+    })()
+  }, [])
+  // console.log("Auth = " + auth)
+  authorized = auth
 
-  return (
+  let dashboard = (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
@@ -162,27 +176,11 @@ function DashboardContent() {
       </Box>
     </ThemeProvider>
   );
+
+  if (!loading){
+    if (authorized)
+      return dashboard
+    else
+      return <Custom403/>
+  }
 }
-
-export default function Dashboard() {
-  return <DashboardContent />;
-}
-
-// export default function Dashboard() {
-
-//   return (
-//     <Box>
-//       <Card>
-//         <Card>
-//           <h2>Profile</h2>
-//           {error && <Alert variant="danger">{error}</Alert>}
-//           <strong>Email:</strong> {currentUser.email}
-//         </Card>
-//       </Card>
-//       <Divider />
-//       <Button variant="contained" onClick={handleLogout}>
-//           Log Out
-//       </Button>
-//     </Box>
-//   )
-// }

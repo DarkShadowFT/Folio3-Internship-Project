@@ -16,6 +16,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {useSelector, useDispatch} from "react-redux";
 import {actionCreators} from "../../state/index";
 import {bindActionCreators} from "redux";
+import cookieCutter from "cookie-cutter";
 
 const drawerWidth = 250;
 
@@ -44,18 +45,19 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== "open"})
 }));
 
 export default function Sidebar() {
-  const open = useSelector((state) => state.state)
-  const {logout} = useAuth()
-  const dispatch = useDispatch()
+  const open = useSelector((state) => state.state);
+  const {logout} = useAuth();
+  const dispatch = useDispatch();
   const router = useRouter()
-  const {toggleDrawer} = bindActionCreators(actionCreators, dispatch)
+  const {toggleDrawer} = bindActionCreators(actionCreators, dispatch);
 
   async function handleLogout() {
     try {
-      await logout()
-      await router.push("/login")
+      await logout();
+      cookieCutter.set('customAuthToken', '', { expires: new Date(0) })
+      await router.push("/login");
     } catch {
-      console.error("Failed to log out")
+      console.error("Failed to log out");
     }
   }
 

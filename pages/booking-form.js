@@ -1,6 +1,5 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Alert, Box, Button} from "@mui/material";
-// import {useAuth} from "../../contexts/AuthContext";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,11 +9,56 @@ import Copyright from "../components/copyright/copyright";
 import Navbar from "../components/Navbar/Navbar"
 import Sidebar from "../components/Sidebar/Sidebar"
 import TextField from "@mui/material/TextField";
+import {useAuth} from "../contexts/AuthContext";
+import {useRouter} from "next/router";
+import axios from "axios";
+import Custom403 from "./403";
+import cookieCutter from "cookie-cutter";
 
 const theme = createTheme();
+let authorized = false
 
-function DashboardContent() {
-  return (
+export default function BookingForm() {
+  const [error, setError] = useState("");
+  const [auth, setAuth] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const {currentUser} = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          if (currentUser){
+            const idToken = cookieCutter.get('customAuthToken')
+            // console.log("idToken = " + response_token)
+            const config = {
+              headers: { Authorization: idToken },
+              credentials: 'include'
+            };
+            const response = await axios.get(
+              'http://localhost:3000/api/auth/booking-form',
+              config
+            )
+            if (response.status === 200) {
+              // console.log("Response = " + JSON.stringify(response))
+              setAuth(true)
+            }
+            setLoading(false)
+          }
+          else {
+            await router.replace("/login")
+          }
+        }
+        catch (e) {
+          setAuth(false)
+        }
+      }
+    )();
+  })
+  authorized = auth
+
+  let bookingForm = (
     <ThemeProvider theme={theme}>
       <Box sx={{display: "flex"}}>
         <CssBaseline />
@@ -32,6 +76,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
+            {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
@@ -40,7 +85,6 @@ function DashboardContent() {
                 justifyContent: "space-between",
                 "& .MuiTextField-root": {m: 1, width: "25ch"},
                 spacing: 10,
-                //,bgcolor: "aqua "
               }}
               noValidate
               autoComplete="off"
@@ -79,9 +123,9 @@ function DashboardContent() {
               />
             </Box>
             <Box>
-              <Link href="/my-appointments">
+              <Link href="/MyAppointments">
                 <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
-                Submit
+                  Submit
                 </Button>
               </Link>
             </Box>
@@ -92,8 +136,13 @@ function DashboardContent() {
       </Box>
     </ThemeProvider>
   );
-}
 
-export default function Dashboard() {
-  return <DashboardContent />;
+  if (!loading){
+    if (authorized)
+      return bookingForm
+    else {
+      return <Custom403/>
+    }
+  }
+
 }

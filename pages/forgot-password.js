@@ -60,20 +60,16 @@ export default function forgotPassword() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <MUILink variant="body2">
-                <Link href="/login">
-                  {"Login"}
-                </Link>
+              <MUILink href="/login" variant="body2">
+                {"Login"}
               </MUILink>
             </Grid>
             <Grid item variant="body2">
               <small>
                 {"Need an Account? "}
               </small>
-              <MUILink variant="body2">
-                <Link href="/signup">
-                  {"Sign Up"}
-                </Link>
+              <MUILink variant="body2" href="/signup">
+                {"Sign Up"}
               </MUILink>
             </Grid>
           </Grid>
