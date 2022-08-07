@@ -58,11 +58,6 @@ export default function Navbar(props) {
       <Typography component="h1" variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
         {props.children}
       </Typography>
-      <IconButton color="inherit">
-        <Badge badgeContent={4} color="secondary">
-          <NotificationsIcon />
-        </Badge>
-      </IconButton>
     </Toolbar>
   </AppBar>
 )};

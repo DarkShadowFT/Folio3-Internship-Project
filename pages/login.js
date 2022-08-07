@@ -21,10 +21,10 @@ import {useGoogleOneTapLogin} from "react-google-one-tap-login";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Link from "next/link";
 import axios from 'axios'
 import {GoogleAuthProvider, signInWithCredential} from 'firebase/auth'
 import { auth } from "../utils/firebase";
+import cookieCutter from 'cookie-cutter'
 
 const theme = createTheme();
 
@@ -79,6 +79,8 @@ export default function Login() {
           // console.log("Received response: " + JSON.stringify(response.data))
           await googleOAuthLogin(response.data.token)
           console.log("Login with custom token successful")
+          const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
+          cookieCutter.set('customAuthToken', customToken)
           await router.replace("/dashboard");
         } catch (err) {
           console.error(err)
@@ -168,19 +170,14 @@ export default function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                  <Link href="/forgot-password">
-                    <a>
-                      {"Forgot password?"}
-                    </a>
-                  </Link>
-                {/*</MUILink>*/}
+                <MUILink href="/forgot-password" variant="body2">
+                  {"Forgot password?"}
+                </MUILink>
               </Grid>
               <Grid item>
-                  {/*<MUILink variant="body2">*/}
-                    <Link href="/signup">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  {/*</MUILink>*/}
+                  <MUILink variant="body2" href="/signup">
+                    {"Don't have an account? Sign Up"}
+                  </MUILink>
               </Grid>
             </Grid>
           </Box>

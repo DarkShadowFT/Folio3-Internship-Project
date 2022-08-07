@@ -14,6 +14,8 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import Custom403 from "./403";
 import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
+import axios from "axios";
+import cookieCutter from "cookie-cutter";
 export default MyAppointments;
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -31,8 +33,7 @@ function MyAppointments() {
       async () => {
         try {
           if (currentUser){
-            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
-            // console.log("idToken = " + response_token)
+            const idToken = cookieCutter.get('customAuthToken')            // console.log("idToken = " + idToken)
             const config = {
               headers: { Authorization: idToken },
               credentials: 'include'

@@ -13,6 +13,7 @@ import {useAuth} from "../contexts/AuthContext";
 import {useRouter} from "next/router";
 import axios from "axios";
 import Custom403 from "./403";
+import cookieCutter from "cookie-cutter";
 
 const theme = createTheme();
 let authorized = false
@@ -29,7 +30,7 @@ export default function BookingForm() {
       async () => {
         try {
           if (currentUser){
-            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+            const idToken = cookieCutter.get('customAuthToken')
             // console.log("idToken = " + response_token)
             const config = {
               headers: { Authorization: idToken },

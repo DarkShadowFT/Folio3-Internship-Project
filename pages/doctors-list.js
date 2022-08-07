@@ -11,6 +11,8 @@ import Container from '@mui/material/Container';
 import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
 import Custom403 from "./403";
+import axios from "axios";
+import cookieCutter from "cookie-cutter";
 
 const mdTheme = createTheme();
 let authorized = false
@@ -25,12 +27,10 @@ function DoctorsList() {
     (
       async () => {
         try {
-          if (currentUser){
-            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
-            // console.log("idToken = " + response_token)
+          if (currentUser && loading){
+            const idToken = cookieCutter.get('customAuthToken')
             const config = {
               headers: { Authorization: idToken },
-              credentials: 'include'
             };
             const response = await axios.get(
               'http://localhost:3000/api/auth/doctors-list',
@@ -42,7 +42,7 @@ function DoctorsList() {
             }
             setLoading(false)
           }
-          else {
+          else if (!currentUser && loading){
             await router.replace("/login")
           }
         }
@@ -70,7 +70,6 @@ function DoctorsList() {
             height: "100vh",
             overflow: "auto",
           }}
-
         >
           <Toolbar/>
           <Container>

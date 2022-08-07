@@ -18,6 +18,7 @@ import {useAuth} from "../contexts/AuthContext";
 import axios from "axios";
 import {useRouter} from "next/router";
 import Custom403 from "./403";
+import cookieCutter from 'cookie-cutter'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -97,36 +98,33 @@ export default function DashboardContent() {
   const router = useRouter()
 
   useEffect(() => {
-    (
-      async () => {
-        try {
-          if (currentUser){
-            const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
-            // console.log("idToken = " + response_token)
-            const config = {
-              headers: { Authorization: idToken },
-              credentials: 'include'
-            };
-            const response = await axios.get(
-              'http://localhost:3000/api/auth/dashboard',
-              config
-            )
-            if (response.status === 200) {
-              // console.log("Response = " + JSON.stringify(response))
-              setAuth(true)
-            }
-            setLoading(false)
+    (async() => {
+      try {
+        if (currentUser) {
+          // const idToken = await currentUser.getIdToken(true)
+          const idToken = cookieCutter.get('customAuthToken')
+          const config = {
+            headers: {Authorization: idToken},
+            credentials: 'include'
+          };
+          const response = await axios.get(
+            'http://localhost:3000/api/auth/dashboard',
+            config
+          )
+          if (response.status === 200) {
+            // console.log("Response = " + JSON.stringify(response))
+            setAuth(true)
           }
-          else {
-            await router.replace("/login")
-          }
-        }
-        catch (e) {
-          setAuth(false)
+          setLoading(false)
+        } else {
+          await router.replace("/login")
         }
       }
-    )();
-  })
+      catch (e) {
+        setAuth(false)
+      }
+    })()
+  }, [])
   // console.log("Auth = " + auth)
   authorized = auth
 
@@ -186,22 +184,3 @@ export default function DashboardContent() {
       return <Custom403/>
   }
 }
-
-// export default function Dashboard() {
-
-//   return (
-//     <Box>
-//       <Card>
-//         <Card>
-//           <h2>Profile</h2>
-//           {error && <Alert variant="danger">{error}</Alert>}
-//           <strong>Email:</strong> {currentUser.email}
-//         </Card>
-//       </Card>
-//       <Divider />
-//       <Button variant="contained" onClick={handleLogout}>
-//           Log Out
-//       </Button>
-//     </Box>
-//   )
-// }
