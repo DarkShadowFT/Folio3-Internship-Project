@@ -53,7 +53,7 @@ export default function Sidebar() {
   async function handleLogout() {
     try {
       await logout()
-      router.push("/login")
+      await router.push("/login")
     } catch {
       console.error("Failed to log out")
     }

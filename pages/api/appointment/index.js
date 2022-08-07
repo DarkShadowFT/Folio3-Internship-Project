@@ -4,7 +4,7 @@ import connectToMongo from '../../../utils/db'
 export default async (req, res) => {
   await connectToMongo();
   
-  if (req.method == "POST"){
+  if (req.method === "POST"){
     try {
       const appointment = Appointment(req.body);
       await appointment.save();

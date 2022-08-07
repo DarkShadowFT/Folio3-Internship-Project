@@ -14,8 +14,6 @@ import TextField from "@mui/material/TextField";
 const theme = createTheme();
 
 function DashboardContent() {
-  const [error, setError] = useState("");
-
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{display: "flex"}}>
@@ -34,7 +32,6 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
-            {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
@@ -82,7 +79,7 @@ function DashboardContent() {
               />
             </Box>
             <Box>
-              <Link href="/MyAppointments">
+              <Link href="/my-appointments">
                 <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
                 Submit
                 </Button>
@@ -100,22 +97,3 @@ function DashboardContent() {
 export default function Dashboard() {
   return <DashboardContent />;
 }
-
-// export default function Dashboard() {
-
-//   return (
-//     <Box>
-//       <Card>
-//         <Card>
-//           <h2>Profile</h2>
-//           {error && <Alert variant="danger">{error}</Alert>}
-//           <strong>Email:</strong> {currentUser.email}
-//         </Card>
-//       </Card>
-//       <Divider />
-//       <Button variant="contained" onClick={handleLogout}>
-//           Log Out
-//       </Button>
-//     </Box>
-//   )
-// }

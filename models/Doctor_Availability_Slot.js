@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import { Schema, model } from 'mongoose';
+
 const DASSchema = new Schema({
   Availability_Day_ID: {
     type: Schema.Types.ObjectId,
@@ -9,4 +10,4 @@ const DASSchema = new Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("Doctor_Availability_Slot", DASSchema);
+module.exports = model("Doctor_Availability_Slot", DASSchema);

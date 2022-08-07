@@ -66,7 +66,7 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          const idToken = await currentUser.getIdToken(/* forceRefresh */ true)
+          const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
           // console.log("idToken = " + response_token)
           const config = {
             headers: { Authorization: idToken }
@@ -92,7 +92,7 @@ export default function Login() {
     try {
       setError("");
       await login(getValues("email"), getValues("password"));
-      router.push("/dashboard")
+      await router.push("/dashboard")
     } catch (err) {
       setError("Failed to login: " + err.code);
     }

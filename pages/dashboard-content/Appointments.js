@@ -14,8 +14,8 @@ function convertDate(original_date) {
   // let hour = original_date.getHours();
   // let min = original_date.getMinutes();
   // let time = date + " " + month + " " + year + " " + hour + ":" + min;
-  let time = date + " " + month + " " + year; // final date with time, you can use this according your requirement
-  return time;
+   // final date with time, you can use this according your requirement
+  return date + " " + month + " " + year;
 }
 
 // Generate Order Data

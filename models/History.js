@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import {Schema, model} from 'mongoose'
+
 const HistorySchema = new Schema({
   Patient_ID: {
     type: Schema.Types.ObjectId,
@@ -9,4 +10,4 @@ const HistorySchema = new Schema({
     required: true
   },
 });
-module.exports = mongoose.model("History", HistorySchema);
+module.exports = model("History", HistorySchema);

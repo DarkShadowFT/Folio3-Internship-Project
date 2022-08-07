@@ -1,5 +1,3 @@
-import moment from "moment";
-
 import Appointment from "../../../models/Appointment"
 import connectToMongo from "../../../utils/db"
 
@@ -23,7 +21,7 @@ export default async (req, res) => {
           $gte: current_month,
           $lt: next_month,
         },
-      }).sort({appointmentdate: 1});
+      }).sort({Booking_Date: 1});
       res.send(JSON.stringify(appointments))
     }
     catch (err){
