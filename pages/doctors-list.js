@@ -47,6 +47,13 @@ function DoctorsList() {
           }
         }
         catch (e) {
+          // Refresh the idToken if expired
+          if (e.response.data.code === "auth/id-token-expired"){
+            const idToken = await currentUser.getIdToken(true)
+            cookieCutter.set('customAuthToken', idToken)
+            console.log("About to reload page")
+            await router.reload()
+          }
           setAuth(false)
         }
       }
