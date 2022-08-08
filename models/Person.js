@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import { Schema, model, models } from 'mongoose';
+
 const PersonSchema = new Schema({
   First_Name: {
     type: String,
@@ -35,5 +36,22 @@ const PersonSchema = new Schema({
     type: String,
     required: true,
   },
+  BMI: {
+    type: Number,
+    required: true,
+    unique: false,
+  },
+  Weight: {
+    type: Number,
+    required: true,
+    unique: false,
+  },
+  Height: {
+    type: Number,
+    required: true,
+    unique: false,
+  },
+ 
 });
-module.exports = mongoose.model("Person", PersonSchema);
+const person = models.person || model('person', PersonSchema);
+export default person;

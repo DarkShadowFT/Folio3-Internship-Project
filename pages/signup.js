@@ -61,7 +61,7 @@ export default function SignUp() {
     age: yup
       .number()
       .required("Please enter your age")
-      .min(18, 'You must be at least 18 years old')
+      .min(1, 'You must be at least 1 years old')
       .max(120, 'You must be at most 120 years old')
       .typeError("Age must be a number"),
     phoneNumber: yup
@@ -87,17 +87,25 @@ export default function SignUp() {
       .required("Please enter your Address")
       .typeError("Enter Address correctly"),
     BMI: yup
-      .string("Enter your BMI")
+      .number("Enter your BMI")
       .required("Please enter your BMI")
+      .min(10, 'BMI should be at least 10 to 50 ')
+      .max(50, 'BMI should be between 10 to 50 ')
       .typeError("Enter BMI correctly"),
     Weight:yup
-      .string("Enter your Weight")
+      .number("Enter your Weight")
       .required("Please enter your Weight")
+      .min(1, 'Weight should be between 1 to 150 kg')
+      .max(150, 'Weight should be between 1 to 150 kg')
       .typeError("Enter Weight correctly"),
+   
     Height:yup
-      .string("Enter your Height")
+      .number("Enter your Height")
       .required("Please enter your Height")
+      .min(2, 'Height should be between 2 to 7 feet')
+      .max(7, 'Height should be between 2 to 7 feet')
       .typeError("Enter Height correctly"),
+      
 
 
 
