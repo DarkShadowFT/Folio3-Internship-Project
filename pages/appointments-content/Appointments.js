@@ -7,35 +7,83 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import Title from "./Title";
+import Typography from '@mui/material/Typography';
+import { object } from "yup";
 
 // Generate Order Data
 function createData(id, doctor, appointment_date, appointment_time, reason) {
   return {id, doctor, appointment_date, appointment_time, reason};
 }
 
-export default function Appointments() {
-  const [rows, setrows] = useState([
-    createData(0, "Mark", "16 Mar, 2019", "1:00 pm", "Fever"),
-    createData(1, "John", "16 June, 2019", "1:00 pm", "Fever"),
-    createData(2, "David", "10 Jan, 2020", "1:00 pm", "Fever"),
-    createData(3, "Nathan", "23 Mar, 2019", "1:00 pm", "Fever"),
-    createData(4, "Michael", "5 Mar, 2019", "1:00 pm", "Fever"),
-  ]);
 
-  const deleteRow = (id) => {
+const getAppointments = async (rows) => {
+  while(rows.length) {
+    rows.pop();
+  }
+
+  // API Call
+  const response = await fetch("/api/my-appointments/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  let counter = 0;
+  for (let obj of json) {
+
+    let response = await fetch(`/api/doctor/${obj.Doctor_ID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const docName = await response.json();
+
+    // extracting time
+    const time = new Date(obj.Date).toLocaleTimeString('en',
+                 { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
+
+    // extracting Date
+    const dt=obj.Date.getFullYear()+'-' + (obj.Date.getMonth()+1) + '-'+obj.Date.getDate();
+
+    let row = createData(counter, docName, dt, time, obj.Query);
+
+    rows.push(row);
+    counter += 1;
+  }
+   
+   return rows;
+};
+
+
+export default function Appointments() {
+  const [rows, setrows] = useState([ ]);
+  getAppointments(rows);
+  const deleteRow = async (id) => {
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
+    const response= await fetch('/api/appointment/index/${id}',{
+      method: 'DELETE'
+    })
+    const data = await response.json()
+    console.log(data)
+    getAppointments(rows)
   };
-
+  
   return (
     <React.Fragment>
-      <Title>Appointments</Title>
-      <Link href="/booking-form">
-        <Button style={{border: "2px solid black", background: "#FFFFCC", color: "black"}}>
-          Create New Appointment
-        </Button>
-      </Link>
-
+    <br></br>
+    <div>
+    <Typography  style={{color: 'blue', fontSize: 22}}> <b>My Appointments  </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; 
+     <Button  variant="outlined" color="success" href="/booking-form">
+        Create New Appointment
+      </Button>
+      </Typography>
+    
+    </div>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -62,17 +110,17 @@ export default function Appointments() {
               <TableCell>{row.reason}</TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "purple"}}> Read</Button>
+                  <Button style={{color: "white", background: "purple"}}> View</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "blue"}}> Edit</Button>
+                  <Button style={{color: "white", background: "blue"}}> Edit</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Button
-                  style={{color: "red"}}
+                  style={{color: "white", background: "#ba0001"}}
                   onClick={() => {
                     deleteRow(row.id);
                   }}
