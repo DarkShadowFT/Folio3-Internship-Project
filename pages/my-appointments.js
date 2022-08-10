@@ -49,7 +49,7 @@ function MyAppointments() {
             setLoading(false)
           }
           else {
-            await router.replace("/login")
+            setLoading(false)
           }
         }
         catch (e) {

@@ -9,7 +9,7 @@ export default function Custom403() {
         <h1>{"403 - Unauthorized"}</h1>
         <Link href="/login">
           <a className={styles.link}>
-            {"Login Again?"}
+            {"Login"}
           </a>
         </Link>
       </Container>

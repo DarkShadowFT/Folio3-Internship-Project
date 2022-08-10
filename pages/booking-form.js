@@ -47,7 +47,7 @@ export default function BookingForm() {
             setLoading(false)
           }
           else {
-            await router.replace("/login")
+            setLoading(false)
           }
         }
         catch (e) {

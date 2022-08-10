@@ -28,6 +28,25 @@ import cookieCutter from 'cookie-cutter'
 
 const theme = createTheme();
 
+async function customTokenLogin(googleOAuthLogin, router) {
+  const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
+// console.log("idToken = " + response_token)
+  const config = {
+    headers: {Authorization: idToken},
+    credentials: 'include'
+  };
+  const response = await axios.get(
+    'http://localhost:3000/api/login',
+    config
+  )
+// console.log("Received response: " + JSON.stringify(response.data))
+  await googleOAuthLogin(response.data.token)
+  console.log("Login with custom token successful")
+  const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
+  cookieCutter.set('customAuthToken', customToken)
+  await router.replace("/dashboard");
+}
+
 export default function Login() {
   const [error, setError] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
@@ -66,22 +85,7 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
-          // console.log("idToken = " + response_token)
-          const config = {
-            headers: { Authorization: idToken },
-            credentials: 'include'
-          };
-          const response = await axios.get(
-            'http://localhost:3000/api/login',
-            config
-          )
-          // console.log("Received response: " + JSON.stringify(response.data))
-          await googleOAuthLogin(response.data.token)
-          console.log("Login with custom token successful")
-          const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
-          cookieCutter.set('customAuthToken', customToken)
-          await router.replace("/dashboard");
+          await customTokenLogin(googleOAuthLogin, router)
         } catch (err) {
           console.error(err)
           if (err.code)
@@ -98,7 +102,7 @@ export default function Login() {
     try {
       setError("");
       await login(getValues("email"), getValues("password"));
-      await router.push("/dashboard")
+      await customTokenLogin(googleOAuthLogin, router)
     } catch (err) {
       setError("Failed to login: " + err.code);
     }

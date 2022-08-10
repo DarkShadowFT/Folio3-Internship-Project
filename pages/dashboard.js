@@ -142,11 +142,13 @@ export default function DashboardContent() {
           }
           setLoading(false)
         } else {
-          await router.replace("/login")
+          setLoading(false)
         }
       }
       catch (e) {
+        setLoading(false)
         // console.log(e)
+
         // Refresh the idToken if expired
         if (e.response.data.code === "auth/id-token-expired"){
           const idToken = await currentUser.getIdToken(true)

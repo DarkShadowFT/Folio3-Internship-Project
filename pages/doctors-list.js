@@ -43,7 +43,7 @@ function DoctorsList() {
             setLoading(false)
           }
           else if (!currentUser && loading){
-            await router.replace("/login")
+            setLoading(false)
           }
         }
         catch (e) {
