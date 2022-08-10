@@ -11,7 +11,7 @@ const Doctor = new mongoose.Schema({
   Specialization:{
     type:String,
     required:true
-  },
+  }//,
   // Degree_info:{
   //   type:String,
   //   required:true

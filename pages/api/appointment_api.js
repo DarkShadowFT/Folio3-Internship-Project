@@ -5,20 +5,19 @@ import connectDb from "D:\\Work\\Folio 3 Project\\Folio3-Internship-Project\\mon
 
 const handler= async (req,res)=>{
   if (req.method=="POST"){
-    for(let i=0;i<req.body.length;i++){
-      console.log(req.body)
-      let d=new Doctor({
-        "Doctor_ID":req.body[i].Doctor_ID,
-        "Patient_ID":req.body[i].Patient_ID,
-        "Query":req.body[i].Query,
-        "Date":req.body[i].Date,
-        "Booking_Date":req.body[i].Booking_Date,
-        "Fee":req.body[i].Fee,
-        "Status":req.body[i].Status
+    console.log("appointmennt api called")
+    let d=new Doctor({
+      // "Doctor_ID":req.body.Doctor_ID,
+      // "Patient_ID":req.body.Patient_ID,
+      "Query":req.body.Query,
+      //"Date":req.body.Date//,
+      "Booking_Date":req.body.Booking_Date,
+      "Fee":req.body.Fee,
+      // "Status":req.body.Status
 
-      })
-      await d.save()
-    }
+    })
+    await d.save()
+    
     
     res.status(200).json({ sucess: 'sucess' })
   }
