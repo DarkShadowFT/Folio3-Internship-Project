@@ -14,13 +14,15 @@ import {useRouter} from "next/router";
 import axios from "axios";
 import Custom403 from "./403";
 import cookieCutter from "cookie-cutter";
+import Custom401 from "./401";
 
 const theme = createTheme();
-let authorized = false
 
 export default function BookingForm() {
-  const [error, setError] = useState("");
-  const [auth, setAuth] = useState(false);
+  // 0 - not logged in, not authorized
+  // 1 - logged in, not authorized
+  // 2 - logged in, authorized
+  const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
   const {currentUser} = useAuth();
   const router = useRouter()
@@ -42,11 +44,15 @@ export default function BookingForm() {
             )
             if (response.status === 200) {
               // console.log("Response = " + JSON.stringify(response))
-              setAuth(true)
+              setAuth(2)
+            }
+            else {
+              setAuth(1)
             }
             setLoading(false)
           }
           else {
+            setAuth(0)
             setLoading(false)
           }
         }
@@ -58,12 +64,11 @@ export default function BookingForm() {
             console.log("About to reload page")
             await router.reload()
           }
-          setAuth(false)
+          setAuth(0)
         }
       }
     )();
   })
-  authorized = auth
 
   let bookingForm = (
     <ThemeProvider theme={theme}>
@@ -83,7 +88,6 @@ export default function BookingForm() {
         >
           <Toolbar />
           <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
-            {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
@@ -145,10 +149,14 @@ export default function BookingForm() {
   );
 
   if (!loading){
-    if (authorized)
-      return bookingForm
-    else {
+    if (auth === 0){
+      return <Custom401/>
+    }
+    else if (auth === 1){
       return <Custom403/>
+    }
+    else {
+      return bookingForm
     }
   }
 

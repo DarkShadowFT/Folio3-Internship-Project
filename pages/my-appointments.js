@@ -16,14 +16,17 @@ import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
 import axios from "axios";
 import cookieCutter from "cookie-cutter";
+import Custom401 from "./401";
 export default MyAppointments;
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const mdTheme = createTheme();
-let authorized = false
 
 function MyAppointments() {
-  const [auth, setAuth] = useState(false);
+  // 0 - not logged in, not authorized
+  // 1 - logged in, not authorized
+  // 2 - logged in, authorized
+  const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
   const {currentUser} = useAuth();
   const router = useRouter()
@@ -44,11 +47,15 @@ function MyAppointments() {
             )
             if (response.status === 200) {
               // console.log("Response = " + JSON.stringify(response))
-              setAuth(true)
+              setAuth(2)
+            }
+            else {
+              setAuth(1)
             }
             setLoading(false)
           }
           else {
+            setAuth(0)
             setLoading(false)
           }
         }
@@ -60,13 +67,12 @@ function MyAppointments() {
             console.log("About to reload page")
             await router.reload()
           }
-          setAuth(false)
+          setAuth(0)
         }
       }
     )();
   })
   // console.log("Auth = " + auth)
-  authorized = auth
 
   let myAppointments = (
     <ThemeProvider theme={mdTheme}>
@@ -95,11 +101,13 @@ function MyAppointments() {
     </ThemeProvider>
   );
 
-  if (!loading){
-    if (authorized)
-      return myAppointments
-    else {
+  if (!loading) {
+    if (auth === 0) {
+      return <Custom401/>
+    } else if (auth === 1) {
       return <Custom403/>
+    } else {
+      return myAppointments
     }
   }
 }

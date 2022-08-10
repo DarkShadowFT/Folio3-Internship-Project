@@ -11,13 +11,12 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import Navbar from "../components/Navbar/Navbar";
 import Copyright from "../components/copyright/copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
-import {Pie} from "react-chartjs-2";
-import {Bar} from "react-chartjs-2";
-import {faker} from "@faker-js/faker";
+import {Pie, Bar} from "react-chartjs-2";
 import {useAuth} from "../contexts/AuthContext";
 import axios from "axios";
 import {useRouter} from "next/router";
 import Custom403 from "./403";
+import Custom401 from "./401";
 import cookieCutter from 'cookie-cutter'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -55,10 +54,12 @@ export const options = {
 const labels = ["2016", "2017", "2018", "2019", "2020", "2021", "2022"];
 
 const mdTheme = createTheme();
-let authorized = false
 
 export default function DashboardContent() {
-  const [auth, setAuth] = useState(false);
+  // 0 - not logged in, not authorized
+  // 1 - logged in, not authorized
+  // 2 - logged in, authorized
+  const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
   const {currentUser} = useAuth();
   const router = useRouter()
@@ -138,10 +139,15 @@ export default function DashboardContent() {
             config
           )
           if (response.status === 200) {
-            setAuth(true)
+            setAuth(2)
+          }
+          else {
+            setAuth(1)
           }
           setLoading(false)
-        } else {
+        }
+        else {
+          setAuth(0)
           setLoading(false)
         }
       }
@@ -156,12 +162,11 @@ export default function DashboardContent() {
           console.log("About to reload page")
           await router.reload()
         }
-        setAuth(false)
+        setAuth(0)
       }
     })()
   }, [])
   // console.log("Auth = " + auth)
-  authorized = auth
 
   const pie_data = {
     labels: ["Attended", "Pending", "Cancelled"],
@@ -247,9 +252,11 @@ export default function DashboardContent() {
   );
 
   if (!loading){
-    if (authorized)
-      return dashboard
-    else
+    if (auth === 0)
+      return <Custom401/>
+    else if (auth === 1)
       return <Custom403/>
+    else
+      return dashboard
   }
 }
