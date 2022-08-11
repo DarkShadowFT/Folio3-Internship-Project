@@ -60,7 +60,6 @@ export default function Appointments() {
       setRows(data)
     })()
   }, [])
-
   return (
     <React.Fragment>
       <Title>Recent Appointments</Title>
