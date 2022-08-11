@@ -76,20 +76,18 @@ export default function Appointments() {
 
   getAppointments(rows,setrows);
   const deleteRow = async (id) => {
+
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
-    let response = async function deletePost(id) {
-        await fetch(`/api/appointment/${id}`, { method: 'DELETE' });
-        setStatus('Delete successful');
-    }
-    deletePost(id)
-    console.log(response);
+    let response = await fetch(`/api/appointment`,
+     { method: 'DELETE' })
+        //setStatus('Delete successful');
+    const data=await response.json()
+    
+    console.log(data);
     //getAppointments(rows,setrows);
-  };
-
-
- 
- 
+  }
+  
   return (
     <React.Fragment>
     <br></br>

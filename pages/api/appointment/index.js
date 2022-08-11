@@ -16,20 +16,21 @@ export default async (req, res) => {
     }
   }
   else if (req.method === "DELETE"){
-    const {appID} = req.query;
-    const deletedappointment = await Appointment.find(
-      (app) => app._id ===parseInt(appID)
-    )
+    
+    const {appID} = req.body;
+    let index=parseInt(appID)
+    const deletedappointment= await Appointment.findOneAndDelete(index)
+    
+    if (Array.isArray(Appointment)) {
+      Appointment.splice(index,1)
+    }
+    
     console.log(deletedappointment);
-    const index=Appointment.findById(
-      (app) => app._id ===parseInt(appID)
-    )
-    Appointment.splice(index,1)
       res.status(200).json(deletedappointment)
+    
   }
   else if (req.method === "GET") {
     const appointments = await Appointment.find({})
-    //console.log(appointments);
     return res.status(200).send(JSON.stringify(appointments))
   }
 };
