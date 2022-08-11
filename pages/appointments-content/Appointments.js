@@ -1,4 +1,5 @@
-import React, {useState} from "react";
+import React from "react";
+import {useEffect, useState} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,68 +10,86 @@ import Link from "next/link";
 import Title from "./Title";
 import Typography from '@mui/material/Typography';
 import { object } from "yup";
+import axios from "axios";
+
+// Generate Order Data
+function convertDate(original_date) {
+  let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let year = original_date.getFullYear();
+  let month = months[original_date.getMonth()];
+  let date = original_date.getDate();
+  return date + " " + month + " " + year;
+}
 
 // Generate Order Data
 function createData(id, doctor, appointment_date, appointment_time, reason) {
-  return {id, doctor, appointment_date, appointment_time, reason};
+  let appt_date = new Date(appointment_date);
+  appt_date = convertDate(appt_date);
+  
+   return {id, doctor, appt_date, appointment_time, reason};
 }
 
 
-const getAppointments = async (rows) => {
-  while(rows.length) {
-    rows.pop();
-  }
+const getAppointments = async (rows,setrows) => {
+  /*while(rows.length) {
+    //rows.pop();
+  }*/
 
-  // API Call
-  const response = await fetch("/api/my-appointments/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const json = await response.json();
-  let counter = 0;
-  for (let obj of json) {
+  useEffect(() => {
+    // Get 5 most recent appointments
+    (async() => {
+      // API Call
+      const response = await axios.get("/api/appointment/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let counter = 0;
+      let data = [];
+      for (let obj of response.data) {
+        // console.log("obj = ", obj);
+        let response = await axios.get(`/api/doctor/${obj.Doctor_ID}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const docName = response.data;
 
-    let response = await fetch(`/api/doctor/${obj.Doctor_ID}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const docName = await response.json();
+        const time = new Date(obj.Date).toLocaleTimeString('en',
+        { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
 
-    // extracting time
-    const time = new Date(obj.Date).toLocaleTimeString('en',
-                 { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
 
-    // extracting Date
-    const dt=obj.Date.getFullYear()+'-' + (obj.Date.getMonth()+1) + '-'+obj.Date.getDate();
-
-    let row = createData(counter, docName, dt, time, obj.Query);
-
-    rows.push(row);
-    counter += 1;
-  }
-   
-   return rows;
+        let row = createData(counter, docName, obj.Date, time, obj.Query);
+        console.log(row);
+        data.push(row);
+        counter += 1;
+      }
+      setrows(data)
+    })()
+  }, [])
+  return rows
 };
 
 
 export default function Appointments() {
   const [rows, setrows] = useState([ ]);
-  getAppointments(rows);
+
+  getAppointments(rows,setrows);
   const deleteRow = async (id) => {
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
-    const response= await fetch('/api/appointment/index/${id}',{
-      method: 'DELETE'
-    })
-    const data = await response.json()
-    console.log(data)
-    getAppointments(rows)
+    let response = async function deletePost(id) {
+        await fetch(`/api/appointment/${id}`, { method: 'DELETE' });
+        setStatus('Delete successful');
+    }
+    deletePost(id)
+    console.log(response);
+    //getAppointments(rows,setrows);
   };
-  
+
+
+ 
+ 
   return (
     <React.Fragment>
     <br></br>
@@ -105,7 +124,7 @@ export default function Appointments() {
           {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.doctor}</TableCell>
-              <TableCell>{row.appointment_date}</TableCell>
+              <TableCell>{row.appt_date}</TableCell>
               <TableCell>{row.appointment_time}</TableCell>
               <TableCell>{row.reason}</TableCell>
               <TableCell>

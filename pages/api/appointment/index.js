@@ -15,4 +15,21 @@ export default async (req, res) => {
       res.status(500).send("Internal server error occurred");
     }
   }
+  else if (req.method === "DELETE"){
+    const {appID} = req.query;
+    const deletedappointment = await Appointment.find(
+      (app) => app._id ===parseInt(appID)
+    )
+    console.log(deletedappointment);
+    const index=Appointment.findById(
+      (app) => app._id ===parseInt(appID)
+    )
+    Appointment.splice(index,1)
+      res.status(200).json(deletedappointment)
+  }
+  else if (req.method === "GET") {
+    const appointments = await Appointment.find({})
+    //console.log(appointments);
+    return res.status(200).send(JSON.stringify(appointments))
+  }
 };
