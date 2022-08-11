@@ -33,27 +33,30 @@ const handler= async (req,res)=>{
   if (req.method=="POST"){
     console.log("Yes this is called in")
     //for(let i=0;i<req.body.length;i++){
-      console.log("Yes this is called innner")
-      console.log(req.body)
+      // console.log("Yes this is called innner")
+      // console.log(req.body)
 
       let d=new Doctor({
         "Person_ID":req.body.Person_ID,
-        "Specialization":req.body.Specialization,
         "Specialization":req.body.Specialization,
         "Degree_info":req.body.Degree_info,
         "Days_available":req.body.Days_available,
         "Slots_available":req.body.Slots_available,
 
       })
-      console.log("end")
-      console.log(d)
+      //console.log("end")
+      //console.log(d)
 
       await d.save()
     //}
     
     res.status(200).json({ sucess: 'sucess electric' })
   }
- 
+  // if (req.method=="GET"){
+  //   const d=await Doctor.find();
+  //   res.status(200).json(d);
+
+  // }  
   else{
     res.status(400).json({ error: 'error' })
   }

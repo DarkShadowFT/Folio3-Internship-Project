@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const DASSchema = new mongoose.Schema({
-  Availability_Day_ID: {
-    type: Number,
-    required: true,
-  },
+  // Availability_Day_ID: {
+  //   type: Number,
+  //   required: true,
+  // },
   Time_Slot: {
     type: String,
     required: true,
