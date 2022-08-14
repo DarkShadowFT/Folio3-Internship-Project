@@ -134,7 +134,7 @@ export default function BookingForm() {
               />
             </Box>
             <Box>
-              <Link href="/MyAppointments">
+              <Link href="/my-appointments">
                 <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
                   Submit
                 </Button>

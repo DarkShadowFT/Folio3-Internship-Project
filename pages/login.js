@@ -60,7 +60,10 @@ export default function Login() {
 
   const validationSchema = yup
     .object({
-      email: yup.string("Enter your email").required("Please enter an email").email("Enter a valid email"),
+      email: yup
+        .string("Enter your email")
+        .required("Please enter an email")
+        .email("Enter a valid email"),
       password: yup
         .string("Enter your password")
         .required("Please enter a password")
