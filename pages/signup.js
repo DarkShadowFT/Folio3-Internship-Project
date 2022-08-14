@@ -265,7 +265,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="ageofpatient"
+                  id="patientAge"
                   label="Age"
                   name="age"
                   autoComplete="age"
@@ -280,7 +280,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="phoneofpatient"
+                  id="patientPhone"
                   label="Phone Number"
                   name="phoneNumber"
                   autoComplete="PhoneNumber"
@@ -295,7 +295,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="CNICofpatient"
+                  id="patientCNIC"
                   label="CNIC Number"
                   name="CNIC"
                   autoComplete="CNICNumber"
@@ -310,7 +310,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="Genderofpatient"
+                  id="patientGender"
                   label="Patient Gender"
                   name="Gender"
                   autoComplete="PatientGender"
@@ -325,7 +325,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="Addressofpatient"
+                  id="patientAddress"
                   label="Patient Address"
                   name="Address"
                   autoComplete="PatientAddress"
@@ -340,7 +340,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="BMIofpatient"
+                  id="patientBMI"
                   label="Patient BMI in kg/feet"
                   name="BMI"
                   autoComplete="PatientBMI"
@@ -355,7 +355,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="Weightofpatient"
+                  id="patientWeight"
                   label="Patient Weight in kg"
                   name="Weight"
                   autoComplete="PatientWeight"
@@ -370,7 +370,7 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="Heightofpatient"
+                  id="patientHeight"
                   label="Patient Height in  feet"
                   name="Height"
                   autoComplete="PatientHeight"
