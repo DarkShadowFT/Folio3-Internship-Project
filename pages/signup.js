@@ -1,34 +1,22 @@
 import React, { useState } from "react"
-import Avatar from "@mui/material/Avatar"
-import Button from "@mui/material/Button"
-import CssBaseline from "@mui/material/CssBaseline"
-import TextField from "@mui/material/TextField"
-import Grid from "@mui/material/Grid"
-import MUILink from "@mui/material/Link";
-import Box from "@mui/material/Box"
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
-import Typography from "@mui/material/Typography"
-import Container from "@mui/material/Container"
+import {Avatar, Button, CssBaseline, TextField, Grid, Link, Box, InputAdornment} from "@mui/material"
+import {LockOutlined, Visibility, VisibilityOff} from "@mui/icons-material"
+import {Typography, Container, IconButton, Snackbar, Alert} from "@mui/material"
+import {FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles"
-import Visibility from "@mui/icons-material/Visibility"
-import VisibilityOff from "@mui/icons-material/VisibilityOff"
-import InputAdornment from "@mui/material/InputAdornment"
-import IconButton from "@mui/material/IconButton"
 import Copyright from "../components/copyright/copyright"
 import { useRouter } from 'next/router'
 import { useAuth } from "../contexts/AuthContext"
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert from '@mui/material/Alert'
 import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
-import Link from "next/link";
 
 const theme = createTheme()
 
 export default function SignUp() {
   const [error, setError] = useState("")
   const [showalert, setshowalert] = React.useState(false)
+  const [gender, setGender] = React.useState("false")
   const [values, setValues] = React.useState({
     amount: "",
     weight: "",
@@ -119,11 +107,14 @@ export default function SignUp() {
   const age = register('age')
   const phoneNumber = register('phoneNumber')
   const CNIC = register('CNIC')
-  const Gender = register('Gender')
-  const Address = register('Address')
+  const address = register('Address')
   const BMI= register('BMI')
-  const Weight = register('Weight')
-  const Height = register('Height')
+  const weight = register('Weight')
+  const height = register('Height')
+
+  const handleGenderChange = (event) => {
+    setGender(event.target.value);
+  };
 
   const handleClickShowPassword = () => {
     setValues({
@@ -160,7 +151,7 @@ export default function SignUp() {
   };
 
   const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
   return (
@@ -176,7 +167,7 @@ export default function SignUp() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <LockOutlined />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
@@ -307,19 +298,18 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="Genderofpatient"
-                  label="Patient Gender"
-                  name="Gender"
-                  autoComplete="PatientGender"
-                  inputRef={Gender.ref}
-                  error={errors.Gender}
-                  onBlur={Gender.onBlur}
-                  helperText={errors.Gender?.message}
-                  onChange={Gender.onChange}
-                />
+                <FormLabel id="gender-label">Gender</FormLabel>
+                <RadioGroup
+                  aria-labelledby="gender-label"
+                  defaultValue="male"
+                  name="gender-group"
+                  value={gender}
+                  onChange={handleGenderChange}
+                  row
+                >
+                  <FormControlLabel value="false" control={<Radio />} label="Female" />
+                  <FormControlLabel value="true" control={<Radio />} label="Male" />
+                </RadioGroup>
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -329,11 +319,11 @@ export default function SignUp() {
                   label="Patient Address"
                   name="Address"
                   autoComplete="PatientAddress"
-                  inputRef={Address.ref}
-                  error={errors.Address}
-                  onBlur={Address.onBlur}
-                  helperText={errors.Address?.message}
-                  onChange={Address.onChange}
+                  inputRef={address.ref}
+                  error={errors.address}
+                  onBlur={address.onBlur}
+                  helperText={errors.address?.message}
+                  onChange={address.onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -359,11 +349,11 @@ export default function SignUp() {
                   label="Patient Weight in kg"
                   name="Weight"
                   autoComplete="PatientWeight"
-                  inputRef={Weight.ref}
-                  error={errors.Weight}
-                  onBlur={Weight.onBlur}
-                  helperText={errors.Weight?.message}
-                  onChange={Weight.onChange}
+                  inputRef={weight.ref}
+                  error={errors.weight}
+                  onBlur={weight.onBlur}
+                  helperText={errors.weight?.message}
+                  onChange={weight.onChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -374,19 +364,13 @@ export default function SignUp() {
                   label="Patient Height in  feet"
                   name="Height"
                   autoComplete="PatientHeight"
-                  inputRef={Height.ref}
-                  error={errors.Height}
-                  onBlur={Height.onBlur}
-                  helperText={errors.Height?.message}
-                  onChange={Height.onChange}
+                  inputRef={height.ref}
+                  error={errors.height}
+                  onBlur={height.onBlur}
+                  helperText={errors.height?.message}
+                  onChange={height.onChange}
                 />
               </Grid>
-
-
-
-
-
-
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
@@ -398,11 +382,9 @@ export default function SignUp() {
             </Snackbar>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <MUILink variant="body2">
-                  <Link href="/login">
-                    {"Already have an account? Sign in"}
-                  </Link>
-                </MUILink>
+                <Link variant="body2" href="/login">
+                  {"Already have an account? Sign in"}
+                </Link>
               </Grid>
             </Grid>
           </Box>
