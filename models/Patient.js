@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
-//import person from "../../models/Person"
-const patient_schema = new mongoose.Schema({
+
+import { Schema, model, models } from 'mongoose';
+const patient_schema = new  Schema({
   Person_ID: {
-    type: Number,
-    required: true,
-    unique: true,
+    type: Schema.Types.ObjectId,
+    required:true,
+    unique:true,
+    ref:'Person'
   },
   
   BMI: {
@@ -22,6 +23,8 @@ const patient_schema = new mongoose.Schema({
     required: true,
     unique: false,
   },
-  //person: [{ type: Schema.Types.ObjectId, ref: 'person' }]
-});
-module.exports = mongoose.model("Patient", patient_schema);
+
+}, {collection: 'Patient'});
+
+const Patient = models.Patient || model('Patient', patient_schema);
+export default Patient;

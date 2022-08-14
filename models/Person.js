@@ -36,22 +36,9 @@ const PersonSchema = new Schema({
     type: String,
     required: true,
   },
-  BMI: {
-    type: Number,
-    required: true,
-    unique: false,
-  },
-  Weight: {
-    type: Number,
-    required: true,
-    unique: false,
-  },
-  Height: {
-    type: Number,
-    required: true,
-    unique: false,
-  },
  
-});
+  
+ 
+}, {collection: 'Person'} );
 const person = models.person || model('person', PersonSchema);
 export default person;
