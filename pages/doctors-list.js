@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react"
-import Search from './doc-list-content/search';
 import Table from './doc-list-content/table';
 import Sidebar from "../components/Sidebar/Sidebar";
 import Navbar from "../components/Navbar/Navbar";
@@ -16,7 +15,6 @@ import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
 
 const mdTheme = createTheme();
-let authorized = false
 
 function DoctorsList() {
   // 0 - not logged in, not authorized
@@ -86,9 +84,6 @@ function DoctorsList() {
           }}
         >
           <Toolbar/>
-          <Container>
-            <Search/>
-          </Container>
           <Container>
             <Table/>
           </Container>

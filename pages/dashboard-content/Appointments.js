@@ -32,6 +32,7 @@ function createData(id, doctor, appointment_date, booking_date, amount, status) 
 
 export default function Appointments() {
   const [rows, setRows] = useState([])
+
   useEffect(() => {
     // Get 5 most recent appointments
     (async() => {

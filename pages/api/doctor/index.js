@@ -8,11 +8,21 @@ export default async (req, res) => {
     try {
       const doctor = Doctor(req.body);
       await doctor.save();
-      res.send(req.body);
+      return res.send(req.body);
     }
     catch (err){
       console.error(err);
       res.status(500).send("Internal server error occurred");
+    }
+  }
+  else if (req.method === "GET"){
+    try {
+      const doctors = await Doctor.find({})
+      return res.status(200).send(JSON.stringify(doctors))
+    }
+    catch (err){
+      console.error(err)
+      res.status(404).send("No doctor found")
     }
   }
 };

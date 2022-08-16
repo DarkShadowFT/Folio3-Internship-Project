@@ -9,7 +9,7 @@ export default async (req, res) => {
     try {
       // Getting Doctor Name
       const {doctorID} = req.query;
-      console.log(doctorID);
+      // console.log(doctorID);
       const doctor = await Doctor.find({_id: doctorID});
       if (doctor[0]){
         // console.log("Doctor info: " + doctor + ", query: " + doctorID);
@@ -19,15 +19,15 @@ export default async (req, res) => {
         // console.log("Doctor common info: ", docInfo);
         const name = docInfo[0].First_Name + " " + docInfo[0].Last_Name;
         // console.log("Doctor Name: ", docName);
-        res.status(200).send(JSON.stringify(name));
+        return res.status(200).send(JSON.stringify(name));
       }
       else {
-        res.status(404).json("No Doctor found!");
+        return res.status(404).json("No Doctor found!");
       }
     }
     catch (err){
       console.error(err);
-      res.status(500).json("Internal server error occurred");
+      return res.status(500).json("Internal server error occurred");
     }
   }
 };
