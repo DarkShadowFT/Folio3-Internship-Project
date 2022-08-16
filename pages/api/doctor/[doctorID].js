@@ -9,7 +9,7 @@ export default async (req, res) => {
     try {
       // Getting Doctor Name
       const {doctorID} = req.query;
-      console.log(doctorID);
+      // console.log(doctorID);
       const doctor = await Doctor.find({_id: doctorID});
       if (doctor[0]){
         // console.log("Doctor info: " + doctor + ", query: " + doctorID);
