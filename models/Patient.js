@@ -1,11 +1,13 @@
+
 import { Schema, model, models } from 'mongoose';
-const patient_schema = new Schema({
+const patient_schema = new  Schema({
   Person_ID: {
     type: Schema.Types.ObjectId,
-    required: true,
-    unique: true,
+    required:true,
+    unique:true,
     ref:'Person'
   },
+  
   BMI: {
     type: Number,
     required: true,
@@ -21,6 +23,8 @@ const patient_schema = new Schema({
     required: true,
     unique: false,
   },
-}, { collection: 'Patient' });
+
+}, {collection: 'Patient'});
+
 const Patient = models.Patient || model('Patient', patient_schema);
-export default Patient
+export default Patient;
