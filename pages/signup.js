@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, { useState, useEffect } from "react"
 import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
@@ -28,10 +28,13 @@ import axios from "axios";
 
 const theme = createTheme()
 
+
+
 export default function SignUp() {
   const [error, setError] = useState("")
   const [showalert, setshowalert] = React.useState(false)
   const [gender, setGender] = useState("male")
+  const [pressSignup, setPressSignup] = React.useState(false)
   const [values, setValues] = React.useState({
     amount: "",
     weight: "",
@@ -95,24 +98,26 @@ export default function SignUp() {
       .min(10, 'BMI should be at least 10 to 50 ')
       .max(50, 'BMI should be between 10 to 50 ')
       .typeError("Enter BMI correctly"),
-    Weight: yup
+    Weight:  yup
       .number("Enter your Weight")
       .required("Please enter your Weight")
       .min(1, 'Weight should be between 1 to 150 kg')
       .max(150, 'Weight should be between 1 to 150 kg')
       .typeError("Enter Weight correctly"),
-
-    Height: yup
+   
+    Height:yup
       .number("Enter your Height")
       .required("Please enter your Height")
       .min(2, 'Height should be between 2 to 7 feet')
       .max(7, 'Height should be between 2 to 7 feet')
       .typeError("Enter Height correctly"),
+      
+
 
 
   }).required();
 
-  const {register, handleSubmit, getValues, formState: {errors}} = useForm({resolver: yupResolver(validationSchema)});
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
   const firstName = register('firstName')
   const lastName = register('lastName')
   const email = register('email')
@@ -148,9 +153,10 @@ export default function SignUp() {
     setshowalert(false);
   };
 
-  const handleSignup = async (evt) => {
-    evt.preventDefault()
+  const handleSignup = async () => {
+
     try {
+      evt.preventDefault();
       setError("")
       // await signup(getValues("email"), getValues("password"));
       setshowalert(true);//if user is sign up successfully set showalert to true.
@@ -184,6 +190,8 @@ export default function SignUp() {
     }
   };
 
+
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -206,7 +214,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={handleSignup} noValidate sx={{mt: 3}}>
+          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{mt: 3}}>
             {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>

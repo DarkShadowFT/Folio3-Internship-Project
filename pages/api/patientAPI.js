@@ -24,7 +24,8 @@ export default async (req, res) => {
       return res.status(500).send("Internal server error occurred");
     }
   }
-  else {
+  else 
+  {
     return res.status(501).json("Invalid API and/or method");
   }
 };
