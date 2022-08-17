@@ -27,6 +27,43 @@ export default function BookingForm() {
   const {currentUser} = useAuth();
   const router = useRouter()
 
+  const url_doctor_api="http://localhost:3000/api/doctor_api"
+  const url_appointment_api="http://localhost:3000/api/appointment_api"
+  const[data,setData]=useState({
+    // first_name:"",
+    // last_name:"",
+    // Specialization:"",
+    // doctor_name:"",
+    Booking_Date:"",
+    Time:"",
+    // appointment_location:"",
+    fee:"",//Appointment Chargers
+    Query:""
+  })
+  function submit(e){
+    e.preventDefault ();
+    console.log("submit got clicked")
+    console.log(data)
+    console.log(data.Query)
+    Axios.post(url_appointment_api,{
+      Query:data.Query,
+      Booking_Date:data.Booking_Date,
+    })
+      .then(res=>{
+        console.log(res.data)
+      })
+  }
+  function handle(e){
+    const newdata={...data}
+    newdata[e.target.id]=e.target.value
+    setData(newdata)
+    console.log(newdata)
+  }
+
+  function sayHello() {
+    alert('You clicked me!');
+  }
+
   useEffect(() => {
     (
       async () => {
@@ -88,6 +125,8 @@ export default function BookingForm() {
         >
           <Toolbar />
           <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
+          <Container  maxWidth="sm" sx={{mt: 4, mb: 2}}>
+            {error && <Alert variant="danger">{error}</Alert>}
             {/* ///////////////////////////////////////////////////////////////*/}
             <Box
               component="form"
@@ -96,24 +135,39 @@ export default function BookingForm() {
                 justifyContent: "space-between",
                 "& .MuiTextField-root": {m: 1, width: "25ch"},
                 spacing: 10,
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+                borderTopLeftRadius:10,
+                borderTopRightRadius:10,
+                width:477
               }}
               noValidate
               autoComplete="off"
             >
               <div>
-                <TextField required id="outlined-required" label="First Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Last Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Doctor Name" defaultValue="" />
-                <TextField required id="outlined-required" label="Doctor Specialization" defaultValue="" />
-                <TextField required id="outlined-required" type="date" />
-                <TextField required id="outlined-required" type="time" />
-                <TextField required id="outlined-required" label="Appointment Location" defaultValue="" />
-                <TextField required id="outlined-required" label="Appointment Charges" defaultValue="" />
+                <TextField onChange={(e)=>handle(e)} required id="first_name" label="First Name" value={data.first_name}  type="text" />
+                <TextField onChange={(e)=>handle(e)} required id="last_name" label="Last Name" value={data.last_name} type="text" />
+                <TextField onChange={(e)=>handle(e)} required id="doctor_name" label="Doctor Name" value={data.doctor_name} type="text" />
+                <TextField onChange={(e)=>handle(e)} required id="Specialization" label="Doctor Specialization" value={data.Specialization} type="text"  />
+                <TextField onChange={(e)=>handle(e)} required id="Booking_Date" type="date" value={data.Booking_Date}/>
+                <TextField onChange={(e)=>handle(e)} required id="Time" type="time" value={data.Time}/>
+                <TextField onChange={(e)=>handle(e)} required id="appointment_location" label="Appointment Location" value={data.appointment_location} type="text" defaultValue="" />
+                <TextField onChange={(e)=>handle(e)} required id="fee" label="Appointment fee" value={data.fee} type="number" defaultValue="" />
+                {/* <Button type="submit" onClick={submit} variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
+                Submit
+                </Button> */}
               </div>
             </Box>
             <Box
               sx={{
                 "& .MuiTextField-root": {m: 1, width: "52ch"},
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+                width:480
               }}
             >
               <TextField required id="outlined-required" label="Email" defaultValue="" fullWidth type="email" />
@@ -121,22 +175,24 @@ export default function BookingForm() {
             <Box
               sx={{
                 "& .MuiTextField-root": {m: 1, width: "52ch"},
+                bgcolor: "white ",
+                mr:1,
+                //border:1,
+                //borderRadius:2,
+                borderBottomLeftRadius:10,
+                borderBottomRightRadius:10,
+                width:480,
               }}
             >
-              <TextField
-                required
-                id="outlined-required"
-                label="Patient Query"
-                defaultValue=""
-                fullWidth
-                multiline
+              <TextField onChange={(e)=>handle(e)}  required id="Query" label="Patient Query" value={data.Query} type="text"
+                fullWidth multiline
                 rows="5"
               />
             </Box>
             <Box>
               <Link href="/my-appointments">
-                <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
-                  Submit
+                <Button type="submit" onClick={submit} variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}>
+                Submit
                 </Button>
               </Link>
             </Box>

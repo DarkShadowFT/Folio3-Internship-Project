@@ -4,10 +4,12 @@ const AppointmentSchema = new Schema({
   Doctor_ID: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'Doctor'
   },
   Patient_ID: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'Patient'
   },
   Query: {
     type: String,
