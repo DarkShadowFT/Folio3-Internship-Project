@@ -67,7 +67,7 @@ export default function BookingForm() {
     alert('You clicked me!');
   }
 
-  if (!loading && auth === 2){
+  useEffect(() => {
     (
       async () => {
         try {
@@ -102,7 +102,7 @@ export default function BookingForm() {
         }
       }
     )();
-  }
+  }, [loading])
 
   useEffect(() => {
     (
