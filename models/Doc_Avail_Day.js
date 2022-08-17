@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import {Schema, model, models} from 'mongoose';
 
 const DADSchema = new Schema({
   Doctor_ID: {
@@ -10,4 +10,6 @@ const DADSchema = new Schema({
     required: true
   },
 });
-module.exports = model("Doc_Avail_Day", DADSchema);
+
+const DocAvailDay = models.Doc_Avail_Day || model('Doc_Avail_Day', DADSchema);
+export default DocAvailDay

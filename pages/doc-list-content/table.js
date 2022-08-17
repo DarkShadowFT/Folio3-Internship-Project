@@ -222,7 +222,8 @@ export default function BasicTable() {
               </TableCell>
               <TableCell align="center">
                 {row.action}
-                <Link href="/booking-form">
+                <Link href={{ pathname: '/booking-form',
+                  query: {docName: row.name, specialization: row.specialization, fee: row.fee} }}>
                   <Button variant="contained">
                     Book Appointment
                   </Button>
