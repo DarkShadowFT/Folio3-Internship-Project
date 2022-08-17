@@ -1,6 +1,10 @@
 import Head from "next/head";
+import {useRouter} from "next/router";
 
 export default function Home() {
+  const router = useRouter()
+  router.push("/login")
+
   return (
     <Head>
       <title>Create Next App</title>

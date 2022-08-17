@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, {useState, useEffect} from "react"
 import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
@@ -22,19 +22,15 @@ import MuiAlert from '@mui/material/Alert'
 import {useForm} from "react-hook-form"
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from "yup"
-import Link from "next/link";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
 import axios from "axios";
 
 const theme = createTheme()
 
-
-
 export default function SignUp() {
   const [error, setError] = useState("")
   const [showalert, setshowalert] = React.useState(false)
   const [gender, setGender] = useState("male")
-  const [pressSignup, setPressSignup] = React.useState(false)
   const [values, setValues] = React.useState({
     amount: "",
     weight: "",
@@ -84,10 +80,6 @@ export default function SignUp() {
       .max(15, 'CNICNumber is exactly 15 characters long and of format xxxxx-xxxxxxx-x')
       .typeError("CNICNumber must be a number")
       .matches("^[0-9]{5}-[0-9]{7}-[0-9]$", 'Should be of the form xxxxx-xxxxxxx-x'),
-    Gender: yup
-      .string("Enter your Gender")
-      .required("Please enter your Gender")
-      .typeError("Enter gender correctly"),
     Address: yup
       .string("Enter your Address")
       .required("Please enter your Address")
@@ -98,26 +90,21 @@ export default function SignUp() {
       .min(10, 'BMI should be at least 10 to 50 ')
       .max(50, 'BMI should be between 10 to 50 ')
       .typeError("Enter BMI correctly"),
-    Weight:  yup
+    Weight: yup
       .number("Enter your Weight")
       .required("Please enter your Weight")
       .min(1, 'Weight should be between 1 to 150 kg')
       .max(150, 'Weight should be between 1 to 150 kg')
       .typeError("Enter Weight correctly"),
-   
-    Height:yup
+    Height: yup
       .number("Enter your Height")
       .required("Please enter your Height")
       .min(2, 'Height should be between 2 to 7 feet')
       .max(7, 'Height should be between 2 to 7 feet')
       .typeError("Enter Height correctly"),
-      
-
-
-
   }).required();
 
-  const { register, handleSubmit, getValues, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
+  const {register, handleSubmit, getValues, formState: {errors}} = useForm({resolver: yupResolver(validationSchema)});
   const firstName = register('firstName')
   const lastName = register('lastName')
   const email = register('email')
@@ -153,12 +140,12 @@ export default function SignUp() {
     setshowalert(false);
   };
 
-  const handleSignup = async () => {
+  const onError = (errors, e) => console.log(errors, e);
 
+  const handleSignup = async () => {
     try {
-      evt.preventDefault();
       setError("")
-      // await signup(getValues("email"), getValues("password"));
+      await signup(getValues("email"), getValues("password"));
       setshowalert(true);//if user is sign up successfully set showalert to true.
 
       const First_Name = getValues('firstName')
@@ -180,16 +167,14 @@ export default function SignUp() {
         First_Name, Last_Name, Email, Password, Age, Phone_Number, CNIC,
         Gender, Address, BMI, Weight, Height
       };
-      const response = await axios.post('/api/patientAPI', object);
-
-      // const timer = setTimeout(() => router.push("/login"), 1500);
-      // return () => clearTimeout(timer);
+      await axios.post('/api/patientAPI', object);
+      const timer = setTimeout(() => router.push("/login"), 1500);
+      return () => clearTimeout(timer);
     } catch (err) {
       setError("Failed to signup: " + err.code)
       setshowalert(false);
     }
   };
-
 
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -214,7 +199,8 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{mt: 3}}>
+          <form onSubmit={handleSubmit(handleSignup, onError)}
+            noValidate sx={{mt: 3}}>
             {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -413,8 +399,6 @@ export default function SignUp() {
                   onChange={Height.onChange}
                 />
               </Grid>
-
-
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
               Sign Up
@@ -431,7 +415,7 @@ export default function SignUp() {
                 </MUILink>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
         <Copyright sx={{mt: 5}}/>
       </Container>
