@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, {useState} from "react"
 import Avatar from "@mui/material/Avatar"
 import Button from "@mui/material/Button"
 import CssBaseline from "@mui/material/CssBaseline"
@@ -9,21 +9,22 @@ import Box from "@mui/material/Box"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import Typography from "@mui/material/Typography"
 import Container from "@mui/material/Container"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
+import {createTheme, ThemeProvider} from "@mui/material/styles"
 import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 import InputAdornment from "@mui/material/InputAdornment"
 import IconButton from "@mui/material/IconButton"
 import Copyright from "../components/copyright/copyright"
-import { useRouter } from 'next/router'
-import { useAuth } from "../contexts/AuthContext"
+import {useRouter} from 'next/router'
+import {useAuth} from "../contexts/AuthContext"
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
-import { useForm } from "react-hook-form"
-import { yupResolver } from '@hookform/resolvers/yup'
+import {useForm} from "react-hook-form"
+import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from "yup"
 import Link from "next/link";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
+import axios from "axios";
 
 const theme = createTheme()
 
@@ -37,7 +38,7 @@ export default function SignUp() {
     weightRange: "",
     showPassword: false,
   });
-  const { signup } = useAuth()
+  const {signup} = useAuth()
   const router = useRouter()
 
   const validationSchema = yup.object({
@@ -94,26 +95,24 @@ export default function SignUp() {
       .min(10, 'BMI should be at least 10 to 50 ')
       .max(50, 'BMI should be between 10 to 50 ')
       .typeError("Enter BMI correctly"),
-    Weight:yup
+    Weight: yup
       .number("Enter your Weight")
       .required("Please enter your Weight")
       .min(1, 'Weight should be between 1 to 150 kg')
       .max(150, 'Weight should be between 1 to 150 kg')
       .typeError("Enter Weight correctly"),
-   
-    Height:yup
+
+    Height: yup
       .number("Enter your Height")
       .required("Please enter your Height")
       .min(2, 'Height should be between 2 to 7 feet')
       .max(7, 'Height should be between 2 to 7 feet')
       .typeError("Enter Height correctly"),
-      
-
 
 
   }).required();
 
-  const { register, handleSubmit, getValues, formState: { errors } } = useForm({ resolver: yupResolver(validationSchema) });
+  const {register, handleSubmit, getValues, formState: {errors}} = useForm({resolver: yupResolver(validationSchema)});
   const firstName = register('firstName')
   const lastName = register('lastName')
   const email = register('email')
@@ -122,12 +121,13 @@ export default function SignUp() {
   const phoneNumber = register('phoneNumber')
   const CNIC = register('CNIC')
   const Address = register('Address')
-  const BMI= register('BMI')
+  const BMI = register('BMI')
   const Weight = register('Weight')
   const Height = register('Height')
 
   const changeGender = (evt) => {
     setGender(evt.target.value)
+    // console.log("Gender = " + gender)
   }
 
   const handleClickShowPassword = () => {
@@ -148,17 +148,37 @@ export default function SignUp() {
     setshowalert(false);
   };
 
-  const handleSignup = async () => {
-
+  const handleSignup = async (evt) => {
+    evt.preventDefault()
     try {
       setError("")
-      await signup(getValues("email"), getValues("password"));
+      // await signup(getValues("email"), getValues("password"));
       setshowalert(true);//if user is sign up successfully set showalert to true.
 
-      const timer = setTimeout(() => router.push("/login"), 1500);
-      return () => clearTimeout(timer);
-    }
-    catch (err) {
+      const First_Name = getValues('firstName')
+      const Last_Name = getValues('lastName')
+      const Email = getValues('email')
+      const Password = getValues('password')
+      const Age = getValues('age')
+      const Phone_Number = getValues('phoneNumber')
+      const CNIC = getValues('CNIC')
+      let Gender = gender
+      console.log("Gender = " + Gender)
+      Gender = Gender === "male";
+      console.log("New Gender = " + Gender)
+      const Address = getValues('Address')
+      const BMI = getValues('BMI')
+      const Weight = getValues('Weight')
+      const Height = getValues('Height')
+      const object = {
+        First_Name, Last_Name, Email, Password, Age, Phone_Number, CNIC,
+        Gender, Address, BMI, Weight, Height
+      };
+      const response = await axios.post('/api/patientAPI', object);
+
+      // const timer = setTimeout(() => router.push("/login"), 1500);
+      // return () => clearTimeout(timer);
+    } catch (err) {
       setError("Failed to signup: " + err.code)
       setshowalert(false);
     }
@@ -171,7 +191,7 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline/>
         <Box
           sx={{
             marginTop: 8,
@@ -180,14 +200,14 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+          <Avatar sx={{m: 1, bgcolor: "secondary.main"}}>
+            <LockOutlinedIcon/>
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={handleSubmit(handleSignup)} noValidate sx={{ mt: 3 }}>
-            {error && < Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+          <Box component="form" onSubmit={handleSignup} noValidate sx={{mt: 3}}>
+            {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -258,7 +278,7 @@ export default function SignUp() {
                           onMouseDown={handleMouseDownPassword}
                           edge="end"
                         >
-                          {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                          {values.showPassword ? <VisibilityOff/> : <Visibility/>}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -268,12 +288,12 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  autoComplete="given-age"
                   required
                   fullWidth
                   id="patientAge"
                   label="Age"
                   name="age"
-                  autoComplete="age"
                   inputRef={age.ref}
                   error={errors.age}
                   onBlur={age.onBlur}
@@ -320,8 +340,8 @@ export default function SignUp() {
                     name="row-radio-buttons-group"
                     onChange={changeGender}
                   >
-                    <FormControlLabel value="male" control={<Radio />} label="Male" />
-                    <FormControlLabel value="female" control={<Radio />} label="Female" />
+                    <FormControlLabel value="male" control={<Radio/>} label="Male"/>
+                    <FormControlLabel value="female" control={<Radio/>} label="Female"/>
                   </RadioGroup>
                 </FormControl>
               </Grid>
@@ -387,16 +407,12 @@ export default function SignUp() {
               </Grid>
 
 
-
-
-
-
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
               Sign Up
             </Button>
             < Snackbar open={showalert} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              <Alert onClose={handleClose} severity="success" sx={{width: '100%'}}>
                 Account created successfully
               </Alert>
             </Snackbar>
@@ -409,8 +425,8 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Copyright sx={{mt: 5}}/>
       </Container>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }

@@ -8,27 +8,23 @@ export default async (req, res) => {
   if (req.method === "POST") {
     try {
       const Person = PersonSchema(req.body);
-
-      Person.save(function (err) {
-        const patient = new Patient({
-          Person_ID: Person._id,  // assign the _id from the person
-          BMI: "30",
-          Weight: "20",
-          Height: "6"
-
-
-        });
-
-        patient.save(function (err) {
-        });
+      await Person.save()
+      const patient = new Patient({
+        Person_ID: Person._id,  // assign the _id from the person
+        BMI: req.body.BMI,
+        Weight: req.body.Weight,
+        Height: req.body.Height
       });
 
-
-      res.send(Person);
+      await patient.save()
+      return res.send(Person);
     }
     catch (err) {
       console.error(err);
-      res.status(500).send("Internal server error occurred");
+      return res.status(500).send("Internal server error occurred");
     }
+  }
+  else {
+    return res.status(501).json("Invalid API and/or method");
   }
 };
