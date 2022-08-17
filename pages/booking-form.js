@@ -141,7 +141,11 @@ export default function BookingForm() {
             newData.fee = doctor.data[0].Fee
             // console.log("Doctor Details = ", doctor.data[0])
             newData.doctorID = doctor.data[0]._id
-            const timer = setTimeout(() => {}, 1500);
+            newData.specialization = doctor.data[0].Specialization
+            const person = await axios.get(`/api/doctor/${newData.doctorID}`)
+            newData.doctor_name = person.data.name
+            // console.log("Doctor name = " + newData.doctor_name)
+            const timer = setTimeout(() => {}, 1000);
             clearTimeout(timer);
             setData(newData)
           }
