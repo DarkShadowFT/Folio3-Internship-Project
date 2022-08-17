@@ -42,7 +42,9 @@ const PersonSchema = new Schema({
     required: true,
     unique: true
   },
-}, {collection: 'Person'});
-
-const Person = models.Person || model('Person', PersonSchema);
-export default Person
+ 
+  
+ 
+}, {collection: 'Person'} );
+const person = models.person || model('person', PersonSchema);
+export default person;

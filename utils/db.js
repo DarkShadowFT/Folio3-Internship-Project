@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const mongoURI =
+  "mongodb://localhost:27017/MyDataBase";
 const connectToMongo = () => {
   if (mongoose.connections[0].readyState) return;
   // Using new database connection
