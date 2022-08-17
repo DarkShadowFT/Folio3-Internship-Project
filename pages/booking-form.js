@@ -25,9 +25,9 @@ function DashboardContent() {
     // Specialization:"",
     // doctor_name:"",
     Booking_Date:"",
-    Time:"",
+    //Time:"",
     // appointment_location:"",
-    fee:"",//Appointment Chargers
+    //fee:"",                   //Appointment Chargers
     Query:""
   })
   function submit(e){

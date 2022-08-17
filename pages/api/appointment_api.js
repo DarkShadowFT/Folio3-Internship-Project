@@ -7,13 +7,13 @@ const handler= async (req,res)=>{
   if (req.method=="POST"){
     console.log("appointmennt api called")
     let d=new Appointment({
-      "Doctor_ID":req.body.Doctor_ID,
-      "Patient_ID":req.body.Patient_ID,
+      //"Doctor_ID":req.body.Doctor_ID,
+      //"Patient_ID":req.body.Patient_ID,
       "Query":req.body.Query,
-      "Date":req.body.Date,
+      //"Date":req.body.Date,
       "Booking_Date":req.body.Booking_Date,
-      "Fee":req.body.Fee,
-      "Status":req.body.Status
+      //"Fee":req.body.Fee,
+      //"Status":req.body.Status
 
     })
     await d.save()
