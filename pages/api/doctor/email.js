@@ -1,4 +1,5 @@
 import Doctor from "../../../models/Doctor"
+import Person from "../../../models/Person";
 import connectToMongo from '../../../utils/db'
 
 export default async (req, res) => {
@@ -7,13 +8,18 @@ export default async (req, res) => {
   if (req.method === "POST"){
     try {
       // Getting Doctor Name
-      // console.log(req.body);
-      const specialization = req.body.searchQuery
-      const regex = new RegExp(specialization, 'i') // i for case insensitive
-      const doctor = await Doctor.find({Specialization: {$regex: regex}});
-      if (doctor[0]){
-        // console.log("Doctor info: " + doctor + ", query: " + doctorID);
-        return res.status(200).send(doctor);
+      const email = req.body.email
+      // console.log("Email = " + email)
+      const person = await Person.find({Email: email})
+      if (person[0]){
+        const doctor = await Doctor.find({Person_ID: person[0]._id});
+        if (doctor[0]){
+          // console.log("Doctor info: " + doctor + ", query: " + doctorID);
+          return res.status(200).send(doctor);
+        }
+        else {
+          return res.status(404).json("No Doctor found!");
+        }
       }
       else {
         return res.status(404).json("No Doctor found!");

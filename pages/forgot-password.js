@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Alert, Button, Box, CssBaseline, Container, Grid, TextField } from "@mui/material"
 import MUILink from "@mui/material/Link";
-import Link from "next/link";
 import { useAuth } from "../contexts/AuthContext"
 
 export default function forgotPassword() {

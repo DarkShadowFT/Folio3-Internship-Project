@@ -51,7 +51,7 @@ export default function Appointments() {
             "Content-Type": "application/json",
           },
         });
-        const docName = response.data;
+        const docName = response.data.name;
 
         let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
         // console.log("row = ", row);

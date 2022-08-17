@@ -18,8 +18,9 @@ export default async (req, res) => {
         const docInfo = await Person.find({_id: personID});
         // console.log("Doctor common info: ", docInfo);
         const name = docInfo[0].First_Name + " " + docInfo[0].Last_Name;
+        const email = docInfo[0].Email
         // console.log("Doctor Name: ", docName);
-        return res.status(200).send(JSON.stringify(name));
+        return res.status(200).send({name: name, email: email});
       }
       else {
         return res.status(404).json("No Doctor found!");

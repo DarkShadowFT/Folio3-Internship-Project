@@ -8,13 +8,13 @@ import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
 import {Search, FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage} from '@mui/icons-material';
 
 
-function createData(id, name, specialization, fee, day_availability, time_availability, action) {
-  return {id, name, specialization, fee, day_availability, time_availability, action};
+function createData(id, docDetails, specialization, fee, day_availability, time_availability, email) {
+  return {id, docDetails, specialization, fee, day_availability, time_availability, email};
 }
 
 function TablePaginationActions(props) {
   const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
+  const {count, page, rowsPerPage, onPageChange} = props;
 
   const handleFirstPageButtonClick = (event) => {
     onPageChange(event, 0);
@@ -33,34 +33,34 @@ function TablePaginationActions(props) {
   };
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+    <Box sx={{flexShrink: 0, ml: 2.5}}>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPage /> : <FirstPage />}
+        {theme.direction === 'rtl' ? <LastPage/> : <FirstPage/>}
       </IconButton>
       <IconButton
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPage /> : <LastPage />}
+        {theme.direction === 'rtl' ? <FirstPage/> : <LastPage/>}
       </IconButton>
     </Box>
   );
@@ -102,11 +102,11 @@ export default function BasicTable() {
           "Content-Type": "application/json",
         },
       });
-      const docName = response.data;
-      // let availability = obj.Days_available + </br> + obj.Slots_available;
-      // console.log("Availability = " + availability)
+      const docDetails = response.data;
+      // console.log("Doctor details = " + JSON.stringify(docDetails))
 
-      const row = createData(counter, docName, obj.Specialization, obj.Fee, obj.Days_available, obj.Slots_available);
+      const row = createData(counter, docDetails, obj.Specialization, obj.Fee, obj.Days_available,
+        obj.Slots_available, obj.Email);
       // console.log("row = ", row);
       data.push(row);
       counter += 1;
@@ -147,119 +147,124 @@ export default function BasicTable() {
 
   return (
     <>
-    <Container style={{
-      display: "flex",
-      alignSelf: "center",
-      justifyContent: "center",
-      flexDirection: "column",
-      padding: 20,
-    }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignSelf: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          padding: 20
-        }}
+      <Container style={{
+        display: "flex",
+        alignSelf: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        padding: 20,
+      }}
       >
-        <form align='center' onSubmit={handleSubmit}>
-          <TextField
-            id="search-bar"
-            className="text"
-            label="Enter Doctor's specialization..."
-            variant="outlined"
-            value={searchQuery}
-            onChange={searchDoctor}
-            size="small"
-            sx={{ width: 500 }}
-            component={Paper}
-          />
-          <IconButton aria-label="search">
-            <Search style={{ fill: "blue" }} />
-          </IconButton>
-        </form>
-      </div>
-    </Container>
-    <TableContainer component={Paper}>
-      <Table sx={{minWidth: 650}} stickyHeader aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell align="center">Doctor Name</TableCell>
-            <TableCell align="center">Doctor Specialization</TableCell>
-            <TableCell align="center">Fee</TableCell>
-            <TableCell align="center">Availability</TableCell>
-            <TableCell align="center">Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow
-              key={row.id}
-              sx={{'&:last-child td, &:last-child th': {border: 0}}}
-            >
-              <TableCell align="center">
-                {<Avatar
-                alt="Remy Sharp"
-                src="/static/images/avatar/1.jpg"
-                sx={{width: 90, height: 90}}
-                />}
-              </TableCell>
-
-              {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly /> */}
-              <TableCell align="center">{row.name}</TableCell>
-              <TableCell align="center">{row.specialization} </TableCell>
-              <TableCell align="center">{row.fee}</TableCell>
-              <TableCell align="center">
-                {`${row.day_availability}`}
-                {' at '}
-                {`${row.time_availability}`}
-              </TableCell>
-              <TableCell align="center">
-                {row.action}
-                <Link href={{ pathname: '/booking-form',
-                  query: {docName: row.name, specialization: row.specialization, fee: row.fee} }}>
-                  <Button variant="contained">
-                    Book Appointment
-                  </Button>
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
-
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={6}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'rows per page',
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
+        <div
+          style={{
+            display: "flex",
+            alignSelf: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            padding: 20
+          }}
+        >
+          <form align='center' onSubmit={handleSubmit}>
+            <TextField
+              id="search-bar"
+              className="text"
+              label="Enter Doctor's specialization..."
+              variant="outlined"
+              value={searchQuery}
+              onChange={searchDoctor}
+              size="small"
+              sx={{width: 500}}
+              component={Paper}
             />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+            <IconButton aria-label="search">
+              <Search style={{fill: "blue"}}/>
+            </IconButton>
+          </form>
+        </div>
+      </Container>
+      <TableContainer component={Paper}>
+        <Table sx={{minWidth: 650}} stickyHeader aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell align="center">Doctor Name</TableCell>
+              <TableCell align="center">Doctor Specialization</TableCell>
+              <TableCell align="center">Fee</TableCell>
+              <TableCell align="center">Availability</TableCell>
+              <TableCell align="center">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : rows
+            ).map((row) => (
+              <TableRow
+                key={row.id}
+                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+              >
+                <TableCell align="center">
+                  {<Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/1.jpg"
+                    sx={{width: 90, height: 90}}
+                  />}
+                </TableCell>
+
+                {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly /> */}
+                <TableCell align="center">{row.docDetails.name}</TableCell>
+                <TableCell align="center">{row.specialization} </TableCell>
+                <TableCell align="center">{row.fee}</TableCell>
+                <TableCell align="center">
+                  {`${row.day_availability}`}
+                  {' at '}
+                  {`${row.time_availability}`}
+                </TableCell>
+                <TableCell align="center">
+                  {row.action}
+                  <Link href={{
+                    pathname: '/booking-form',
+                    query: {
+                      docName: row.docDetails.name, specialization: row.specialization,
+                      fee: row.fee, email: row.docDetails.email
+                    }
+                  }}>
+                    <Button variant="contained">
+                      Book Appointment
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+
+            {emptyRows > 0 && (
+              <TableRow style={{height: 53 * emptyRows}}>
+                <TableCell colSpan={6}/>
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+                colSpan={6}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
     </>
   );
 }

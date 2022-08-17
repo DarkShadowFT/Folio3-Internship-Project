@@ -53,7 +53,7 @@ const getAppointments = async (rows,setrows) => {
             "Content-Type": "application/json",
           },
         });
-        const docName = response.data;
+        const docName = response.data.name;
 
         const time = new Date(obj.Date).toLocaleTimeString('en',
         { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
