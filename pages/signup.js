@@ -23,12 +23,14 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from "yup"
 import Link from "next/link";
+import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
 
 const theme = createTheme()
 
 export default function SignUp() {
   const [error, setError] = useState("")
   const [showalert, setshowalert] = React.useState(false)
+  const [gender, setGender] = useState("male")
   const [values, setValues] = React.useState({
     amount: "",
     weight: "",
@@ -119,11 +121,14 @@ export default function SignUp() {
   const age = register('age')
   const phoneNumber = register('phoneNumber')
   const CNIC = register('CNIC')
-  const Gender = register('Gender')
   const Address = register('Address')
   const BMI= register('BMI')
   const Weight = register('Weight')
   const Height = register('Height')
+
+  const changeGender = (evt) => {
+    setGender(evt.target.value)
+  }
 
   const handleClickShowPassword = () => {
     setValues({
@@ -307,19 +312,18 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="patientGender"
-                  label="Patient Gender"
-                  name="Gender"
-                  autoComplete="PatientGender"
-                  inputRef={Gender.ref}
-                  error={errors.Gender}
-                  onBlur={Gender.onBlur}
-                  helperText={errors.Gender?.message}
-                  onChange={Gender.onChange}
-                />
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    onChange={changeGender}
+                  >
+                    <FormControlLabel value="male" control={<Radio />} label="Male" />
+                    <FormControlLabel value="female" control={<Radio />} label="Female" />
+                  </RadioGroup>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField
