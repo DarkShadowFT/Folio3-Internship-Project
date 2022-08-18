@@ -1,16 +1,75 @@
 import React from "react";
 import {useEffect, useState} from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
 import Link from "next/link";
-import Title from "./Title";
 import Typography from '@mui/material/Typography';
-import { object } from "yup";
 import axios from "axios";
+import PropTypes from 'prop-types';
+import {Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import {Button, IconButton} from '@mui/material';
+import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
+import {FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Delete, Edit} from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const {count, page, rowsPerPage, onPageChange} = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{flexShrink: 0, ml: 2.5}}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPage/> : <FirstPage/>}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPage/> : <LastPage/>}
+      </IconButton>
+    </Box>
+  );
+}
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
 
 // Generate Order Data
 function convertDate(original_date) {
@@ -25,19 +84,19 @@ function convertDate(original_date) {
 function createData(id, doctor, appointment_date, appointment_time, reason) {
   let appt_date = new Date(appointment_date);
   appt_date = convertDate(appt_date);
-  
-   return {id, doctor, appt_date, appointment_time, reason};
+
+  return {id, doctor, appt_date, appointment_time, reason};
 }
 
 
-const getAppointments = async (rows,setrows) => {
+const getAppointments = async (rows, setrows) => {
   /*while(rows.length) {
     //rows.pop();
   }*/
 
   useEffect(() => {
     // Get 5 most recent appointments
-    (async() => {
+    (async () => {
       // API Call
       const response = await axios.get("/api/appointment/", {
         headers: {
@@ -56,11 +115,11 @@ const getAppointments = async (rows,setrows) => {
         const docName = response.data.name;
 
         const time = new Date(obj.Date).toLocaleTimeString('en',
-        { timeStyle: 'short', hour12: false, timeZone: 'UTC' });
+          {timeStyle: 'short', hour12: false, timeZone: 'UTC'});
 
 
         let row = createData(counter, docName, obj.Date, time, obj.Query);
-        console.log(row);
+        // console.log(row);
         data.push(row);
         counter += 1;
       }
@@ -72,35 +131,58 @@ const getAppointments = async (rows,setrows) => {
 
 
 export default function Appointments() {
-  const [rows, setrows] = useState([ ]);
+  const [rows, setrows] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
 
-  getAppointments(rows,setrows);
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  getAppointments(rows, setrows);
   const deleteRow = async (id) => {
 
     alert("Are you sure you want to delete this appointment?");
     setrows(rows.filter((row) => row.id !== id));
     let response = await fetch(`/api/appointment`,
-     { method: 'DELETE' })
-        //setStatus('Delete successful');
-    const data=await response.json()
-    
+      {method: 'DELETE'})
+    //setStatus('Delete successful');
+    const data = await response.json()
+
     console.log(data);
     //getAppointments(rows,setrows);
   }
-  
+
   return (
     <React.Fragment>
-    <br></br>
-    <div>
-    <Typography  style={{color: 'blue', fontSize: 22}}> <b>My Appointments  </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    &nbsp; &nbsp; 
-     <Button  variant="outlined" color="success" href="/booking-form">
-        Create New Appointment
-      </Button>
-      </Typography>
-    
-    </div>
+      <br></br>
+      <div>
+        <Typography style={{color: 'blue', fontSize: 22}}> <b>My Appointments </b></Typography>
+          <Box
+            m={1}
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            // sx={boxDefault}
+          >
+            <Link href="/booking-form">
+              <Button variant="outlined" color="success">
+                Create New Appointment
+              </Button>
+            </Link>
+          </Box>
+
+
+      </div>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -119,7 +201,10 @@ export default function Appointments() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+          ).map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.doctor}</TableCell>
               <TableCell>{row.appt_date}</TableCell>
@@ -127,17 +212,24 @@ export default function Appointments() {
               <TableCell>{row.reason}</TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "white", background: "purple"}}> View</Button>
+                  <Button
+                    style={{color: "white", background: "#39c0ed"}}
+                    startIcon={<VisibilityIcon fontSize="inherit" size="small"/>}
+                  > View</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Link href="/booking-form">
-                  <Button style={{color: "white", background: "blue"}}> Edit</Button>
+                  <Button
+                    style={{color: "white", background: "#ffa900"}}
+                    startIcon={<Edit fontSize="inherit" size="small"/>}
+                  >Edit</Button>
                 </Link>
               </TableCell>
               <TableCell>
                 <Button
-                  style={{color: "white", background: "#ba0001"}}
+                  style={{color: "white", background: "#dc3545"}}
+                  startIcon={<Delete fontSize="inherit" size="small"/>}
                   onClick={() => {
                     deleteRow(row.id);
                   }}
@@ -148,7 +240,33 @@ export default function Appointments() {
               </TableCell>
             </TableRow>
           ))}
+
+          {emptyRows > 0 && (
+            <TableRow style={{height: 53 * emptyRows}}>
+              <TableCell colSpan={6}/>
+            </TableRow>
+          )}
         </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+              colSpan={6}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
     </React.Fragment>
   );

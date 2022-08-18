@@ -62,7 +62,7 @@ export default function Sidebar() {
   }
 
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer variant="permanent" open={open} PaperProps={{ style: { height: "100vh" } }}>
       <Toolbar
         sx={{
           display: "flex",
