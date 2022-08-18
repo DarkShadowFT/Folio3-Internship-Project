@@ -29,7 +29,7 @@ export const mainListItems = (
       </ListItemButton>
     </Link>
     <Link href="/my-appointments" replace>
-      <ListItemButton href="/my-appointments">
+      <ListItemButton>
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>

@@ -108,6 +108,8 @@ export default function BookingForm() {
           Fee: data.fee,
           Status: data.Status
         })
+        const creation_response = await axios.post('/api/sendInBlue/creation', {email: currentUser.email})
+        console.log("Deletion confirmation email response = " + creation_response)
       } else {
 
         await axios.put(url_appointment_api, {

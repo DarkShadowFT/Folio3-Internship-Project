@@ -8,15 +8,14 @@ export default async (req, res) => {
     try {
       const appointment = Appointment(req.body);
       await appointment.save();
-      res.send(req.body);
+      return res.send(req.body);
     }
     catch (err){
       console.error(err);
-      res.status(500).send("Internal server error occurred");
+      return res.status(500).send("Internal server error occurred");
     }
   }
   else if (req.method === "DELETE"){
-    
     const {appID} = req.body;
     let index=parseInt(appID)
     const deletedappointment= await Appointment.findOneAndDelete(index)
@@ -26,8 +25,7 @@ export default async (req, res) => {
     }
     
     console.log(deletedappointment);
-      res.status(200).json(deletedappointment)
-    
+    return res.status(200).json(deletedappointment)
   }
   else if (req.method === "GET") {
     const appointments = await Appointment.find({})

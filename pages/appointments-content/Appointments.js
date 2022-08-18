@@ -9,6 +9,7 @@ import {Button, IconButton} from '@mui/material';
 import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
 import {FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Delete, Edit} from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import {useAuth} from "../../contexts/AuthContext";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -134,6 +135,7 @@ export default function Appointments() {
   const [rows, setrows] = useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(6);
+  const {currentUser} = useAuth();
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -159,6 +161,8 @@ export default function Appointments() {
     const data = await response.json()
 
     console.log(data);
+    const del_response = await axios.post('/api/sendInBlue/deletion', {email: currentUser.email})
+    console.log("Deletion confirmation email response = " + del_response)
     //getAppointments(rows,setrows);
   }
 

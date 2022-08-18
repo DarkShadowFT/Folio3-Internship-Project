@@ -30,7 +30,6 @@ const theme = createTheme();
 
 async function customTokenLogin(googleOAuthLogin, router) {
   const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
-// console.log("idToken = " + response_token)
   const config = {
     headers: {Authorization: idToken},
     credentials: 'include'
@@ -39,9 +38,7 @@ async function customTokenLogin(googleOAuthLogin, router) {
     'http://localhost:3000/api/login',
     config
   )
-// console.log("Received response: " + JSON.stringify(response.data))
   await googleOAuthLogin(response.data.token)
-  console.log("Login with custom token successful")
   const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
   cookieCutter.set('customAuthToken', customToken)
   await router.replace("/dashboard");

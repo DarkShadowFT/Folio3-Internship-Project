@@ -32,6 +32,7 @@
     "recharts": "^2.1.12",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
+    "sib-api-v3-sdk": "^8.4.2",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
