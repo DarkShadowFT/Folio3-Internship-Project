@@ -33,7 +33,7 @@ export default function BookingForm() {
   const {currentUser} = useAuth();
   const router = useRouter()
 
-  const url_appointment_api = "http://localhost:3000/api/appointment_api"
+  const url_appointment_api = "/api/appointment_api"
   const [data, setData] = useState({
     specialization: "", doctor_name: "", appointment_date: "", Booking_Date: "", appointment_time: "", fee: "",//Appointment Charges
     Status: "Pending", patientID: "", doctorID: ""
@@ -264,7 +264,7 @@ export default function BookingForm() {
           const config = {
             headers: {Authorization: idToken}, credentials: 'include'
           };
-          const response = await axios.get('http://localhost:3000/api/auth/booking-form', config)
+          const response = await axios.get('/api/auth/booking-form', config)
           if (response.status === 200) {
             setAuth(2)
           } else {

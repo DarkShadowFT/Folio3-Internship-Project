@@ -44,17 +44,21 @@ export default function Appointments() {
       });
       let counter = 0;
       let data = [];
+      let promises = [];
       for (let obj of response.data) {
         // console.log("obj = ", obj);
-        let response = await axios.get(`/api/doctor/${obj.Doctor_ID}`, {
+        promises.push(axios.get(`/api/doctor/${obj.Doctor_ID}`, {
           headers: {
             "Content-Type": "application/json",
           },
-        });
-        const docName = response.data.name;
+        }));
+      }
+      let doc_api_response = await Promise.all(promises)
+      for (let obj of response.data) {
+        const docName = doc_api_response[counter].data.name;
 
         let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
-        // console.log("row = ", row);
+        // console.log(row);
         data.push(row);
         counter += 1;
       }

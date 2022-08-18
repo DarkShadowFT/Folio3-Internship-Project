@@ -95,19 +95,22 @@ export default function BasicTable() {
   const populateTable = async (response) => {
     let counter = 0;
     let data = [];
+    let promises = [];
     for (let obj of response.data) {
       // console.log("obj = ", obj);
-      let response = await axios.get(`/api/doctor/${obj._id}`, {
+      promises.push(axios.get(`/api/doctor/${obj._id}`, {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      const docDetails = response.data;
-      // console.log("Doctor details = " + JSON.stringify(docDetails))
+      }));
+    }
+    let doc_api_response = await Promise.all(promises)
+    for (let obj of response.data) {
+      const docDetails = doc_api_response[counter].data;
 
       const row = createData(counter, docDetails, obj.Specialization, obj.Fee, obj.Days_available,
         obj.Slots_available, obj.Email);
-      // console.log("row = ", row);
+      // console.log(row);
       data.push(row);
       counter += 1;
     }

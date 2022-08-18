@@ -9,9 +9,11 @@ export default async (req, res) => {
     let formatted_date = year + '-' + '01' + '-' + '01';
     // console.log("formatted_date = " + formatted_date)
     const current_year = new Date(formatted_date);
-    formatted_date = (year + 1) + '-' + '01' + '-' + '01';
+    let formatted_year = parseInt(year)
+    formatted_year += 1
+    formatted_date = formatted_year + '-' + '01' + '-' + '01';
     const next_year = new Date(formatted_date);
-    // console.log("current month = " + current_month + ", \nnext month = " + next_month);
+    // console.log("current year = " + current_year + ", \nnext year = " + next_year);
     if (req.method === "GET") {
       const appointments = await Appointment.find({
         Booking_Date: {

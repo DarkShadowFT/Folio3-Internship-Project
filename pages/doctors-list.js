@@ -35,7 +35,7 @@ function DoctorsList() {
               headers: { Authorization: idToken },
             };
             const response = await axios.get(
-              'http://localhost:3000/api/auth/doctors-list',
+              '/api/auth/doctors-list',
               config
             )
             if (response.status === 200) {

@@ -42,7 +42,7 @@ function MyAppointments() {
               credentials: 'include'
             };
             const response = await axios.get(
-              'http://localhost:3000/api/auth/my-appointments',
+              '/api/auth/my-appointments',
               config
             )
             if (response.status === 200) {

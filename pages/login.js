@@ -35,7 +35,7 @@ async function customTokenLogin(googleOAuthLogin, router) {
     credentials: 'include'
   };
   const response = await axios.get(
-    'http://localhost:3000/api/login',
+    '/api/login',
     config
   )
   await googleOAuthLogin(response.data.token)

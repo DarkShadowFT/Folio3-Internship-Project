@@ -98,12 +98,18 @@ export default function DashboardContent() {
     (async() => {
       const date = new Date()
       const currentYear = date.getFullYear() - 6
+
+      const completed_array = []
+      const pending_array = []
+      const cancelled_array = []
+
       for (let i = currentYear; i < currentYear + 7; i++){
         const response = await axios.get(`/api/dashboard/${i}`)
-
+        // console.log("Response = " + JSON.stringify(response.data))
         let completed_count = 0
         let pending_count = 0
         let cancelled_count = 0
+
         for (let appt of response.data){
           if (appt.Status === "Completed"){
             completed_count += 1
@@ -116,10 +122,19 @@ export default function DashboardContent() {
           }
         }
 
-        setAttended(oldValue => [...oldValue, completed_count])
-        setPending(oldValue => [...oldValue, pending_count])
-        setCancelled(oldValue => [...oldValue, cancelled_count])
+        completed_array.push(completed_count)
+        pending_array.push(pending_count)
+        cancelled_array.push(cancelled_array)
+        completed_count = 0
+        pending_count = 0
+        cancelled_count = 0
       }
+      // console.log("Completed = " + completed_array)
+      // console.log("Pending = " + pending_array)
+      // console.log("Cancelled = " + cancelled_array)
+      setAttended(completed_array)
+      setPending(pending_array)
+      setCancelled(cancelled_array)
     })()
   }, [])
 
@@ -135,7 +150,7 @@ export default function DashboardContent() {
               Authorization: idToken}
             };
           const response = await axios.get(
-            'http://localhost:3000/api/auth/dashboard',
+            '/api/auth/dashboard',
             config
           )
           if (response.status === 200) {

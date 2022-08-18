@@ -22,11 +22,14 @@ export default async (req, res) => {
           $lt: next_month,
         },
       }).sort({Booking_Date: 1});
-      res.send(JSON.stringify(appointments))
+      return res.send(JSON.stringify(appointments))
     }
     catch (err){
       console.error(err)
-      res.status(500).send("Internal server error occurred")
+      return res.status(500).send("Internal server error occurred")
     }
+  }
+  else {
+    return res.status(501).json("Invalid API and/or method");
   }
 }
