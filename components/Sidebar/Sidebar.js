@@ -8,7 +8,6 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import {mainListItems} from "../../pages/dashboard-content/listItems";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -17,6 +16,11 @@ import {useSelector, useDispatch} from "react-redux";
 import {actionCreators} from "../../state/index";
 import {bindActionCreators} from "redux";
 import cookieCutter from "cookie-cutter";
+import Link from "next/link";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import PersonIcon from "@mui/icons-material/Person";
+import BoltIcon from "@mui/icons-material/Bolt";
 
 const drawerWidth = 250;
 
@@ -81,7 +85,38 @@ export default function Sidebar() {
       </Toolbar>
       <Divider />
       <List component="nav">
-        {mainListItems}
+        <Link href="/dashboard" replace>
+          <ListItemButton>
+            <ListItemIcon>
+              <DashboardIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Dashboard"/>
+          </ListItemButton>
+        </Link>
+        <Link href="/doctors-list" replace>
+          <ListItemButton>
+            <ListItemIcon>
+              <AssignmentTurnedInIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Book Appointment"/>
+          </ListItemButton>
+        </Link>
+        <Link href="/my-appointments" replace>
+          <ListItemButton>
+            <ListItemIcon>
+              <PersonIcon/>
+            </ListItemIcon>
+            <ListItemText primary="My Appointments"/>
+          </ListItemButton>
+        </Link>
+        <Link href="/booking-form" replace>
+          <ListItemButton>
+            <ListItemIcon>
+              <BoltIcon/>
+            </ListItemIcon>
+            <ListItemText primary="Instant Appointment"/>
+          </ListItemButton>
+        </Link>
         <ListItemButton onClick={handleLogout}>
           <ListItemIcon>
             <ExitToAppIcon />

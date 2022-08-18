@@ -90,10 +90,24 @@ function createData(id, appt_id, doctor, appointment_date, appointment_time, rea
 }
 
 
-const getAppointments = async (rows, setrows) => {
-  /*while(rows.length) {
-    //rows.pop();
-  }*/
+export default function Appointments() {
+  const [rows, setrows] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(6);
+  const {currentUser} = useAuth();
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
     // Get 5 most recent appointments
@@ -127,30 +141,7 @@ const getAppointments = async (rows, setrows) => {
       setrows(data)
     })()
   }, [])
-  return rows
-};
 
-
-export default function Appointments() {
-  const [rows, setrows] = useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(6);
-  const {currentUser} = useAuth();
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  getAppointments(rows, setrows);
   const deleteRow = async (id) => {
 
     alert("Are you sure you want to delete this appointment?");

@@ -3,7 +3,7 @@ import { Alert, Button, Box, CssBaseline, Container, Grid, TextField } from "@mu
 import MUILink from "@mui/material/Link";
 import { useAuth } from "../contexts/AuthContext"
 
-export default function forgotPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const { resetPassword } = useAuth()
   const [error, setError] = useState("")
