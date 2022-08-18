@@ -81,16 +81,14 @@ function MyAppointments() {
         <Navbar>My Appointments</Navbar>
         <Sidebar/>
         
-        <Box component="main">
+        <Box component="main" sx={{ width: 1 }}>
           <Toolbar />
-          <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+          <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
             {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Grid container spacing={3}>
-              
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                <Appointments />
+                  <Appointments />
                 </Paper>
               </Grid>
             </Grid>
