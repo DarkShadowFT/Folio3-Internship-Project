@@ -81,11 +81,11 @@ function convertDate(original_date) {
 }
 
 // Generate Order Data
-function createData(id, doctor, appointment_date, appointment_time, reason) {
+function createData(id, appt_id, doctor, appointment_date, appointment_time, reason) {
   let appt_date = new Date(appointment_date);
   appt_date = convertDate(appt_date);
 
-  return {id, doctor, appt_date, appointment_time, reason};
+  return {id, appt_id, doctor, appt_date, appointment_time, reason};
 }
 
 
@@ -118,7 +118,7 @@ const getAppointments = async (rows, setrows) => {
           {timeStyle: 'short', hour12: false, timeZone: 'UTC'});
 
 
-        let row = createData(counter, docName, obj.Date, time, obj.Query);
+        let row = createData(counter, obj._id, docName, obj.Date, time, obj.Query);
         // console.log(row);
         data.push(row);
         counter += 1;
@@ -167,19 +167,19 @@ export default function Appointments() {
       <br></br>
       <div>
         <Typography style={{color: 'blue', fontSize: 22}}> <b>My Appointments </b></Typography>
-          <Box
-            m={1}
-            display="flex"
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            // sx={boxDefault}
-          >
-            <Link href="/booking-form">
-              <Button variant="outlined" color="success">
-                Create New Appointment
-              </Button>
-            </Link>
-          </Box>
+        <Box
+          m={1}
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          // sx={boxDefault}
+        >
+          <Link href="/booking-form">
+            <Button variant="outlined" color="success">
+              Create New Appointment
+            </Button>
+          </Link>
+        </Box>
 
 
       </div>
@@ -211,7 +211,11 @@ export default function Appointments() {
               <TableCell>{row.appointment_time}</TableCell>
               <TableCell>{row.reason}</TableCell>
               <TableCell>
-                <Link href="/booking-form">
+                <Link href={{
+                  pathname: '/booking-form',
+                  query: {app_id: row.appt_id, action: "view"}
+                }
+                }>
                   <Button
                     style={{color: "white", background: "#39c0ed"}}
                     startIcon={<VisibilityIcon fontSize="inherit" size="small"/>}
