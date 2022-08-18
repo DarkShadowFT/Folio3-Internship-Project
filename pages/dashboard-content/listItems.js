@@ -12,7 +12,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 
 export const mainListItems = (
   <React.Fragment>
-    <Link href="/dashboard">
+    <Link href="/dashboard" replace>
       <ListItemButton>
         <ListItemIcon>
           <DashboardIcon />
@@ -20,7 +20,7 @@ export const mainListItems = (
         <ListItemText primary="Dashboard" />
       </ListItemButton>
     </Link>
-    <Link href="/doctors-list">
+    <Link href="/doctors-list" replace>
       <ListItemButton>
         <ListItemIcon>
           <AssignmentTurnedInIcon />
@@ -28,7 +28,7 @@ export const mainListItems = (
         <ListItemText primary="Book Appointment" />
       </ListItemButton>
     </Link>
-    <Link href="/my-appointments">
+    <Link href="/my-appointments" replace>
       <ListItemButton href="/my-appointments">
         <ListItemIcon>
           <PersonIcon />
@@ -36,7 +36,7 @@ export const mainListItems = (
         <ListItemText primary="My Appointments" />
       </ListItemButton>
     </Link>
-    <Link href="/booking-form"> 
+    <Link href="/booking-form" replace>
     <ListItemButton>
       <ListItemIcon>
         <BoltIcon />

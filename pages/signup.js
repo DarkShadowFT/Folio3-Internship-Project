@@ -199,8 +199,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form onSubmit={handleSubmit(handleSignup, onError)}
-            noValidate sx={{mt: 3}}>
+          <form onSubmit={handleSubmit(handleSignup, onError)} noValidate style={{marginTop: 3}}>
             {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>

@@ -33,4 +33,7 @@ export default async (req, res) => {
     const appointments = await Appointment.find({})
     return res.status(200).send(JSON.stringify(appointments))
   }
+  else {
+    return res.status(501).json("Invalid API and/or method");
+  }
 };

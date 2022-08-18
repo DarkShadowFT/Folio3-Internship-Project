@@ -223,7 +223,11 @@ export default function Appointments() {
                 </Link>
               </TableCell>
               <TableCell>
-                <Link href="/booking-form">
+                <Link href={{
+                  pathname: '/booking-form',
+                  query: {app_id: row.appt_id, action: "edit"}
+                }
+                }>
                   <Button
                     style={{color: "white", background: "#ffa900"}}
                     startIcon={<Edit fontSize="inherit" size="small"/>}

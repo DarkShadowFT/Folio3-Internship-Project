@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, Button} from "@mui/material";
+import {Alert, Box, Button} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,6 +15,9 @@ import axios from "axios";
 import Custom403 from "./403";
 import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
+import {useForm} from "react-hook-form"
+import {yupResolver} from '@hookform/resolvers/yup'
+import * as yup from "yup"
 
 const theme = createTheme();
 
@@ -26,25 +29,14 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(true);
   const [disabled, setDisabled] = useState(false);
   const [updateMethod, setUpdateMethod] = useState(false);
+  const [error, setError] = useState("")
   const {currentUser} = useAuth();
   const router = useRouter()
 
   const url_appointment_api = "http://localhost:3000/api/appointment_api"
   const [data, setData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    specialization: "",
-    doctor_name: "",
-    doctor_email: "",
-    appointment_date: "",
-    Booking_Date: "",
-    appointment_time: "",
-    fee: "",//Appointment Charges
-    Query: "",
-    Status: "Pending",
-    patientID: "",
-    doctorID: ""
+    specialization: "", doctor_name: "", appointment_date: "", Booking_Date: "", appointment_time: "", fee: "",//Appointment Charges
+    Status: "Pending", patientID: "", doctorID: ""
   })
 
   function getRandomDate(src_date) {
@@ -62,36 +54,76 @@ export default function BookingForm() {
     return new_date;
   }
 
-  async function submit(e) {
-    e.preventDefault();
-    // console.log("submit got clicked")
-    // console.log("Data = " + JSON.stringify(data))
-    // console.log(data.Query)
-    data.Booking_Date = new Date()
+  const onError = (errors, e) => console.log(errors, e);
 
-    if (!updateMethod) {
-      await axios.post(url_appointment_api, {
-        Doctor_ID: data.doctorID,
-        Patient_ID: data.patientID,
-        Query: data.Query,
-        Date: getRandomDate(data.Booking_Date),
-        Booking_Date: data.Booking_Date,
-        Fee: data.fee,
-        Status: data.Status
-      })
-    } else {
-      await axios.put(url_appointment_api, {
-        Doctor_ID: data.doctorID,
-        Patient_ID: data.patientID,
-        Query: data.Query,
-        Date: getRandomDate(data.Booking_Date),
-        Booking_Date: data.Booking_Date,
-        Fee: data.fee,
-        Status: data.Status
-      })
-        .then(res => {
-          console.log(res.data)
+  const validationSchema = yup.object({
+    firstName: yup
+      .string("Enter your first name")
+      .required("Please enter your first name")
+      .min(3, 'First name is too short - should be minimum 3 chars')
+      .max(50, 'First name is too long'), lastName: yup
+      .string("Enter your last name")
+      .required("Please enter your last name")
+      .min(3, 'Last name is too short - should be minimum 3 chars')
+      .max(50, 'Last name is too long'), patientEmail: yup
+      .string("Enter your email")
+      .required("Please enter an email")
+      .email("Enter a valid email"), doctorEmail: yup
+      .string("Enter your email")
+      .required("Please enter an email")
+      .email("Enter a valid email"), query: yup
+      .string("Enter your Query")
+      .required("Please enter your Query")
+      .typeError("Enter Query correctly"),
+  }).required();
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+    formState: {errors}
+  } = useForm({resolver: yupResolver(validationSchema)});
+
+  const firstName = register('firstName')
+  const lastName = register('lastName')
+  const patientEmail = register('patientEmail')
+  const doctorEmail = register('doctorEmail')
+  const query = register('query')
+  const watchDoctorEmail = watch('doctorEmail', '');
+
+  async function submit(e) {
+    try {
+      // e.preventDefault();
+      data.Booking_Date = new Date()
+
+      if (!updateMethod) {
+        await axios.post(url_appointment_api, {
+          Doctor_ID: data.doctorID,
+          Patient_ID: data.patientID,
+          Query: getValues("query"),
+          Date: getRandomDate(data.Booking_Date),
+          Booking_Date: data.Booking_Date,
+          Fee: data.fee,
+          Status: data.Status
         })
+      } else {
+
+        await axios.put(url_appointment_api, {
+          app_id: router.query.app_id,
+          Doctor_ID: data.doctorID,
+          Patient_ID: data.patientID,
+          Query: getValues("query"),
+          Date: getRandomDate(data.Booking_Date),
+          Booking_Date: data.Booking_Date,
+          Fee: data.fee,
+          Status: data.Status
+        })
+      }
+      await router.push("/my-appointments")
+    } catch (err) {
+      setError("Failed to signup: " + err.code)
     }
   }
 
@@ -103,13 +135,44 @@ export default function BookingForm() {
   }
 
   useEffect(() => {
+    const handleRouteChange = (url, {shallow}) => {
+      setValue("doctorEmail", "")
+      setValue("query", "")
+      setAuth(0);
+      setLoading(true);
+      setDisabled(false);
+      setUpdateMethod(false);
+      const newData = {...data}
+      newData.doctor_name = ""
+      newData.doctorID = ""
+      newData.specialization = ""
+      newData.fee = ""
+      newData.Booking_Date = ""
+      newData.appointment_time = ""
+      newData.appointment_date = ""
+      newData.Status = ""
+      setData(newData)
+    }
+
+    router.events.on('routeChangeStart', handleRouteChange)
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+  }, [])
+
+  useEffect(() => {
     (async () => {
       try {
         const userData = await axios.get(`/api/person/${currentUser.email}`)
         const newData = {...data}
-        newData.first_name = userData.data[0].First_Name
-        newData.last_name = userData.data[0].Last_Name
-        newData.email = currentUser.email
+        setValue("firstName", userData.data[0].First_Name)
+        setValue("lastName", userData.data[0].Last_Name)
+        setValue("patientEmail", currentUser.email)
+
+        // Boolean to change request to PUT request if booking form opened in edit mode
         setUpdateMethod(false)
 
         const patient = await axios.get(`/api/patient/${userData.data[0]._id}`)
@@ -118,24 +181,25 @@ export default function BookingForm() {
         if (router.query) {
           if (Object.keys(router.query).length === 2) {
             const appointment = await axios.get(`/api/appointment/${router.query.app_id}`)
-            newData.first_name = appointment.data.first_name
-            newData.last_name = appointment.data.last_name
-            newData.doctor_email = appointment.data.doctor_email
+            setValue("firstName", appointment.data.first_name)
+            setValue("lastName", appointment.data.last_name)
+            setValue("doctorEmail", appointment.data.doctor_email)
             newData.doctor_name = appointment.data.doctor_name
             newData.specialization = appointment.data.doctor_specialization
             newData.fee = appointment.data.appt_fee
-            newData.email = appointment.data.patient_email
-            newData.Query = appointment.data.appt_query
+            setValue("patientEmail", appointment.data.patient_email)
+            setValue("query", appointment.data.appt_query)
             const converted_date = new Date(appointment.data.appt_date)
             // console.log("Converted date = " + converted_date)
             newData.appointment_date = converted_date.toISOString().split('T')[0];
             newData.appointment_time = converted_date.toTimeString().split(' ')[0]
 
-            if (router.query.action === "edit"){
+            if (router.query.action === "edit") {
               setUpdateMethod(true)
+              setDisabled(false)
+            } else if (router.query.action === "view") {
+              setDisabled(true)
             }
-
-            setDisabled(true)
 
           } else {
             if (router.query.docName) {
@@ -151,7 +215,7 @@ export default function BookingForm() {
             }
 
             if (router.query.email) {
-              newData.doctor_email = router.query.email
+              setValue("doctorEmail", router.query.email)
             }
 
             setDisabled(false)
@@ -168,8 +232,9 @@ export default function BookingForm() {
   useEffect(() => {
     (async () => {
       try {
-        if (data.doctor_email !== "") {
-          const doctor = await axios.post('/api/doctor/email', {email: data.doctor_email})
+        const doc_email = watchDoctorEmail
+        if (doc_email && doc_email.length !== 0) {
+          const doctor = await axios.post('/api/doctor/email', {email: doc_email})
           const newData = {...data}
           newData.fee = doctor.data[0].Fee
           // console.log("Doctor Details = ", doctor.data[0])
@@ -178,16 +243,16 @@ export default function BookingForm() {
           const person = await axios.get(`/api/doctor/${newData.doctorID}`)
           newData.doctor_name = person.data.name
           // console.log("Doctor name = " + newData.doctor_name)
-          const timer = setTimeout(() => {
-          }, 1000);
-          clearTimeout(timer);
+          // const timer = setTimeout(() => {
+          // }, 1000);
+          // clearTimeout(timer);
           setData(newData)
         }
       } catch (err) {
-        console.error(err)
+        // console.error(err)
       }
     })();
-  }, [data.doctor_email])
+  }, [watchDoctorEmail])
 
   useEffect(() => {
     (async () => {
@@ -236,93 +301,139 @@ export default function BookingForm() {
       >
         <Toolbar/>
         <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
-          <Box
-            component="form"
-            sx={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              "& .MuiTextField-root": {m: 1, width: "25ch"},
-              spacing: 10,
-              bgcolor: "white ",
-              mr: 1,
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-              width: 477
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField onChange={(e) => handle(e)} required
-                       id="first_name" label="First Name" value={data.first_name} disabled={disabled} type="text"/>
-            <TextField onChange={(e) => handle(e)} required
-                       id="last_name" label="Last Name" value={data.last_name} disabled={disabled} type="text"/>
-          </Box>
-          <Box sx={{
-            "& .MuiTextField-root": {m: 1, width: "52ch"}, bgcolor: "white ", mr: 1, //border:1,
-            //borderRadius:2,
-            width: 480
-          }}>
-            <TextField onChange={(e) => handle(e)} required
-                       id="doctor_email" label="Doctor Email" value={data.doctor_email} disabled={disabled}
-                       type="email"/>
-          </Box>
-          <Box component="form"
-               sx={{
-                 flexDirection: "row",
-                 justifyContent: "space-between",
-                 "& .MuiTextField-root": {m: 1, width: "25ch"},
-                 spacing: 10,
-                 bgcolor: "white ",
-                 mr: 1, //border:1,
-                 //borderRadius:2,
-                 borderTopLeftRadius: 10,
-                 borderTopRightRadius: 10,
-                 width: 477
-               }}
-               noValidate
-               autoComplete="off">
-            <TextField onChange={(e) => handle(e)} required
-                       disabled={true} id="doctor_name" label="Doctor Name" value={data.doctor_name} type="text"/>
-            <TextField onChange={(e) => handle(e)} required
-                       disabled={true} id="specialization" label="Doctor Specialization" value={data.specialization}
-                       type="text"/>
-            {disabled && <TextField onChange={(e) => handle(e)} required
-                                    id="Booking_Date" type="date" disabled={true} label="Appointment Date"
-                                    value={data.appointment_date}/>}
-            {disabled && <TextField onChange={(e) => handle(e)} required
-                                    id="Time" type="time" disabled={true} label="Appointment Time"
-                                    value={data.appointment_time}/>}
-          </Box>
-          <Box sx={{
-            "& .MuiTextField-root": {m: 1, width: "52ch"}, bgcolor: "white ", mr: 1, width: 480
-          }}>
-            <TextField onChange={(e) => handle(e)} required
-                       disabled={true} id="fee" label="Appointment fee" value={data.fee} type="number"/>
-            <TextField onChange={(e) => handle(e)} required id="email"
-                       label="Email" value={data.email} disabled={disabled} fullWidth type="email"/>
-          </Box>
-          <Box
-            sx={{
-              "& .MuiTextField-root": {m: 1, width: "52ch"},
-              bgcolor: "white ",
-              mr: 1,
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-              width: 480,
-            }}
-          >
-            <TextField onChange={(e) => handle(e)} required id="Query" label="Patient Query"
-                       value={data.Query} type="text" disabled={disabled} fullWidth multiline rows="5"
-            />
-          </Box>
-          <Box>
-            <Link href="/my-appointments">
-              <Button type="submit" onClick={submit} variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}
+          <form onSubmit={handleSubmit(submit, onError)} noValidate autoComplete="off">
+            {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
+            <Box
+              sx={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                "& .MuiTextField-root": {m: 1, width: "25ch"},
+                spacing: 10,
+                bgcolor: "white ",
+                mr: 1,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                width: 477
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField required
+                         id="firstName"
+                         label="First Name" name="firstName"
+                         inputRef={firstName.ref}
+                         error={errors.firstName}
+                         onBlur={firstName.onBlur}
+                         helperText={errors.firstName?.message}
+                         onChange={firstName.onChange}
+                         type="text"
+                         disabled={disabled}
+                         autoComplete="off"
+              />
+              <TextField required
+                         id="last_name"
+                         label="Last Name"
+                         name="lastName"
+                         disabled={disabled}
+                         inputRef={lastName.ref}
+                         error={errors.lastName}
+                         onBlur={lastName.onBlur}
+                         helperText={errors.lastName?.message}
+                         onChange={lastName.onChange}
+                         type="text"
+                         autoComplete="off"
+              />
+            </Box>
+            <Box sx={{
+              "& .MuiTextField-root": {m: 1, width: "52ch"}, bgcolor: "white ", mr: 1, width: 480
+            }} noValidate
+                 autoComplete="off">
+              <div>
+                <TextField required
+                           id="doctorEmail"
+                           label="Doctor Email"
+                           disabled={disabled}
+                           inputRef={doctorEmail.ref}
+                           error={errors.doctorEmail}
+                           onBlur={doctorEmail.onBlur}
+                           helperText={errors.doctorEmail?.message}
+                           onChange={doctorEmail.onChange}
+                           name="doctorEmail"
+                           InputLabelProps={{shrink: true}}
+                />
+              </div>
+            </Box>
+            <Box
+              sx={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                "& .MuiTextField-root": {m: 1, width: "25ch"},
+                spacing: 10,
+                bgcolor: "white ",
+                mr: 1, //border:1,
+                //borderRadius:2,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+                width: 477
+              }}
+              noValidate
+              autoComplete="off">
+              <TextField onChange={(e) => handle(e)} required
+                         disabled={true} id="doctor_name" label="Doctor Name" value={data.doctor_name} type="text"/>
+              <TextField onChange={(e) => handle(e)} required
+                         disabled={true} id="specialization" label="Doctor Specialization" value={data.specialization}
+                         type="text"/>
+              {disabled && <TextField onChange={(e) => handle(e)} required
+                                      id="Booking_Date" type="date" disabled={true} label="Appointment Date"
+                                      value={data.appointment_date}/>}
+              {disabled && <TextField onChange={(e) => handle(e)} required
+                                      id="Time" type="time" disabled={true} label="Appointment Time"
+                                      value={data.appointment_time}/>}
+            </Box>
+            <Box sx={{
+              "& .MuiTextField-root": {m: 1, width: "52ch"}, bgcolor: "white ", mr: 1, width: 480
+            }}>
+              <TextField onChange={(e) => handle(e)} required
+                         disabled={true} id="fee" label="Appointment fee" value={data.fee} type="number"/>
+              <TextField required
+                         id="patientEmail"
+                         label="Your Email"
+                         name="patientEmail"
+                         fullWidth
+                         inputRef={patientEmail.ref}
+                         error={errors.patientEmail}
+                         onBlur={patientEmail.onBlur}
+                         helperText={errors.patientEmail?.message}
+                         onChange={patientEmail.onChange}
+                         disabled={disabled}
+              />
+              <div>
+                <TextField
+                  required
+                  id="Query"
+                  label="Patient Query"
+                  name="query"
+                  fullWidth
+                  inputRef={query.ref}
+                  error={errors.query}
+                  onBlur={query.onBlur}
+                  helperText={errors.query?.message}
+                  onChange={query.onChange}
+                  type="text"
+                  disabled={disabled}
+                  multiline
+                  rows={5}
+                  InputLabelProps={{shrink: true}}
+                />
+              </div>
+            </Box>
+            <Box>
+              <Button type="submit" variant="contained" sx={{ml: 15, mt: 2, b: 2, pl: 10, pr: 10}}
                       disabled={disabled}>
                 Submit
               </Button>
-            </Link>
-          </Box>
+            </Box>
+          </form>
         </Container>
         <Copyright sx={{pt: 4}}/>
       </Box>

@@ -55,7 +55,7 @@ export default function Sidebar() {
     try {
       await logout();
       cookieCutter.set('customAuthToken', '', { expires: new Date(0) })
-      await router.push("/login");
+      await router.replace("/login");
     } catch {
       console.error("Failed to log out");
     }
