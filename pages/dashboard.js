@@ -94,49 +94,49 @@ export default function DashboardContent() {
   }, [])
 
   // Fetching 7-year appointments
-  useEffect(() => {
-    (async() => {
-      const date = new Date()
-      const currentYear = date.getFullYear() - 6
-
-      const completed_array = []
-      const pending_array = []
-      const cancelled_array = []
-
-      for (let i = currentYear; i < currentYear + 7; i++){
-        const response = await axios.get(`/api/dashboard/${i}`)
-        // console.log("Response = " + JSON.stringify(response.data))
-        let completed_count = 0
-        let pending_count = 0
-        let cancelled_count = 0
-
-        for (let appt of response.data){
-          if (appt.Status === "Completed"){
-            completed_count += 1
-          }
-          else if (appt.Status === "Cancelled"){
-            cancelled_count += 1
-          }
-          else if (appt.Status === "Pending"){
-            pending_count += 1
-          }
-        }
-
-        completed_array.push(completed_count)
-        pending_array.push(pending_count)
-        cancelled_array.push(cancelled_array)
-        completed_count = 0
-        pending_count = 0
-        cancelled_count = 0
-      }
-      // console.log("Completed = " + completed_array)
-      // console.log("Pending = " + pending_array)
-      // console.log("Cancelled = " + cancelled_array)
-      setAttended(completed_array)
-      setPending(pending_array)
-      setCancelled(cancelled_array)
-    })()
-  }, [])
+  // useEffect(() => {
+  //   (async() => {
+  //     const date = new Date()
+  //     const currentYear = date.getFullYear() - 6
+  //
+  //     const completed_array = []
+  //     const pending_array = []
+  //     const cancelled_array = []
+  //
+  //     for (let i = currentYear; i < currentYear + 7; i++){
+  //       const response = await axios.get(`/api/dashboard/${i}`)
+  //       // console.log("Response = " + JSON.stringify(response.data))
+  //       let completed_count = 0
+  //       let pending_count = 0
+  //       let cancelled_count = 0
+  //
+  //       for (let appt of response.data){
+  //         if (appt.Status === "Completed"){
+  //           completed_count += 1
+  //         }
+  //         else if (appt.Status === "Cancelled"){
+  //           cancelled_count += 1
+  //         }
+  //         else if (appt.Status === "Pending"){
+  //           pending_count += 1
+  //         }
+  //       }
+  //
+  //       completed_array.push(completed_count)
+  //       pending_array.push(pending_count)
+  //       cancelled_array.push(cancelled_array)
+  //       completed_count = 0
+  //       pending_count = 0
+  //       cancelled_count = 0
+  //     }
+  //     // console.log("Completed = " + completed_array)
+  //     // console.log("Pending = " + pending_array)
+  //     // console.log("Cancelled = " + cancelled_array)
+  //     setAttended(completed_array)
+  //     setPending(pending_array)
+  //     setCancelled(cancelled_array)
+  //   })()
+  // }, [])
 
   // Authorizing user
   useEffect(() => {
