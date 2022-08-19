@@ -30,6 +30,7 @@ const theme = createTheme();
 
 async function customTokenLogin(googleOAuthLogin, router) {
   const idToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
+  // console.log("idToken = " + idToken)
   const config = {
     headers: {Authorization: idToken},
     credentials: 'include'
