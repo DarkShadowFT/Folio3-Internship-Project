@@ -38,6 +38,7 @@ async function customTokenLogin(googleOAuthLogin, router) {
     '/api/login',
     config
   )
+  console.log("Login API response = " + response.data)
   await googleOAuthLogin(response.data.token)
   const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
   cookieCutter.set('customAuthToken', customToken)
@@ -85,7 +86,9 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
+          console.log("Signed in with custom credentials")
           await customTokenLogin(googleOAuthLogin, router)
+          console.log("Signed in with custom token")
         } catch (err) {
           console.error(err)
           if (err.code)
