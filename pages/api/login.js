@@ -3,7 +3,7 @@ import {adminAuth} from "../../utils/firebase-admin";
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET'){
-        console.log("headers = " + JSON.stringify(req))
+      console.log("headers = " + JSON.stringify(req))
       const idToken = req.headers['authorization']
       console.log("idToken = " + idToken)
       const decodedToken = await adminAuth.verifyIdToken(idToken)
