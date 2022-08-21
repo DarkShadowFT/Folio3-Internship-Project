@@ -79,15 +79,6 @@ function convertDate(original_date) {
   return date + " " + month + " " + year;
 }
 
-// Generate Order Data
-function createData(id, appt_id, doctor, appointment_date, appointment_time, reason) {
-  let appt_date = new Date(appointment_date);
-  appt_date = convertDate(appt_date);
-
-  return {id, appt_id, doctor, appt_date, appointment_time, reason};
-}
-
-
 export default function Appointments() {
   const [rows, setrows] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -117,25 +108,17 @@ export default function Appointments() {
       });
       let counter = 0;
       let data = [];
-      let promises = [];
       for (let obj of response.data) {
         // console.log("obj = ", obj);
-        promises.push(axios.get(`/api/doctor/${obj.Doctor_ID}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }));
-      }
-      let doc_api_response = await Promise.all(promises)
-      for (let obj of response.data) {
-        const docName = doc_api_response[counter].data.name;
+        const docName = obj.Doctor_ID.Person_ID.First_Name + " " + obj.Doctor_ID.Person_ID.Last_Name
 
         const time = new Date(obj.Date).toLocaleTimeString('en',
           {timeStyle: 'short', hour12: false, timeZone: 'UTC'});
 
-        let row = createData(counter, obj._id, docName, obj.Date, time, obj.Query);
+        // let row = createData(counter, obj._id, docName, obj.Date, time, obj.Query);
         // console.log(row);
-        data.push(row);
+        data.push({id: counter, appt_id: obj._id, doctor: docName, appt_date: obj.Date, appointment_time: time,
+          reason: obj.Query});
         counter += 1;
       }
       setrows(data)

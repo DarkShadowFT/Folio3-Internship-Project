@@ -46,5 +46,5 @@ const PersonSchema = new Schema({
   
  
 }, {collection: 'Person'} );
-const person = models.person || model('person', PersonSchema);
-export default person;
+const Person = models.Person || model('Person', PersonSchema);
+export default Person;

@@ -97,17 +97,7 @@ export default function BasicTable() {
     let data = [];
     let promises = [];
     for (let obj of response.data) {
-      // console.log("obj = ", obj);
-      promises.push(axios.get(`/api/doctor/${obj._id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }));
-    }
-    let doc_api_response = await Promise.all(promises)
-    for (let obj of response.data) {
-      const docDetails = doc_api_response[counter].data;
-
+      const docDetails = {name: obj.Person_ID.First_Name + " " + obj.Person_ID.Last_Name, email: obj.Person_ID.Email}
       const row = createData(counter, docDetails, obj.Specialization, obj.Fee, obj.Days_available,
         obj.Slots_available, obj.Email);
       // console.log(row);

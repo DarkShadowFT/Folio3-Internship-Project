@@ -97,13 +97,13 @@ export default function DashboardContent() {
   // useEffect(() => {
   //   (async() => {
   //     const date = new Date()
-  //     const currentYear = date.getFullYear() - 6
+  //     const currentYear = date.getFullYear()
   //
   //     const completed_array = []
   //     const pending_array = []
   //     const cancelled_array = []
   //
-  //     for (let i = currentYear; i < currentYear + 7; i++){
+  //     for (let i = currentYear; i < currentYear + 1; i++){
   //       const response = await axios.get(`/api/dashboard/${i}`)
   //       // console.log("Response = " + JSON.stringify(response.data))
   //       let completed_count = 0
@@ -246,9 +246,9 @@ export default function DashboardContent() {
                     height: 250,
                   }}
                 >
-                  <div style={{display: "flex", width: "45%"}}>
+                  <div style={{display: "flex", width: "100%"}}>
                     <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}} />
-                    <Bar data={data} width={"10%"} options={options} />
+                    {/*<Bar data={data} width={"10%"} options={options} />*/}
                   </div>
                 </Paper>
               </Grid>

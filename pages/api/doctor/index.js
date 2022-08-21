@@ -17,7 +17,7 @@ export default async (req, res) => {
   }
   else if (req.method === "GET"){
     try {
-      const doctors = await Doctor.find({})
+      const doctors = await Doctor.find({}).populate('Person_ID');
       return res.status(200).send(JSON.stringify(doctors))
     }
     catch (err){

@@ -28,7 +28,10 @@ export default async (req, res) => {
     return res.status(200).json(deletedappointment)
   }
   else if (req.method === "GET") {
-    const appointments = await Appointment.find({})
+    const appointments = await Appointment.find({}).populate({
+      path: 'Doctor_ID', model: 'Doctor',
+      populate: {path: 'Person_ID', model: 'Person'}
+    })
     return res.status(200).send(JSON.stringify(appointments))
   }
   else {

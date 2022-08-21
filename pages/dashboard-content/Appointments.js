@@ -44,19 +44,8 @@ export default function Appointments() {
       });
       let counter = 0;
       let data = [];
-      let promises = [];
       for (let obj of response.data) {
-        // console.log("obj = ", obj);
-        promises.push(axios.get(`/api/doctor/${obj.Doctor_ID}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }));
-      }
-      let doc_api_response = await Promise.all(promises)
-      for (let obj of response.data) {
-        const docName = doc_api_response[counter].data.name;
-
+        const docName = obj.Doctor_ID.Person_ID.First_Name + " " + obj.Doctor_ID.Person_ID.Last_Name
         let row = createData(counter, docName, obj.Date, obj.Booking_Date, obj.Fee, obj.Status);
         // console.log(row);
         data.push(row);
