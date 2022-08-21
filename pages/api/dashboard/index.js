@@ -1,4 +1,6 @@
 import Appointment from "../../../models/Appointment"
+import Doctor from "../../../models/Doctor"
+import Person from "../../../models/Person"
 import connectToMongo from "../../../utils/db"
 
 export default async (req, res) => {

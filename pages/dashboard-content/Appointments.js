@@ -13,10 +13,6 @@ function convertDate(original_date) {
   let year = original_date.getFullYear();
   let month = months[original_date.getMonth()];
   let date = original_date.getDate();
-  // let hour = original_date.getHours();
-  // let min = original_date.getMinutes();
-  // let time = date + " " + month + " " + year + " " + hour + ":" + min;
-   // final date with time, you can use this according your requirement
   return date + " " + month + " " + year;
 }
 

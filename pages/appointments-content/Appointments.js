@@ -79,6 +79,16 @@ function convertDate(original_date) {
   return date + " " + month + " " + year;
 }
 
+// Generate Order Data
+function createData(id, doctor, appointment_date, booking_date, amount, status) {
+  let appt_date = new Date(appointment_date);
+  let book_date = new Date(booking_date);
+  appt_date = convertDate(appt_date);
+  book_date = convertDate(book_date);
+  // console.log("Appointment date = " + appt_date + ", Booking Date = " + book_date);
+  return {id, doctor, appt_date, book_date, amount, status};
+}
+
 export default function Appointments() {
   const [rows, setrows] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -117,8 +127,8 @@ export default function Appointments() {
 
         // let row = createData(counter, obj._id, docName, obj.Date, time, obj.Query);
         // console.log(row);
-        data.push({id: counter, appt_id: obj._id, doctor: docName, appt_date: obj.Date, appointment_time: time,
-          reason: obj.Query});
+        data.push({id: counter, appt_id: obj._id, doctor: docName, appt_date: convertDate(new Date(obj.Date)),
+          appointment_time: time, reason: obj.Query});
         counter += 1;
       }
       setrows(data)
