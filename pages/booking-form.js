@@ -4,7 +4,6 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
-import Link from "next/link";
 import Copyright from "../components/Copyright";
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"

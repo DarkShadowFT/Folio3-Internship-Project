@@ -6,7 +6,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Appointments from "./dashboard-content/Appointments";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Copyright from "../components/Copyright";
@@ -18,9 +17,14 @@ import {useRouter} from "next/router";
 import Custom403 from "./403";
 import Custom401 from "./401";
 import authHelper from "../utils/authHelper"
-// import cookieCutter from 'cookie-cutter'
+import dynamic from 'next/dynamic'
+import {Suspense} from 'react'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const Appointments = dynamic(() => import('./dashboard-content/Appointments'), {
+  suspense: true,
+})
 
 export const options = {
   responsive: true,
@@ -212,7 +216,9 @@ export default function DashboardContent() {
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                  <Appointments/>
+                  <Suspense fallback={`Loading...`}>
+                    <Appointments/>
+                  </Suspense>
                 </Paper>
               </Grid>
             </Grid>

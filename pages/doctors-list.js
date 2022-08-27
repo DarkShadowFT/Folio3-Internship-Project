@@ -6,11 +6,8 @@ import {Box} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Container from '@mui/material/Container';
-import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
 import Custom403 from "./403";
-import axios from "axios";
-// import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'

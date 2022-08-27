@@ -6,16 +6,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Copyright from "../components/Copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import Custom403 from "./403";
-import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
-import axios from "axios";
-// import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'
