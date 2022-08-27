@@ -68,9 +68,10 @@ export default function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const {currentUser, IDToken} = useAuth();
   const [pie_chart_data, setPieChartData] = useState([])
-  const [attended, setAttended] = useState([])
-  const [pending, setPending] = useState([])
-  const [cancelled, setCancelled] = useState([])
+  const [yearlyData, setYearlyData] = useState([[], [], []])
+  // const [attended, setAttended] = useState([])
+  // const [pending, setPending] = useState([])
+  // const [cancelled, setCancelled] = useState([])
 
   // Fetching current month's appointment to be displayed in pie chart
   useEffect(() => {
@@ -98,40 +99,37 @@ export default function DashboardContent() {
   // Fetching 7-year appointments
   useEffect(() => {
     (async () => {
-      const date = new Date()
-      const currentYear = date.getFullYear() - 6
-
-      const completed_array = []
-      const pending_array = []
-      const cancelled_array = []
-
-      for (let i = currentYear; i < currentYear + 7; i++) {
-        const response = await axios.get(`/api/dashboard/${i}`)
-        // console.log("Response = " + JSON.stringify(response.data))
-        let completed_count = 0
-        let pending_count = 0
-        let cancelled_count = 0
-
-        for (let appt of response.data) {
-          if (appt.Status === "Completed") {
-            completed_count += 1
-          } else if (appt.Status === "Cancelled") {
-            cancelled_count += 1
-          } else if (appt.Status === "Pending") {
-            pending_count += 1
+      const response = await axios.get(`/api/appointment/year`)
+      const least_year = new Date().getFullYear() - 6
+      const statuses = ["Cancelled", "Completed", "Pending"]
+      let count = 0
+      for (let i = least_year; i < least_year + 7; i++) {
+        if (response.data[count]._id.date === i) {
+          let copy = [...yearlyData]
+          for (let j = 0; j < statuses.length; j++) {
+            if (response.data[count]._id.status === statuses[j]) {
+              copy[j].push(response.data[count].count)
+            } else {
+              copy[j].push(0)
+            }
+            count += 1
           }
+          setYearlyData(copy)
+        } else {
+          let copy = [...yearlyData]
+          copy[0].push(0)
+          copy[1].push(0)
+          copy[2].push(0)
+          setYearlyData(copy)
         }
-
-        completed_array.push(completed_count)
-        pending_array.push(pending_count)
-        cancelled_array.push(cancelled_array)
-        completed_count = 0
-        pending_count = 0
-        cancelled_count = 0
       }
-      setAttended(completed_array)
-      setPending(pending_array)
-      setCancelled(cancelled_array)
+      // if (appt._id.status === "Completed") {
+      //   setAttended(oldArray => [...oldArray, appt.count])
+      // } else if (appt._id.status === "Cancelled") {
+      //   setCancelled(oldArray => [...oldArray, appt.count])
+      // } else if (appt._id.status === "Pending") {
+      //   setPending(oldArray => [...oldArray, appt.count])
+      // }
     })()
   }, [])
 
@@ -162,17 +160,17 @@ export default function DashboardContent() {
     datasets: [
       {
         label: "Attended",
-        data: attended.map((appt) => appt),
+        data: yearlyData[1].map((appt) => appt),
         backgroundColor: "rgba(255, 99, 132, 0.8)",
       },
       {
         label: "Pending",
-        data: pending.map((appt) => appt),
+        data: yearlyData[2].map((appt) => appt),
         backgroundColor: "rgba(75, 192, 192, 0.8)",
       },
       {
         label: "Cancelled",
-        data: cancelled.map((appt) => appt),
+        data: yearlyData[0].map((appt) => appt),
         backgroundColor: "rgba(53, 162, 235, 0.8)",
       },
     ],
