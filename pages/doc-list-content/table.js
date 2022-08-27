@@ -120,25 +120,10 @@ export default function BasicTable() {
   useEffect(() => {
     // Get doctor(s) matching the entered specialization
     (async () => {
-      if (searchQuery !== ""){
-        const response = await axios.post("/api/doctor/specialization", {searchQuery});
-        await populateTable(response)
-      }
-    })()
-  }, [searchQuery])
-
-  useEffect(() => {
-    // Get doctors list
-    (async () => {
-      // API Call
-      const response = await axios.get("/api/doctor", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post("/api/doctor/specialization", {searchQuery});
       await populateTable(response)
     })()
-  }, [])
+  }, [searchQuery])
 
   return (
     <>
@@ -147,7 +132,7 @@ export default function BasicTable() {
         alignSelf: "center",
         justifyContent: "center",
         flexDirection: "column",
-        padding: 20,
+        padding: 15,
       }}
       >
         <div
@@ -177,7 +162,7 @@ export default function BasicTable() {
           </form>
         </div>
       </Container>
-      <Table sx={{minWidth: 650, minHeight: "70vh"}} stickyHeader aria-label="simple table">
+      <Table sx={{minWidth: 650, minHeight: "60vh"}} stickyHeader aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell></TableCell>
@@ -199,7 +184,7 @@ export default function BasicTable() {
             >
               <TableCell align="center">
                 {<Avatar
-                  sx={{width: 70, height: 70}}
+                  sx={{width: 64, height: 64}}
                   >
                   <Image
                   src="/doctor-character-background_1270-84.webp"
