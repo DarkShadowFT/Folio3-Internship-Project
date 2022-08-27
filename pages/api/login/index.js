@@ -1,4 +1,4 @@
-import {adminAuth} from "../../utils/firebase-admin";
+import {adminAuth} from "../../../utils/firebase-admin";
 
 export default async function handler(req, res) {
   // console.log("API called with ", req.method)
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const idToken = req.headers['authorization']
       // console.log("idToken = " + idToken)
       const decodedToken = await adminAuth.verifyIdToken(idToken)
-      console.log("Decoded token: " + decodedToken)
+      // console.log("Decoded token: " + decodedToken)
       const userId = decodedToken.uid
       const additionalClaims = {
         dashboardView: true,
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         appointmentEdit: true,
         appointmentDelete: true,
       };
-      console.log("Additional claims created with uid = ", userId)
+      // console.log("Additional claims created with uid = ", userId)
       let customToken
       try {
         customToken = await adminAuth.createCustomToken(userId, additionalClaims)
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       catch(err){
         console.error(err)
       }
-      console.log("Created custom token: " + customToken)
+      // console.log("Created custom token: " + customToken)
       const name = decodedToken.name;
       return res.status(200).json({name: name, token: customToken})
     }

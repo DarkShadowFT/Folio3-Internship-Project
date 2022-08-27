@@ -42,9 +42,6 @@ const PersonSchema = new Schema({
     required: true,
     unique: true
   },
- 
-  
- 
 }, {collection: 'Person'} );
 const Person = models.Person || model('Person', PersonSchema);
 export default Person;

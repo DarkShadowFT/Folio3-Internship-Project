@@ -6,6 +6,7 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '
 import {Avatar, Paper, Button, TextField, IconButton, Container} from '@mui/material';
 import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
 import {Search, FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage} from '@mui/icons-material';
+import Image from "next/image";
 
 
 function createData(id, docDetails, specialization, fee, day_availability, time_availability, email) {
@@ -95,7 +96,6 @@ export default function BasicTable() {
   const populateTable = async (response) => {
     let counter = 0;
     let data = [];
-    let promises = [];
     for (let obj of response.data) {
       const docDetails = {name: obj.Person_ID.First_Name + " " + obj.Person_ID.Last_Name, email: obj.Person_ID.Email}
       const row = createData(counter, docDetails, obj.Specialization, obj.Fee, obj.Days_available,
@@ -120,8 +120,10 @@ export default function BasicTable() {
   useEffect(() => {
     // Get doctor(s) matching the entered specialization
     (async () => {
-      const response = await axios.post("/api/doctor/specialization", {searchQuery});
-      await populateTable(response)
+      if (searchQuery !== ""){
+        const response = await axios.post("/api/doctor/specialization", {searchQuery});
+        await populateTable(response)
+      }
     })()
   }, [searchQuery])
 
@@ -175,89 +177,92 @@ export default function BasicTable() {
           </form>
         </div>
       </Container>
-      <TableContainer component={Paper}>
-        <Table sx={{minWidth: 650}} stickyHeader aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell align="center">Doctor Name</TableCell>
-              <TableCell align="center">Doctor Specialization</TableCell>
-              <TableCell align="center">Fee</TableCell>
-              <TableCell align="center">Availability</TableCell>
-              <TableCell align="center">Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : rows
-            ).map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-              >
-                <TableCell align="center">
-                  {<Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
-                    sx={{width: 90, height: 90}}
-                  />}
-                </TableCell>
+      <Table sx={{minWidth: 650, minHeight: "70vh"}} stickyHeader aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell align="center">Doctor Name</TableCell>
+            <TableCell align="center">Doctor Specialization</TableCell>
+            <TableCell align="center">Fee</TableCell>
+            <TableCell align="center">Availability</TableCell>
+            <TableCell align="center">Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+          ).map((row) => (
+            <TableRow
+              key={row.id}
+              sx={{'&:last-child td, &:last-child th': {border: 0}}}
+            >
+              <TableCell align="center">
+                {<Avatar
+                  sx={{width: 70, height: 70}}
+                  >
+                  <Image
+                  src="/doctor-character-background_1270-84.webp"
+                  alt="Doctor Image"
+                  // priority="true"
+                  width={90}
+                  height={90}
+                  />
+                </Avatar>}
+              </TableCell>
 
-                {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly /> */}
-                <TableCell align="center">{row.docDetails.name}</TableCell>
-                <TableCell align="center">{row.specialization} </TableCell>
-                <TableCell align="center">{row.fee}</TableCell>
-                <TableCell align="center">
-                  {`${row.day_availability}`}
-                  {' at '}
-                  {`${row.time_availability}`}
-                </TableCell>
-                <TableCell align="center">
-                  {row.action}
-                  <Link href={{
-                    pathname: '/booking-form',
-                    query: {
-                      docName: row.docDetails.name, specialization: row.specialization,
-                      fee: row.fee, email: row.docDetails.email
-                    }
-                  }}>
-                    <Button variant="contained">
-                      Book Appointment
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {emptyRows > 0 && (
-              <TableRow style={{height: 53 * emptyRows}}>
-                <TableCell colSpan={6}/>
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-                colSpan={6}
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+              <TableCell align="center">{row.docDetails.name}</TableCell>
+              <TableCell align="center">{row.specialization} </TableCell>
+              <TableCell align="center">{row.fee}</TableCell>
+              <TableCell align="center">
+                {`${row.day_availability}`}
+                {' at '}
+                {`${row.time_availability}`}
+              </TableCell>
+              <TableCell align="center">
+                {row.action}
+                <Link href={{
+                  pathname: '/booking-form',
+                  query: {
+                    docName: row.docDetails.name, specialization: row.specialization,
+                    fee: row.fee, email: row.docDetails.email
+                  }
+                }}>
+                  <Button variant="contained">
+                    Book Appointment
+                  </Button>
+                </Link>
+              </TableCell>
             </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+          ))}
+
+          {emptyRows > 0 && (
+            <TableRow style={{height: 53 * emptyRows}}>
+              <TableCell colSpan={6}/>
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+              colSpan={6}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
     </>
   );
 }

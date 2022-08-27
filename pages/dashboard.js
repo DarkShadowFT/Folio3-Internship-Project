@@ -7,9 +7,9 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Appointments from "./dashboard-content/Appointments";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Navbar from "../components/Navbar/Navbar";
-import Copyright from "../components/copyright/copyright";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import Copyright from "../components/Copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import {Pie, Bar} from "react-chartjs-2";
 import {useAuth} from "../contexts/AuthContext";
@@ -17,7 +17,8 @@ import axios from "axios";
 import {useRouter} from "next/router";
 import Custom403 from "./403";
 import Custom401 from "./401";
-import cookieCutter from 'cookie-cutter'
+import authHelper from "../utils/authHelper"
+// import cookieCutter from 'cookie-cutter'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -61,8 +62,7 @@ export default function DashboardContent() {
   // 2 - logged in, authorized
   const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
-  const {currentUser} = useAuth();
-  const router = useRouter()
+  const {currentUser, IDToken} = useAuth();
   const [pie_chart_data, setPieChartData] = useState([])
   const [attended, setAttended] = useState([])
   const [pending, setPending] = useState([])
@@ -70,21 +70,19 @@ export default function DashboardContent() {
 
   // Fetching current month's appointment to be displayed in pie chart
   useEffect(() => {
-    (async() => {
-      const response = await axios.get('/api/dashboard/month')
+    (async () => {
+      const response = await axios.get('/api/appointment/month')
       let completed_count = 0
       let pending_count = 0
       let cancelled_count = 0
       // console.log("Response.data = " + JSON.stringify(response))
-      for (let appt of response.data){
+      for (let appt of response.data) {
         // console.log("appt type = " + JSON.stringify(appt.Status))
-        if (appt.Status === "Completed"){
+        if (appt.Status === "Completed") {
           completed_count += 1
-        }
-        else if (appt.Status === "Cancelled"){
+        } else if (appt.Status === "Cancelled") {
           cancelled_count += 1
-        }
-        else if (appt.Status === "Pending"){
+        } else if (appt.Status === "Pending") {
           pending_count += 1
         }
       }
@@ -95,7 +93,7 @@ export default function DashboardContent() {
 
   // Fetching 7-year appointments
   useEffect(() => {
-    (async() => {
+    (async () => {
       const date = new Date()
       const currentYear = date.getFullYear() - 6
 
@@ -103,21 +101,19 @@ export default function DashboardContent() {
       const pending_array = []
       const cancelled_array = []
 
-      for (let i = currentYear; i < currentYear + 7; i++){
+      for (let i = currentYear; i < currentYear + 7; i++) {
         const response = await axios.get(`/api/dashboard/${i}`)
         // console.log("Response = " + JSON.stringify(response.data))
         let completed_count = 0
         let pending_count = 0
         let cancelled_count = 0
 
-        for (let appt of response.data){
-          if (appt.Status === "Completed"){
+        for (let appt of response.data) {
+          if (appt.Status === "Completed") {
             completed_count += 1
-          }
-          else if (appt.Status === "Cancelled"){
+          } else if (appt.Status === "Cancelled") {
             cancelled_count += 1
-          }
-          else if (appt.Status === "Pending"){
+          } else if (appt.Status === "Pending") {
             pending_count += 1
           }
         }
@@ -129,9 +125,6 @@ export default function DashboardContent() {
         pending_count = 0
         cancelled_count = 0
       }
-      // console.log("Completed = " + completed_array)
-      // console.log("Pending = " + pending_array)
-      // console.log("Cancelled = " + cancelled_array)
       setAttended(completed_array)
       setPending(pending_array)
       setCancelled(cancelled_array)
@@ -140,46 +133,10 @@ export default function DashboardContent() {
 
   // Authorizing user
   useEffect(() => {
-    (async() => {
-      try {
-        if (currentUser) {
-          // const idToken = await currentUser.getIdToken(true)
-          const idToken = cookieCutter.get('customAuthToken')
-          const config = {
-            headers: {
-              Authorization: idToken}
-            };
-          const response = await axios.get(
-            '/api/auth/dashboard',
-            config
-          )
-          if (response.status === 200) {
-            setAuth(2)
-          }
-          else {
-            setAuth(1)
-          }
-          setLoading(false)
-        }
-        else {
-          setAuth(0)
-          setLoading(false)
-        }
-      }
-      catch (e) {
-        setLoading(false)
-        // console.log(e)
-
-        // Refresh the idToken if expired
-        if (e.response.data.code === "auth/id-token-expired"){
-          const idToken = await currentUser.getIdToken(true)
-          cookieCutter.set('customAuthToken', idToken)
-          console.log("About to reload page")
-          await router.reload()
-        }
-        setAuth(0)
-      }
-    })()
+    authHelper({
+      currentUser: currentUser, API_URL: '/api/auth/dashboard', IDToken: IDToken,
+      setAuth: setAuth, setLoading: setLoading
+    })
   }, [])
   // console.log("Auth = " + auth)
 
@@ -220,9 +177,9 @@ export default function DashboardContent() {
   let dashboard = (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
-        <CssBaseline />
+        <CssBaseline/>
         <Navbar>Dashboard</Navbar>
-        <Sidebar />
+        <Sidebar/>
         <Box
           component="main"
           sx={{
@@ -233,7 +190,7 @@ export default function DashboardContent() {
             overflow: "auto",
           }}
         >
-          <Toolbar />
+          <Toolbar/>
           <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
             {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Grid container spacing={3}>
@@ -247,26 +204,26 @@ export default function DashboardContent() {
                   }}
                 >
                   <div style={{display: "flex", width: "45%"}}>
-                    <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}} />
-                    <Bar data={data} width={"10%"} options={options} />
+                    <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}}/>
+                    <Bar data={data} width={"10%"} options={options}/>
                   </div>
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                  <Appointments />
+                  <Appointments/>
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{pt: 4}} />
           </Container>
+          <Copyright sx={{pt: 2}}/>
         </Box>
       </Box>
     </ThemeProvider>
   );
 
-  if (!loading){
+  if (!loading) {
     if (auth === 0)
       return <Custom401/>
     else if (auth === 1)

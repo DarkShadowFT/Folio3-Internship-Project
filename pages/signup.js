@@ -14,7 +14,7 @@ import Visibility from "@mui/icons-material/Visibility"
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 import InputAdornment from "@mui/material/InputAdornment"
 import IconButton from "@mui/material/IconButton"
-import Copyright from "../components/copyright/copyright"
+import Copyright from "../components/Copyright"
 import {useRouter} from 'next/router'
 import {useAuth} from "../contexts/AuthContext"
 import Snackbar from '@mui/material/Snackbar'
@@ -167,7 +167,7 @@ export default function SignUp() {
         First_Name, Last_Name, Email, Password, Age, Phone_Number, CNIC,
         Gender, Address, BMI, Weight, Height
       };
-      await axios.post('/api/patientAPI', object);
+      await axios.post('/api/signup', object);
       const timer = setTimeout(() => router.push("/login"), 1500);
       return () => clearTimeout(timer);
     } catch (err) {

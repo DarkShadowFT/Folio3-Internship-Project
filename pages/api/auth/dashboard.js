@@ -8,8 +8,8 @@ export default async function handler(req, res){
       // console.log("idToken = " + idToken)
       const decodedToken = await adminAuth.verifyIdToken(idToken)
       // console.log("Decoded token: " + JSON.stringify(decodedToken))
-      if (!decodedToken.dashboardView)
-        return res.status(403).json("Not Authorized")
+      // if (!decodedToken.dashboardView)
+      //   return res.status(403).json("Not Authorized")
       // console.log("Created custom token: " + customToken)
       return res.status(200).json("Authorized")
     }

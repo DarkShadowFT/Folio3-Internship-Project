@@ -6,18 +6,25 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Appointments from "./appointments-content/Appointments";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Navbar from "../components/Navbar/Navbar";
-import Copyright from "../components/copyright/copyright";
+
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import Copyright from "../components/Copyright";
 import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from "chart.js";
 import Custom403 from "./403";
 import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
 import axios from "axios";
-import cookieCutter from "cookie-cutter";
+// import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
-export default MyAppointments;
+import dynamic from 'next/dynamic'
+import {Suspense} from 'react'
+import authHelper from "../utils/authHelper";
+
+const Appointments = dynamic(() => import('./appointments-content/Appointments'), {
+  suspense: true,
+})
+
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const mdTheme = createTheme();
@@ -28,72 +35,44 @@ function MyAppointments() {
   // 2 - logged in, authorized
   const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
-  const {currentUser} = useAuth();
-  const router = useRouter()
+  const {currentUser, IDToken} = useAuth();
 
   useEffect(() => {
-    (
-      async () => {
-        try {
-          if (currentUser){
-            const idToken = cookieCutter.get('customAuthToken')            // console.log("idToken = " + idToken)
-            const config = {
-              headers: { Authorization: idToken },
-              credentials: 'include'
-            };
-            const response = await axios.get(
-              '/api/auth/my-appointments',
-              config
-            )
-            if (response.status === 200) {
-              // console.log("Response = " + JSON.stringify(response))
-              setAuth(2)
-            }
-            else {
-              setAuth(1)
-            }
-            setLoading(false)
-          }
-          else {
-            setAuth(0)
-            setLoading(false)
-          }
-        }
-        catch (e) {
-          // Refresh the idToken if expired
-          if (e.response.data.code === "auth/id-token-expired"){
-            const idToken = await currentUser.getIdToken(true)
-            cookieCutter.set('customAuthToken', idToken)
-            console.log("About to reload page")
-            await router.reload()
-          }
-          setAuth(0)
-        }
-      }
-    )();
+    authHelper({
+      currentUser: currentUser, API_URL: '/api/auth/my-appointments', IDToken: IDToken,
+      setAuth: setAuth, setLoading: setLoading
+    })
   })
-  // console.log("Auth = " + auth)
 
   let myAppointments = (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{display: "flex"}}>
-        <CssBaseline />
+        <CssBaseline/>
         <Navbar>My Appointments</Navbar>
         <Sidebar/>
-        
-        <Box component="main" sx={{ width: 1 }}>
-          <Toolbar />
+
+        <Box component="main"
+             sx={{
+               backgroundColor: (theme) =>
+                 theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+               flexGrow: 1,
+               height: "100vh",
+               overflow: "auto",
+             }}
+        >
+          <Toolbar/>
           <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
-            {/* {error && <Alert variant="danger">{error}</Alert>} */}
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                  <Appointments />
+                <Paper sx={{pl: 2, pr: 2, display: "flex", flexDirection: "column"}}>
+                  <Suspense fallback={<Paper sx={{pb: 2, pt: 2}}>{`Loading...`}</Paper>}>
+                    <Appointments/>
+                  </Suspense>
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{pt: 4}} />
           </Container>
+          <Copyright sx={{pt: 2}}/>
         </Box>
       </Box>
     </ThemeProvider>
@@ -110,22 +89,4 @@ function MyAppointments() {
   }
 }
 
-
-// export default function Dashboard() {
-
-//   return (
-//     <Box>
-//       <Card>
-//         <Card>
-//           <h2>Profile</h2>
-//           {error && <Alert variant="danger">{error}</Alert>}
-//           <strong>Email:</strong> {currentUser.email}
-//         </Card>
-//       </Card>
-//       <Divider />
-//       <Button variant="contained" onClick={handleLogout}>
-//           Log Out
-//       </Button>
-//     </Box>
-//   )
-// }
+export default MyAppointments;

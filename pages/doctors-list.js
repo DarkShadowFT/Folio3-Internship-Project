@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react"
-import Table from './doc-list-content/table';
-import Sidebar from "../components/Sidebar/Sidebar";
-import Navbar from "../components/Navbar/Navbar";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {Box} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,8 +10,18 @@ import {useRouter} from "next/router";
 import {useAuth} from "../contexts/AuthContext";
 import Custom403 from "./403";
 import axios from "axios";
-import cookieCutter from "cookie-cutter";
+// import cookieCutter from "cookie-cutter";
 import Custom401 from "./401";
+import dynamic from 'next/dynamic'
+import {Suspense} from 'react'
+import Copyright from "../components/Copyright";
+import authHelper from "../utils/authHelper";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+
+const DynamicComponent = dynamic(() => import('./doc-list-content/table'), {
+  suspense: true,
+})
 
 const mdTheme = createTheme();
 
@@ -22,50 +31,14 @@ function DoctorsList() {
   // 2 - logged in, authorized
   const [auth, setAuth] = useState(0);
   const [loading, setLoading] = useState(true);
-  const {currentUser} = useAuth();
-  const router = useRouter()
+  const {currentUser, IDToken} = useAuth();
 
   useEffect(() => {
-    (
-      async () => {
-        try {
-          if (currentUser){
-            const idToken = cookieCutter.get('customAuthToken')
-            const config = {
-              headers: { Authorization: idToken },
-            };
-            const response = await axios.get(
-              '/api/auth/doctors-list',
-              config
-            )
-            if (response.status === 200) {
-              // console.log("Response = " + JSON.stringify(response))
-              setAuth(2)
-            }
-            else {
-              setAuth(1)
-            }
-            setLoading(false)
-          }
-          else {
-            setAuth(0)
-            setLoading(false)
-          }
-        }
-        catch (e) {
-          // Refresh the idToken if expired
-          if (e.response.data.code === "auth/id-token-expired"){
-            const idToken = await currentUser.getIdToken(true)
-            cookieCutter.set('customAuthToken', idToken)
-            console.log("About to reload page")
-            await router.reload()
-          }
-          setAuth(0)
-        }
-      }
-    )();
+    authHelper({
+      currentUser: currentUser, API_URL: '/api/auth/doctors-list', IDToken: IDToken,
+      setAuth: setAuth, setLoading: setLoading
+    })
   })
-  // console.log("Auth = " + auth)
 
   let doctorsList = (
     <ThemeProvider theme={mdTheme}>
@@ -84,9 +57,18 @@ function DoctorsList() {
           }}
         >
           <Toolbar/>
-          <Container>
-            <Table/>
+          <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper sx={{p: 0, display: "flex", flexDirection: "column"}}>
+                  <Suspense fallback={<Paper sx={{p: 2}}>{`Loading...`}</Paper>}>
+                    <DynamicComponent/>
+                  </Suspense>
+                </Paper>
+              </Grid>
+            </Grid>
           </Container>
+          <Copyright sx={{pt: 2}}/>
         </Box>
       </Box>
     </ThemeProvider>

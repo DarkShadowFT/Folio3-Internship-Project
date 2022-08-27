@@ -10,6 +10,8 @@ import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
 import {FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage, Delete, Edit} from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {useAuth} from "../../contexts/AuthContext";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -32,35 +34,35 @@ function TablePaginationActions(props) {
   };
 
   return (<Box sx={{flexShrink: 0, ml: 2.5}}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === 'rtl' ? <LastPage/> : <FirstPage/>}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === 'rtl' ? <FirstPage/> : <LastPage/>}
-      </IconButton>
-    </Box>);
+    <IconButton
+      onClick={handleFirstPageButtonClick}
+      disabled={page === 0}
+      aria-label="first page"
+    >
+      {theme.direction === 'rtl' ? <LastPage/> : <FirstPage/>}
+    </IconButton>
+    <IconButton
+      onClick={handleBackButtonClick}
+      disabled={page === 0}
+      aria-label="previous page"
+    >
+      {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
+    </IconButton>
+    <IconButton
+      onClick={handleNextButtonClick}
+      disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+      aria-label="next page"
+    >
+      {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
+    </IconButton>
+    <IconButton
+      onClick={handleLastPageButtonClick}
+      disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+      aria-label="last page"
+    >
+      {theme.direction === 'rtl' ? <FirstPage/> : <LastPage/>}
+    </IconButton>
+  </Box>);
 }
 
 TablePaginationActions.propTypes = {
@@ -127,129 +129,134 @@ export default function Appointments() {
 
         // let row = createData(counter, obj._id, docName, obj.Date, time, obj.Query);
         // console.log(row);
-        data.push({id: counter, appt_id: obj._id, doctor: docName, appt_date: convertDate(new Date(obj.Date)),
-          appointment_time: time, reason: obj.Query});
+        data.push({
+          id: counter, appt_id: obj._id, doctor: docName, appt_date: convertDate(new Date(obj.Date)),
+          appointment_time: time, reason: obj.Query
+        });
         counter += 1;
       }
       setrows(data)
-  })()
-}, [])
+    })()
+  }, [])
 
-const deleteRow = async (id) => {
+  const deleteRow = async (id) => {
 
-  alert("Are you sure you want to delete this appointment?");
-  setrows(rows.filter((row) => row.id !== id));
-  let response = await fetch(`/api/appointment`, {method: 'DELETE'})
-  //setStatus('Delete successful');
-  const data = await response.json()
+    alert("Are you sure you want to delete this appointment?");
+    setrows(rows.filter((row) => row.id !== id));
+    let response = await fetch(`/api/appointment`, {method: 'DELETE'})
+    //setStatus('Delete successful');
+    const data = await response.json()
 
-  console.log(data);
-  const del_response = await axios.post('/api/sendInBlue/deletion', {email: currentUser.email})
-  console.log("Deletion confirmation email response = " + del_response)
-  //getAppointments(rows,setrows);
-}
+    console.log(data);
+    const del_response = await axios.post('/api/sendInBlue/deletion', {email: currentUser.email})
+    console.log("Deletion confirmation email response = " + del_response)
+    //getAppointments(rows,setrows);
+  }
 
-return (<React.Fragment>
-    <br></br>
-    <div>
-      <Typography style={{color: 'blue', fontSize: 22}}> <b>My Appointments </b></Typography>
-      <Box
-        m={1}
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="flex-end"
-        // sx={boxDefault}
-      >
-        <Link href="/booking-form">
-          <Button variant="outlined" color="success">
-            Create New Appointment
-          </Button>
-        </Link>
-      </Box>
-
-
-    </div>
-    <Table size="small">
-      <TableHead>
-        <TableRow>
-          <TableCell>
-            <b>Doctor</b>
-          </TableCell>
-          <TableCell>
-            <b>Appointment Date</b>
-          </TableCell>
-          <TableCell>
-            <b>Appointment Time</b>
-          </TableCell>
-          <TableCell>
-            <b>Reason</b>
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row) => (
-          <TableRow key={row.id}>
-            <TableCell>{row.doctor}</TableCell>
-            <TableCell>{row.appt_date}</TableCell>
-            <TableCell>{row.appointment_time}</TableCell>
-            <TableCell>{row.reason}</TableCell>
+  return (
+    <React.Fragment>
+      <div>
+        <Box
+          m={1}
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="flex-end"
+          // sx={boxDefault}
+        >
+          <Link href="/booking-form">
+            <Button variant="outlined" color="success">
+              Create New Appointment
+            </Button>
+          </Link>
+        </Box>
+      </div>
+      <Table sx={{minWidth: 650, minHeight: "60vh"}} stickyHeader aria-label="simple table">
+        <TableHead>
+          <TableRow>
             <TableCell>
-              <Link href={{
-                pathname: '/booking-form', query: {app_id: row.appt_id, action: "view"}
-              }}>
-                <Button
-                  style={{color: "white", background: "#39c0ed"}}
-                  startIcon={<VisibilityIcon fontSize="inherit" size="small"/>}
-                > View</Button>
-              </Link>
+              <b>Doctor</b>
             </TableCell>
             <TableCell>
-              <Link href={{
-                pathname: '/booking-form', query: {app_id: row.appt_id, action: "edit"}
-              }}>
-                <Button
-                  style={{color: "white", background: "#ffa900"}}
-                  startIcon={<Edit fontSize="inherit" size="small"/>}
-                >Edit</Button>
-              </Link>
+              <b>Appointment Date</b>
             </TableCell>
             <TableCell>
-              <Button
-                style={{color: "white", background: "#dc3545"}}
-                startIcon={<Delete fontSize="inherit" size="small"/>}
-                onClick={() => {
-                  deleteRow(row.id);
-                }}
-              >
-                {" "}
-                Delete
-              </Button>
+              <b>Appointment Time</b>
             </TableCell>
-          </TableRow>))}
+            <TableCell>
+              <b>Reason</b>
+            </TableCell>
+            <TableCell>
+              <b>Actions</b>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.doctor}</TableCell>
+              <TableCell>{row.appt_date}</TableCell>
+              <TableCell>{row.appointment_time}</TableCell>
+              <TableCell>{row.reason}</TableCell>
+              <TableCell>
+                <Grid item xs={12} sx={{display: "flex", justifyContent: "space-between"}}>
+                  <Link href={{
+                    pathname: '/booking-form', query: {app_id: row.appt_id, action: "view"}
+                  }}>
+                    <Button
+                      style={{color: "white", background: "#39c0ed"}}
+                      startIcon={<VisibilityIcon fontSize="inherit" size="small"/>}
+                    > View</Button>
+                  </Link>
+                  <Link href={{
+                    pathname: '/booking-form', query: {app_id: row.appt_id, action: "edit"}
+                  }}>
+                    <Button
+                      style={{color: "white", background: "#ffa900"}}
+                      startIcon={<Edit fontSize="inherit" size="small"/>}
+                    >Edit</Button>
+                  </Link>
+                  <Button
+                    style={{color: "white", background: "#dc3545"}}
+                    startIcon={<Delete fontSize="inherit" size="small"/>}
+                    onClick={() => {
+                      deleteRow(row.id);
+                    }}
+                  >
+                    {" "}
+                    Delete
+                  </Button>
+                </Grid>
+              </TableCell>
+              {/*<TableCell>*/}
 
-        {emptyRows > 0 && (<TableRow style={{height: 53 * emptyRows}}>
+              {/*</TableCell>*/}
+              {/*<TableCell>*/}
+              {/*</TableCell>*/}
+            </TableRow>))}
+
+          {emptyRows > 0 && (<TableRow style={{height: 53 * emptyRows}}>
             <TableCell colSpan={6}/>
           </TableRow>)}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
-            colSpan={6}
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            SelectProps={{
-              inputProps: {
-                'aria-label': 'rows per page',
-              }, native: true,
-            }}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-          />
-        </TableRow>
-      </TableFooter>
-    </Table>
-  </React.Fragment>);
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, {label: 'All', value: -1}]}
+              colSpan={6}
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                }, native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </React.Fragment>);
 }

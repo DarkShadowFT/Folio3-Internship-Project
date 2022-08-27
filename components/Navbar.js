@@ -1,14 +1,12 @@
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {styled} from "@mui/material/styles";
 import { useSelector, useDispatch } from 'react-redux';
-import { actionCreators } from "../../state/index";
+import { actionCreators } from "../state";
 import { bindActionCreators } from "redux";
 
 const drawerWidth = 250;

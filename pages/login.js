@@ -16,7 +16,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from 'next/router'
 import {useAuth} from "../contexts/AuthContext";
-import Copyright from "../components/copyright/copyright";
+import Copyright from "../components/Copyright";
 import {useGoogleOneTapLogin} from "react-google-one-tap-login";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -24,7 +24,7 @@ import * as yup from "yup";
 import axios from 'axios'
 import {GoogleAuthProvider, signInWithCredential} from 'firebase/auth'
 import { auth } from "../utils/firebase";
-import cookieCutter from 'cookie-cutter'
+// import cookieCutter from 'cookie-cutter'
 
 const theme = createTheme();
 
@@ -39,17 +39,17 @@ async function customTokenLogin(googleOAuthLogin, router) {
     '/api/login',
     config
   )
-  console.log("Login API response = " + response.data)
+  // console.log("Login API response = " + response.data)
   await googleOAuthLogin(response.data.token)
-  const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
-  cookieCutter.set('customAuthToken', customToken)
+  // const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
+  // cookieCutter.set('customAuthToken', customToken)
   await router.replace("/dashboard");
 }
 
 export default function Login() {
   const [error, setError] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
-  const {googleOAuthLogin, login, currentUser} = useAuth();
+  const {googleOAuthLogin, login, setIDToken, currentUser} = useAuth();
   const router = useRouter()
 
   const togglePassword = () => {
@@ -72,10 +72,7 @@ export default function Login() {
     .required();
 
   const {
-    register,
-    handleSubmit,
-    getValues,
-    formState: {errors},
+    register, handleSubmit, getValues, formState: {errors},
   } = useForm({resolver: yupResolver(validationSchema)});
   const email = register("email");
   const password = register("password");
@@ -87,9 +84,10 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          console.log("Signed in with custom credentials")
-          await customTokenLogin(googleOAuthLogin, router)
-          console.log("Signed in with custom token")
+          await router.push("/dashboard")
+          // console.log("Signed in with custom credentials")
+          // await customTokenLogin(googleOAuthLogin, router)
+          // console.log("Signed in with custom token")
         } catch (err) {
           console.error(err)
           if (err.code)
@@ -106,7 +104,8 @@ export default function Login() {
     try {
       setError("");
       await login(getValues("email"), getValues("password"));
-      await customTokenLogin(googleOAuthLogin, router)
+      await router.push("/dashboard")
+      // await customTokenLogin(googleOAuthLogin, router)
     } catch (err) {
       setError("Failed to login: " + err.code);
     }

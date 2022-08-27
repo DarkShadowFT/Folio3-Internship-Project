@@ -18,6 +18,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
+  const [IDToken, setIDToken] = useState()
     
   function googleOAuthLogin(response) {
     if (response) {
@@ -34,6 +35,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
+    // setIDToken("")
     return signOut(auth)
   }
 
@@ -43,7 +45,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     return onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user)
+      if (user){
+        // console.log("User = " + JSON.stringify(user))
+        setCurrentUser(user)
+        setIDToken(user.stsTokenManager.accessToken)
+      }
       setLoading(false)
     })
   }, [])
@@ -54,7 +60,9 @@ export function AuthProvider({ children }) {
     signup,
     logout,
     resetPassword,
-    googleOAuthLogin
+    googleOAuthLogin,
+    setIDToken,
+    IDToken
   }
 
   return (

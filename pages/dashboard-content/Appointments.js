@@ -4,7 +4,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Title from "./Title";
+import Title from "../../components/Title";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
@@ -33,7 +33,7 @@ export default function Appointments() {
     // Get 5 most recent appointments
     (async() => {
       // API Call
-      const response = await axios.get("/api/dashboard/", {
+      const response = await axios.get("/api/appointment/recentAppointments", {
         headers: {
           "Content-Type": "application/json",
         },
