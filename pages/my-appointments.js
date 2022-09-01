@@ -39,7 +39,7 @@ export default function MyAppointments() {
       currentUser: currentUser, API_URL: '/api/auth/my-appointments', IDToken: IDToken,
       setAuth: setAuth, setLoading: setLoading
     })
-  })
+  }, [])
 
   let myAppointments = (
     <ThemeProvider theme={mdTheme}>

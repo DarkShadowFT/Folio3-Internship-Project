@@ -36,7 +36,7 @@ export default function DoctorsList() {
       currentUser: currentUser, API_URL: '/api/auth/doctors-list', IDToken: IDToken,
       setAuth: setAuth, setLoading: setLoading
     })
-  })
+  }, [])
 
   let doctorsList = (
     <ThemeProvider theme={mdTheme}>

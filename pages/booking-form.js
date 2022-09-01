@@ -268,7 +268,7 @@ export default function BookingForm() {
       currentUser: currentUser, API_URL: '/api/auth/booking-form', IDToken: IDToken,
       setAuth: setAuth, setLoading: setLoading
     })
-  })
+  }, [])
 
   let bookingForm = (<ThemeProvider theme={theme}>
     <Box component="main" sx={{
