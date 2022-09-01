@@ -69,9 +69,6 @@ export default function DashboardContent() {
   const {currentUser, IDToken} = useAuth();
   const [pie_chart_data, setPieChartData] = useState([])
   const [yearlyData, setYearlyData] = useState([[], [], []])
-  // const [attended, setAttended] = useState([])
-  // const [pending, setPending] = useState([])
-  // const [cancelled, setCancelled] = useState([])
 
   // Fetching current month's appointment to be displayed in pie chart
   useEffect(() => {
@@ -80,9 +77,9 @@ export default function DashboardContent() {
       let completed_count = 0
       let pending_count = 0
       let cancelled_count = 0
-      // console.log("Response.data = " + JSON.stringify(response))
+      console.log("Response.data = " + JSON.stringify(response))
       for (let appt of response.data) {
-        // console.log("appt type = " + JSON.stringify(appt.Status))
+        console.log("appt type = " + JSON.stringify(appt.Status))
         if (appt.Status === "Completed") {
           completed_count += 1
         } else if (appt.Status === "Cancelled") {
@@ -91,7 +88,7 @@ export default function DashboardContent() {
           pending_count += 1
         }
       }
-      // console.log("Returning " + [completed_count, pending_count, cancelled_count]);
+      console.log("Returning " + [completed_count, pending_count, cancelled_count]);
       setPieChartData([completed_count, pending_count, cancelled_count])
     })()
   }, [])
