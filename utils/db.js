@@ -6,7 +6,7 @@ const connectToMongo = () => {
   if (mongoose.connections[0].readyState) return;
   // Using new database connection
   // console.log("Monoose = " + mongoose.connections)
-  mongoose.connect(MONGO_URI, () => {
+  mongoose.connect(MONGO_URI, { maxPoolSize: 100, minPoolSize: 25 }, () => {
     console.log("Connected to Mongo Successfully");
   });
 };
