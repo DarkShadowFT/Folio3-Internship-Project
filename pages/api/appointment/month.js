@@ -21,7 +21,7 @@ export default async (req, res) => {
           $gte: current_month,
           $lt: next_month,
         },
-      }).sort({Date: 1});
+      });
       return res.send(JSON.stringify(appointments))
     }
     catch (err){
