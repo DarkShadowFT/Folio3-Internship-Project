@@ -69,9 +69,6 @@ export default function DashboardContent() {
   const {currentUser, IDToken} = useAuth();
   const [pie_chart_data, setPieChartData] = useState([])
   const [yearlyData, setYearlyData] = useState([[], [], []])
-  // const [attended, setAttended] = useState([])
-  // const [pending, setPending] = useState([])
-  // const [cancelled, setCancelled] = useState([])
 
   // Fetching current month's appointment to be displayed in pie chart
   useEffect(() => {

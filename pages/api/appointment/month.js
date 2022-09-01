@@ -12,16 +12,16 @@ export default async (req, res) => {
   const current_month = new Date(formatted_date);
   formatted_date = year + '-' + (month + 1) + '-' + '01';
   const next_month = new Date(formatted_date);
-  // console.log("current month = " + current_month + ", \nnext month = " + next_month);
+  console.log("current month = " + current_month + ", \nnext month = " + next_month);
 
   if (req.method === "GET") {
     try {
       const appointments = await Appointment.find({
-        Booking_Date: {
+        Date: {
           $gte: current_month,
           $lt: next_month,
         },
-      }).sort({Booking_Date: 1});
+      }).sort({Date: 1});
       return res.send(JSON.stringify(appointments))
     }
     catch (err){

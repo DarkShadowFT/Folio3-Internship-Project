@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "find-me-a-doctor-dev",
   storageBucket: "find-me-a-doctor-dev.appspot.com",
   messagingSenderId: "293626469940",
-  appId: "1:293626469940:web:59152084384af542d13461"
+  appId: "1:293626469940:web:d7a4be05d5c9589fd13461"
 };
 
 // Initialize Firebase
