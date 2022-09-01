@@ -164,7 +164,7 @@ export default function Appointments() {
           // sx={boxDefault}
         >
           <Link href="/booking-form">
-            <Button variant="outlined" color="success">
+            <Button variant="outlined" color="success" sx={{mt: 2, mb: 0}}>
               Create New Appointment
             </Button>
           </Link>

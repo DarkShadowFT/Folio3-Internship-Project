@@ -16,6 +16,7 @@ import Custom401 from "./401";
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'
 import authHelper from "../utils/authHelper";
+import Layout from "../components/Layout";
 
 const Appointments = dynamic(() => import('./appointments-content/Appointments'), {
   suspense: true,
@@ -25,7 +26,7 @@ ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tool
 
 const mdTheme = createTheme();
 
-function MyAppointments() {
+export default function MyAppointments() {
   // 0 - not logged in, not authorized
   // 1 - logged in, not authorized
   // 2 - logged in, authorized
@@ -42,34 +43,28 @@ function MyAppointments() {
 
   let myAppointments = (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{display: "flex"}}>
-        <CssBaseline/>
-        <Navbar>My Appointments</Navbar>
-        <Sidebar/>
-
-        <Box component="main"
-             sx={{
-               backgroundColor: (theme) =>
-                 theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-               flexGrow: 1,
-               height: "100vh",
-               overflow: "auto",
-             }}
-        >
-          <Toolbar/>
-          <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{pl: 2, pr: 2, display: "flex", flexDirection: "column"}}>
-                  <Suspense fallback={<Paper sx={{pb: 2, pt: 2}}>{`Loading...`}</Paper>}>
-                    <Appointments/>
-                  </Suspense>
-                </Paper>
-              </Grid>
+      <Box component="main"
+           sx={{
+             backgroundColor: (theme) =>
+               theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+             flexGrow: 1,
+             height: "100vh",
+             overflow: "auto",
+           }}
+      >
+        <Toolbar/>
+        <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper sx={{pl: 2, pr: 2, display: "flex", flexDirection: "column"}}>
+                <Suspense fallback={`Loading...`}>
+                  <Appointments/>
+                </Suspense>
+              </Paper>
             </Grid>
-          </Container>
-          <Copyright sx={{pt: 2}}/>
-        </Box>
+          </Grid>
+        </Container>
+        <Copyright sx={{pt: 2}}/>
       </Box>
     </ThemeProvider>
   );
@@ -85,4 +80,15 @@ function MyAppointments() {
   }
 }
 
-export default MyAppointments;
+MyAppointments.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Box sx={{display: "flex"}}>
+        <CssBaseline/>
+        <Navbar>My Appointments</Navbar>
+        <Sidebar/>
+        {page}
+      </Box>
+    </Layout>
+  )
+}

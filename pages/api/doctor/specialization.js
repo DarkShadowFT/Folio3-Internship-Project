@@ -11,7 +11,7 @@ export default async (req, res) => {
       // console.log(req.body);
       const specialization = req.body.searchQuery
       const regex = new RegExp(specialization, 'i') // i for case insensitive
-      const doctor = await Doctor.find({Specialization: {$regex: regex}}).populate('Person_ID');
+      const doctor = await Doctor.find({Specialization: {$regex: regex}}).populate('Person_ID').lean();
       if (doctor[0]){
         // console.log("Doctor info: " + doctor + ", query: " + doctorID);
         return res.status(200).send(doctor);

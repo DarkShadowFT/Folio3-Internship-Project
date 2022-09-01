@@ -8,11 +8,10 @@ export default async (req, res) => {
     await connectToMongo()
 
     if (req.method === "GET") {
-      const appointments = await Appointment.find({}).sort("-date").limit(5).populate({
+      const appointments = await Appointment.find({}).limit(5).sort({Date: -1}).populate({
         path: 'Doctor_ID', model: 'Doctor',
         populate: {path: 'Person_ID', model: 'Person'}
-      })
-
+      }).lean()
       return res.status(200).send(JSON.stringify(appointments))
     }
   }

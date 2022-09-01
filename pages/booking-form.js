@@ -17,6 +17,7 @@ import {useForm} from "react-hook-form"
 import {yupResolver} from '@hookform/resolvers/yup'
 import * as yup from "yup"
 import authHelper from "../utils/authHelper";
+import Layout from "../components/Layout";
 
 const theme = createTheme();
 
@@ -270,168 +271,164 @@ export default function BookingForm() {
   })
 
   let bookingForm = (<ThemeProvider theme={theme}>
-    <Box sx={{display: "flex"}}>
-      <CssBaseline/>
-      <Navbar>Booking Form</Navbar>
-      <Sidebar/>
-      <Box component="main" sx={{
-        backgroundColor: (theme) => theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-        flexGrow: 1,
-        height: "100vh",
-        overflow: "auto",
-      }}
-      >
-        <Toolbar/>
-        <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
-          <form onSubmit={handleSubmit(submit, onError)} noValidate autoComplete="off">
-            {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
-            <Box
-              sx={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                "& .MuiTextField-root": {m: 1, width: "25ch"},
-                spacing: 10,
-                backgroundColor: "white ",
-                mr: 1,
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-                width: 477
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <Box>
-                <TextField required
-                           id="firstName"
-                           label="First Name" name="firstName"
-                           inputRef={firstName.ref}
-                           error={errors.firstName}
-                           onBlur={firstName.onBlur}
-                           helperText={errors.firstName?.message}
-                           onChange={firstName.onChange}
-                           type="text"
-                           disabled={disabled}
-                           autoComplete="off"
-                           InputLabelProps={{shrink: true}}
-                />
-                <TextField required
-                           id="last_name"
-                           label="Last Name"
-                           name="lastName"
-                           disabled={disabled}
-                           inputRef={lastName.ref}
-                           error={errors.lastName}
-                           onBlur={lastName.onBlur}
-                           helperText={errors.lastName?.message}
-                           onChange={lastName.onChange}
-                           type="text"
-                           autoComplete="off"
-                           InputLabelProps={{shrink: true}}
-                />
-              </Box>
-              <Box sx={{
-                "& .MuiTextField-root": {m: 1, width: "51.7ch"}, mr: 1, width: 477
-              }} noValidate
-                   autoComplete="off">
-                <div>
-                  <TextField required
-                             id="doctorEmail"
-                             label="Doctor Email"
-                             disabled={disabled}
-                             inputRef={doctorEmail.ref}
-                             error={errors.doctorEmail}
-                             onBlur={doctorEmail.onBlur}
-                             helperText={errors.doctorEmail?.message}
-                             onChange={doctorEmail.onChange}
-                             name="doctorEmail"
-                             InputLabelProps={{shrink: true}}
-                  />
-                </div>
-              </Box>
-              <Box noValidate autoComplete="off">
-                <TextField onChange={(e) => handle(e)}
-                           required
-                           disabled={true}
-                           id="doctor_name"
-                           label="Doctor Name"
-                           value={data.doctor_name}
-                           type="text"
-                           InputLabelProps={{shrink: true}}
-                />
-                <TextField onChange={(e) => handle(e)}
-                           required
-                           disabled={true}
-                           id="specialization"
-                           label="Doctor Specialization"
-                           value={data.specialization}
-                           type="text"
-                           InputLabelProps={{shrink: true}}
-                />
-                {disabled && <TextField onChange={(e) => handle(e)} required
-                                        id="Booking_Date" type="date" disabled={true} label="Appointment Date"
-                                        value={data.appointment_date} InputLabelProps={{shrink: true}}/>}
-                {disabled && <TextField onChange={(e) => handle(e)} required
-                                        id="Time" type="time" disabled={true} label="Appointment Time"
-                                        value={data.appointment_time} InputLabelProps={{shrink: true}}/>}
-              </Box>
-              <Box sx={{
-                "& .MuiTextField-root": {m: 1, width: "51.7ch"}, mr: 1, width: 477
-              }}>
-                <TextField onChange={(e) => handle(e)}
-                           required
-                           disabled={true}
-                           id="fee"
-                           label="Appointment fee"
-                           value={data.fee}
-                           type="number"
-                           InputLabelProps={{shrink: true}}
-                />
-                <TextField required
-                           id="patientEmail"
-                           label="Your Email"
-                           name="patientEmail"
-                           fullWidth
-                           inputRef={patientEmail.ref}
-                           error={errors.patientEmail}
-                           onBlur={patientEmail.onBlur}
-                           helperText={errors.patientEmail?.message}
-                           onChange={patientEmail.onChange}
-                           disabled={disabled}
-                           InputLabelProps={{shrink: true}}
-                />
-                <div>
-                  <TextField
-                    required
-                    id="Query"
-                    label="Patient Query"
-                    name="query"
-                    fullWidth
-                    inputRef={query.ref}
-                    error={errors.query}
-                    onBlur={query.onBlur}
-                    helperText={errors.query?.message}
-                    onChange={query.onChange}
-                    type="text"
-                    disabled={disabled}
-                    multiline
-                    rows={5}
-                    InputLabelProps={{shrink: true}}
-                  />
-                </div>
-              </Box>
-              <Container sx={{display: "flex", justifyContent: "center"}}>
-                <Button type="submit" variant="contained" sx={{mb: 3, mt: 2, b: 2, pl: 10, pr: 10}}
-                        disabled={disabled}>
-                  Submit
-                </Button>
-              </Container>
+    <Box component="main" sx={{
+      backgroundColor: (theme) => theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+      flexGrow: 1,
+      height: "100vh",
+      overflow: "auto",
+    }}
+    >
+      <Toolbar/>
+      <Container maxWidth="sm" sx={{mt: 4, mb: 2}}>
+        <form onSubmit={handleSubmit(submit, onError)} noValidate autoComplete="off">
+          {error && < Alert severity="error" sx={{mb: 3}}>{error}</Alert>}
+          <Box
+            sx={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              "& .MuiTextField-root": {m: 1, width: "25ch"},
+              spacing: 10,
+              backgroundColor: "white ",
+              mr: 1,
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              width: 477
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <Box>
+              <TextField required
+                         id="firstName"
+                         label="First Name" name="firstName"
+                         inputRef={firstName.ref}
+                         error={errors.firstName}
+                         onBlur={firstName.onBlur}
+                         helperText={errors.firstName?.message}
+                         onChange={firstName.onChange}
+                         type="text"
+                         disabled={disabled}
+                         autoComplete="off"
+                         InputLabelProps={{shrink: true}}
+              />
+              <TextField required
+                         id="last_name"
+                         label="Last Name"
+                         name="lastName"
+                         disabled={disabled}
+                         inputRef={lastName.ref}
+                         error={errors.lastName}
+                         onBlur={lastName.onBlur}
+                         helperText={errors.lastName?.message}
+                         onChange={lastName.onChange}
+                         type="text"
+                         autoComplete="off"
+                         InputLabelProps={{shrink: true}}
+              />
             </Box>
-          </form>
-        </Container>
-        <Copyright sx={{pt: 2}}/>
-      </Box>
+            <Box sx={{
+              "& .MuiTextField-root": {m: 1, width: "51.7ch"}, mr: 1, width: 477
+            }} noValidate
+                 autoComplete="off">
+              <div>
+                <TextField required
+                           id="doctorEmail"
+                           label="Doctor Email"
+                           disabled={disabled}
+                           inputRef={doctorEmail.ref}
+                           error={errors.doctorEmail}
+                           onBlur={doctorEmail.onBlur}
+                           helperText={errors.doctorEmail?.message}
+                           onChange={doctorEmail.onChange}
+                           name="doctorEmail"
+                           InputLabelProps={{shrink: true}}
+                />
+              </div>
+            </Box>
+            <Box noValidate autoComplete="off">
+              <TextField onChange={(e) => handle(e)}
+                         required
+                         disabled={true}
+                         id="doctor_name"
+                         label="Doctor Name"
+                         value={data.doctor_name}
+                         type="text"
+                         InputLabelProps={{shrink: true}}
+              />
+              <TextField onChange={(e) => handle(e)}
+                         required
+                         disabled={true}
+                         id="specialization"
+                         label="Doctor Specialization"
+                         value={data.specialization}
+                         type="text"
+                         InputLabelProps={{shrink: true}}
+              />
+              {disabled && <TextField onChange={(e) => handle(e)} required
+                                      id="Booking_Date" type="date" disabled={true} label="Appointment Date"
+                                      value={data.appointment_date} InputLabelProps={{shrink: true}}/>}
+              {disabled && <TextField onChange={(e) => handle(e)} required
+                                      id="Time" type="time" disabled={true} label="Appointment Time"
+                                      value={data.appointment_time} InputLabelProps={{shrink: true}}/>}
+            </Box>
+            <Box sx={{
+              "& .MuiTextField-root": {m: 1, width: "51.7ch"}, mr: 1, width: 477
+            }}>
+              <TextField onChange={(e) => handle(e)}
+                         required
+                         disabled={true}
+                         id="fee"
+                         label="Appointment fee"
+                         value={data.fee}
+                         type="number"
+                         InputLabelProps={{shrink: true}}
+              />
+              <TextField required
+                         id="patientEmail"
+                         label="Your Email"
+                         name="patientEmail"
+                         fullWidth
+                         inputRef={patientEmail.ref}
+                         error={errors.patientEmail}
+                         onBlur={patientEmail.onBlur}
+                         helperText={errors.patientEmail?.message}
+                         onChange={patientEmail.onChange}
+                         disabled={disabled}
+                         InputLabelProps={{shrink: true}}
+              />
+              <div>
+                <TextField
+                  required
+                  id="Query"
+                  label="Patient Query"
+                  name="query"
+                  fullWidth
+                  inputRef={query.ref}
+                  error={errors.query}
+                  onBlur={query.onBlur}
+                  helperText={errors.query?.message}
+                  onChange={query.onChange}
+                  type="text"
+                  disabled={disabled}
+                  multiline
+                  rows={5}
+                  InputLabelProps={{shrink: true}}
+                />
+              </div>
+            </Box>
+            <Container sx={{display: "flex", justifyContent: "center"}}>
+              <Button type="submit" variant="contained" sx={{mb: 3, mt: 2, b: 2, pl: 10, pr: 10}}
+                      disabled={disabled}>
+                Submit
+              </Button>
+            </Container>
+          </Box>
+        </form>
+      </Container>
+      <Copyright sx={{pt: 2}}/>
     </Box>
-  </ThemeProvider>);
+  </ThemeProvider>
+  );
 
   if (!loading) {
     if (auth === 0) {
@@ -442,4 +439,17 @@ export default function BookingForm() {
       return bookingForm
     }
   }
+}
+
+BookingForm.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Box sx={{display: "flex"}}>
+        <CssBaseline/>
+        <Navbar>Booking Form</Navbar>
+        <Sidebar/>
+        {page}
+      </Box>
+    </Layout>
+  )
 }

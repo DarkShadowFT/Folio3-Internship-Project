@@ -33,7 +33,7 @@ export default async (req, res) => {
     const appointments = await Appointment.find({}).populate({
       path: 'Doctor_ID', model: 'Doctor',
       populate: {path: 'Person_ID', model: 'Person'}
-    })
+    }).lean()
     return res.status(200).send(JSON.stringify(appointments))
   }
   else {

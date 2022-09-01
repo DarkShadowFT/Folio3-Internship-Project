@@ -15,6 +15,7 @@ import Copyright from "../components/Copyright";
 import authHelper from "../utils/authHelper";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import Layout from "../components/Layout";
 
 const DynamicComponent = dynamic(() => import('./doc-list-content/table'), {
   suspense: true,
@@ -22,7 +23,7 @@ const DynamicComponent = dynamic(() => import('./doc-list-content/table'), {
 
 const mdTheme = createTheme();
 
-function DoctorsList() {
+export default function DoctorsList() {
   // 0 - not logged in, not authorized
   // 1 - logged in, not authorized
   // 2 - logged in, authorized
@@ -39,34 +40,29 @@ function DoctorsList() {
 
   let doctorsList = (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{display: "flex"}}>
-        <CssBaseline/>
-        <Navbar>Doctors List</Navbar>
-        <Sidebar/>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar/>
-          <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{p: 0, display: "flex", flexDirection: "column"}}>
-                  <Suspense fallback={<Paper sx={{p: 2}}>{`Loading...`}</Paper>}>
-                    <DynamicComponent/>
-                  </Suspense>
-                </Paper>
-              </Grid>
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+          flexGrow: 1,
+          height: "100vh",
+          overflow: "auto",
+        }}
+      >
+        <Toolbar/>
+        <Container maxWidth="xl" sx={{mt: 4, mb: 4}}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper sx={{p: 0, display: "flex", flexDirection: "column"}}>
+                <Suspense fallback={<Paper sx={{p: 2}}>{`Loading...`}</Paper>}>
+                  <DynamicComponent/>
+                </Suspense>
+              </Paper>
             </Grid>
-          </Container>
-          <Copyright sx={{pt: 2}}/>
-        </Box>
+          </Grid>
+        </Container>
+        <Copyright sx={{pt: 2}}/>
       </Box>
     </ThemeProvider>
   );
@@ -82,4 +78,15 @@ function DoctorsList() {
   }
 }
 
-export default DoctorsList;
+DoctorsList.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Box sx={{display: "flex"}}>
+        <CssBaseline/>
+        <Navbar>Doctors List</Navbar>
+        <Sidebar/>
+        {page}
+      </Box>
+    </Layout>
+  )
+}

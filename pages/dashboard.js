@@ -13,12 +13,12 @@ import {Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Ti
 import {Pie, Bar} from "react-chartjs-2";
 import {useAuth} from "../contexts/AuthContext";
 import axios from "axios";
-import {useRouter} from "next/router";
 import Custom403 from "./403";
 import Custom401 from "./401";
 import authHelper from "../utils/authHelper"
 import dynamic from 'next/dynamic'
 import {Suspense} from 'react'
+import Layout from '../components/Layout'
 
 ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -178,51 +178,46 @@ export default function DashboardContent() {
 
   let dashboard = (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{display: "flex"}}>
-        <CssBaseline/>
-        <Navbar>Dashboard</Navbar>
-        <Sidebar/>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar/>
-          <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
-            {/* {error && <Alert variant="danger">{error}</Alert>} */}
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    height: 250,
-                  }}
-                >
-                  <div style={{display: "flex", width: "45%"}}>
-                    <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}}/>
-                    <Bar data={data} width={"10%"} options={options}/>
-                  </div>
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
-                  <Suspense fallback={`Loading...`}>
-                    <Appointments/>
-                  </Suspense>
-                </Paper>
-              </Grid>
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+          flexGrow: 1,
+          height: "100vh",
+          overflow: "auto",
+        }}
+      >
+        <Toolbar/>
+        <Container maxWidth="lg" sx={{mt: 4, mb: 4}}>
+          {/* {error && <Alert variant="danger">{error}</Alert>} */}
+          <Grid container spacing={3}>
+            {/* Chart */}
+            <Grid item xs={12} md={8} lg={12}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  height: 250,
+                }}
+              >
+                <div style={{display: "flex", width: "45%"}}>
+                  <Pie data={pie_data} width="300px" options={{maintainAspectRatio: false}}/>
+                  <Bar data={data} width={"10%"} options={options}/>
+                </div>
+              </Paper>
             </Grid>
-          </Container>
-          <Copyright sx={{pt: 2}}/>
-        </Box>
+            {/* Recent Orders */}
+            <Grid item xs={12}>
+              <Paper sx={{p: 2, display: "flex", flexDirection: "column"}}>
+                <Suspense fallback={`Loading...`}>
+                  <Appointments/>
+                </Suspense>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
+        <Copyright sx={{pt: 2}}/>
       </Box>
     </ThemeProvider>
   );
@@ -235,4 +230,17 @@ export default function DashboardContent() {
     else
       return dashboard
   }
+}
+
+DashboardContent.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <Box sx={{display: "flex"}}>
+        <CssBaseline/>
+        <Navbar>Dashboard</Navbar>
+        <Sidebar/>
+        {page}
+      </Box>
+    </Layout>
+  )
 }

@@ -7,17 +7,17 @@ export default async (req, res) => {
 
   if (req.method === "POST") {
     try {
-      const Person = Person(req.body);
-      await Person.save()
+      const person = Person(req.body);
+      await person.save()
       const patient = Patient({
-        Person_ID: Person._id,  // assign the _id from the person
+        Person_ID: person._id,  // assign the _id from the person
         BMI: req.body.BMI,
         Weight: req.body.Weight,
         Height: req.body.Height
       });
 
       await patient.save()
-      return res.send(Person);
+      return res.send(person);
     }
     catch (err) {
       console.error(err);
