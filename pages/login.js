@@ -43,7 +43,7 @@ async function customTokenLogin(googleOAuthLogin, router) {
   await googleOAuthLogin(response.data.token)
   // const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
   // cookieCutter.set('customAuthToken', customToken)
-  await router.replace("/dashboard");
+  await router.prefetch("/dashboard");
 }
 
 export default function Login() {
@@ -84,7 +84,7 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          await router.push("/dashboard")
+          await router.prefetch("/dashboard")
           // console.log("Signed in with custom credentials")
           // await customTokenLogin(googleOAuthLogin, router)
           // console.log("Signed in with custom token")
@@ -104,7 +104,7 @@ export default function Login() {
     try {
       setError("");
       await login(getValues("email"), getValues("password"));
-      await router.push("/dashboard")
+      await router.prefetch("/dashboard")
       // await customTokenLogin(googleOAuthLogin, router)
     } catch (err) {
       setError("Failed to login: " + err.code);

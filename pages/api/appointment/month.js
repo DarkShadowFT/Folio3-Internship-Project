@@ -12,7 +12,7 @@ export default async (req, res) => {
   const current_month = new Date(formatted_date);
   formatted_date = year + '-' + (month + 1) + '-' + '01';
   const next_month = new Date(formatted_date);
-  console.log("current month = " + current_month + ", \nnext month = " + next_month);
+  // console.log("current month = " + current_month + ", \nnext month = " + next_month);
 
   if (req.method === "GET") {
     try {
