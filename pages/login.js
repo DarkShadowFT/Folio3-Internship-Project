@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Alert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -24,7 +24,6 @@ import * as yup from "yup";
 import axios from 'axios'
 import {GoogleAuthProvider, signInWithCredential} from 'firebase/auth'
 import { auth } from "../utils/firebase";
-// import cookieCutter from 'cookie-cutter'
 
 const theme = createTheme();
 
@@ -43,7 +42,7 @@ async function customTokenLogin(googleOAuthLogin, router) {
   await googleOAuthLogin(response.data.token)
   // const customToken = await auth.currentUser.getIdToken(/* forceRefresh */ true)
   // cookieCutter.set('customAuthToken', customToken)
-  await router.prefetch("/dashboard");
+  await router.push("/dashboard");
 }
 
 export default function Login() {
@@ -84,7 +83,7 @@ export default function Login() {
           setError("")
           const cred = GoogleAuthProvider.credential(credential)
           await signInWithCredential(auth, cred)
-          await router.prefetch("/dashboard")
+          await router.push("/dashboard")
           // console.log("Signed in with custom credentials")
           // await customTokenLogin(googleOAuthLogin, router)
           // console.log("Signed in with custom token")
@@ -104,12 +103,18 @@ export default function Login() {
     try {
       setError("");
       await login(getValues("email"), getValues("password"));
-      await router.prefetch("/dashboard")
+      await router.push("/dashboard")
       // await customTokenLogin(googleOAuthLogin, router)
     } catch (err) {
       setError("Failed to login: " + err.code);
     }
   };
+
+  // Prefetch dashboard page
+  useEffect(() => {
+    // Prefetch the dashboard page
+    router.prefetch('/dashboard')
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>

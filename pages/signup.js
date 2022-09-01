@@ -176,10 +176,14 @@ export default function SignUp() {
     }
   };
 
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+
+  useEffect(() => {
+    // Prefetch the login page
+    router.prefetch('/login')
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>

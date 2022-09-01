@@ -145,7 +145,7 @@ export default function BookingForm() {
       newData.Status = ""
       setData(newData)
 
-      await router.prefetch("/my-appointments")
+      await router.push("/my-appointments")
     } catch (err) {
       setError("Failed to signup: " + err.code)
     }
@@ -257,6 +257,11 @@ export default function BookingForm() {
       currentUser: currentUser, API_URL: '/api/auth/booking-form', IDToken: IDToken,
       setAuth: setAuth, setLoading: setLoading
     })
+  }, [])
+
+  useEffect(() => {
+    // Prefetch the appointments page
+    router.prefetch('/my-appointments')
   }, [])
 
   let bookingForm = (

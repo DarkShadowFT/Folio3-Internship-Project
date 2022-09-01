@@ -120,13 +120,6 @@ export default function DashboardContent() {
           setYearlyData(copy)
         }
       }
-      // if (appt._id.status === "Completed") {
-      //   setAttended(oldArray => [...oldArray, appt.count])
-      // } else if (appt._id.status === "Cancelled") {
-      //   setCancelled(oldArray => [...oldArray, appt.count])
-      // } else if (appt._id.status === "Pending") {
-      //   setPending(oldArray => [...oldArray, appt.count])
-      // }
     })()
   }, [])
 
