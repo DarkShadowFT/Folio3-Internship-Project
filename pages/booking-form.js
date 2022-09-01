@@ -236,7 +236,7 @@ export default function BookingForm() {
         console.error(err)
       }
     })();
-  }, [loading])
+  }, [])
 
   useEffect(() => {
     (async () => {
