@@ -130,7 +130,6 @@ export default function DashboardContent() {
       setAuth: setAuth, setLoading: setLoading
     })
   }, [])
-  // console.log("Auth = " + auth)
 
   const pie_data = {
     labels: ["Attended", "Pending", "Cancelled"],

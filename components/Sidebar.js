@@ -15,7 +15,6 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {useSelector, useDispatch} from "react-redux";
 import {actionCreators} from "../state";
 import {bindActionCreators} from "redux";
-// import cookieCutter from "cookie-cutter";
 import Link from "next/link";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
@@ -58,7 +57,6 @@ export default function Sidebar() {
   async function handleLogout() {
     try {
       await logout();
-      // cookieCutter.set('customAuthToken', '', { expires: new Date(0) })
       await router.replace("/login");
     } catch {
       console.error("Failed to log out");
