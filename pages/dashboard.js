@@ -101,7 +101,7 @@ export default function DashboardContent() {
       const statuses = ["Cancelled", "Completed", "Pending"]
       let count = 0
       for (let i = least_year; i < least_year + 7; i++) {
-        if (response.data[count]._id.date === i) {
+        if (response.data[count]?._id.date === i) {
           let copy = [...yearlyData]
           for (let j = 0; j < statuses.length; j++) {
             if (response.data[count]._id.status === statuses[j]) {

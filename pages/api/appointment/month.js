@@ -5,8 +5,8 @@ export default async (req, res) => {
   await connectToMongo()
 
   const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const year = 2021;
+  const month = 10;
   let formatted_date = year + '-' + month + '-' + '01';
   // console.log("formatted_date = " + formatted_date)
   const current_month = new Date(formatted_date);
