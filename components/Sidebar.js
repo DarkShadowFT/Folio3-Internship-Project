@@ -96,7 +96,7 @@ export default function Sidebar() {
             <ListItemIcon>
               <AssignmentTurnedInIcon/>
             </ListItemIcon>
-            <ListItemText primary="Book Appointment"/>
+            <ListItemText primary="Doctors List"/>
           </ListItemButton>
         </Link>
         <Link href="/my-appointments" replace>
@@ -112,7 +112,7 @@ export default function Sidebar() {
             <ListItemIcon>
               <BoltIcon/>
             </ListItemIcon>
-            <ListItemText primary="Instant Appointment"/>
+            <ListItemText primary="Book Appointment"/>
           </ListItemButton>
         </Link>
         <ListItemButton onClick={handleLogout}>
